@@ -1,17 +1,21 @@
+import "core-js/stable";
+import "regenerator-runtime/runtime";
+
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import "./styles/style.css"
-
-
-export function devCssImportCommand() {
+async function devCssImportCommand() {
+  const darkTheme = await fetch("darkTheme.css");
+  const text = await darkTheme.text();
   return `
       window.__STORE__.dispatch(window.__ACTIONS__.updateUserConfig({
-        css: "body{margin:0;background-color:#add8e6}#main-content{font-size:x-large}fieldset.dicts>.dict{margin:6px}",
+        css: "${text}",
         js: ""
       }));`;
 }
 
 // display
-var css = document.getElementById("css-import");
-css.innerHTML = devCssImportCommand();
+window.onload = async () => {
+  var css = document.getElementById("css-import");
+  css.innerHTML = await devCssImportCommand();
+};

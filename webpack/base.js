@@ -8,6 +8,10 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 module.exports = {
   mode: "development",
   devtool: "eval-source-map",
+  entry: {
+    index: "./src/index.js",
+    darkTheme: "./src/styles/darkTheme.css"
+  },
   module: {
     rules: [
       {
