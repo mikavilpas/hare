@@ -1,3 +1,12 @@
 body {
-    background: green;
+    margin: 0;
+    background-color: lightblue;
+}
+
+#main-content {
+    font-size: x-large;
+}
+
+fieldset.dicts > .dict {
+    margin: 6px;
 }
