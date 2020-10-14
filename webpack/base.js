@@ -10,7 +10,8 @@ module.exports = {
   devtool: "eval-source-map",
   entry: {
     index: "./src/index.js",
-    darkTheme: "./src/styles/darkTheme.css"
+    darkTheme: "./src/styles/darkTheme.css",
+    externalLinksAsNewTabs: "./src/site-scripts/externalLinksAsNewTabs.js"
   },
   module: {
     rules: [
@@ -34,9 +35,6 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin({
       root: path.resolve(__dirname, "../")
-    }),
-    new HtmlWebpackPlugin({
-      template: "./index.html"
     }),
     new MiniCssExtractPlugin(),
     new OptimizeCssAssetsPlugin({
