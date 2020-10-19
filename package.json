@@ -39,9 +39,12 @@
   "dependencies": {
     "bootstrap": "^4.5.2",
     "core-js": "^3.6.5",
+    "highlight.js": "^10.3.1",
     "jquery": "^3.5.1",
+    "mustache": "^4.0.1",
     "phaser": "^3.20.1",
     "popper.js": "^1.16.1",
+    "prettier": "^2.1.2",
     "regenerator-runtime": "^0.13.7"
   }
 }
