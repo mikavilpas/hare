@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="index.js"></script>
+    <link type="text/css" rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg">
+          <h2>Customizations</h2>
+          Paste these into the settings window.
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg">
+          <h3>Javascript</h3>
+          <pre><code class="javascript" id="customizations-js"></code></pre>
+          <button
+            id="copy-js-customizations-button"
+            type="button"
+            class="btn btn-outline-primary btn-sm"
+          >
+            Copy
+          </button>
+        </div>
+
+        <div class="col-lg">
+          <h3>Css</h3>
+          <pre><code class="css" id="customizations-css"></code></pre>
+          <button
+            id="copy-css-customizations-button"
+            type="button"
+            class="btn btn-outline-primary btn-sm"
+          >
+            Copy
+          </button>
+        </div>
+      </div>
+
+      <hr />
+      <div class="row">
+        <div class="col-lg">
+          <h2>Developer import</h2>
+          <pre><code class="javascript" id="dev-import"></code></pre>
+
+          <button
+            id="copy-dev-button"
+            type="button"
+            class="btn btn-outline-primary btn-sm"
+          >
+            Copy
+          </button>
+          <script id="dev-import-template" type="text/plain">
+            window.__STORE__.dispatch(window.__ACTIONS__.updateUserConfig({
+                css: {{{css}}},
+                js: {{{js}}}
+            }));
+          </script>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
