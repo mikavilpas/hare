@@ -20,10 +20,12 @@ async function displayDevSourceFile({
   codeElement,
   copyButtonElement,
 }) {
-  const file = files[0]; // only one supported for now
-  const source = await sourceCodeService.loadFileText(file);
+  const sources = await Promise.all(
+    files.map(sourceCodeService.loadFileText)
+  ).then((texts) => texts.join("\n"));
+
   const escapedSource = Mustache.render(templateText, {
-    code: JSON.stringify(source),
+    code: JSON.stringify(sources),
   });
 
   codeElement.innerHTML = escapedSource;
@@ -45,7 +47,7 @@ window.onload = async () => {
 
   // js
   await displayDevSourceFile({
-    files: ["externalLinksAsNewTabs.js"],
+    files: ["externalLinksAsNewTabs.js", "addJishoSentenceSearch.js"],
     templateText: document.getElementById("js-import-template").innerHTML,
     codeElement: document.getElementById("js-import"),
     copyButtonElement: document.getElementById("copy-js-button"),
