@@ -1,10 +1,8 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 
-import "highlight.js/styles/github.css";
 import hljs from "highlight.js/lib/core";
-import javascript from "highlight.js/lib/languages/javascript";
-hljs.registerLanguage("javascript", javascript);
+import "highlight.js/styles/github.css";
 
 import * as Mustache from "mustache";
 
@@ -24,11 +22,20 @@ function displaySourceFiles({
   templateText,
   codeElement,
   copyButtonElement,
+  highlight,
 }) {
   const sourceText = Mustache.render(templateText, data);
 
+  if (highlight) {
+    // add syntax coloring in a worker
+    const worker = new Worker("highlighter.js");
+    worker.onmessage = (event) => {
+      codeElement.innerHTML = event.data;
+    };
+    worker.postMessage(sourceText);
+  }
+
   codeElement.innerHTML = sourceText;
-  hljs.highlightBlock(codeElement);
 
   copyButtonElement.onclick = () =>
     navigator.clipboard.writeText(codeElement.innerText);
@@ -42,22 +49,23 @@ window.onload = async () => {
     "addJishoSentenceSearch.js",
   ]);
 
+  // production javascript
+  displaySourceFiles({
+    data: { js: jsText, language: "plaintext" },
+    templateText: "{{{js}}}",
+    codeElement: document.getElementById("customizations-js"),
+    copyButtonElement: document.getElementById("copy-js-customizations-button"),
+  });
+
   // production css
   displaySourceFiles({
     data: { css: cssText },
-    templateText: "{{css}}",
+    templateText: "{{{css}}}",
     codeElement: document.getElementById("customizations-css"),
     copyButtonElement: document.getElementById(
       "copy-css-customizations-button"
     ),
-  });
-
-  // production javascript
-  displaySourceFiles({
-    data: { js: jsText },
-    templateText: "{{js}}",
-    codeElement: document.getElementById("customizations-js"),
-    copyButtonElement: document.getElementById("copy-js-customizations-button"),
+    highlight: true,
   });
 
   // dev import
@@ -66,5 +74,6 @@ window.onload = async () => {
     templateText: document.getElementById("dev-import-template").innerHTML,
     codeElement: document.getElementById("dev-import"),
     copyButtonElement: document.getElementById("copy-dev-button"),
+    highlight: true,
   });
 };

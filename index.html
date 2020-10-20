@@ -40,6 +40,7 @@
         </div>
       </div>
 
+      <hr />
       <div class="row">
         <div class="col-lg">
           <h2>Developer import</h2>
@@ -54,8 +55,8 @@
           </button>
           <script id="dev-import-template" type="text/plain">
             window.__STORE__.dispatch(window.__ACTIONS__.updateUserConfig({
-                css: {{css}},
-                js: {{js}}
+                css: {{{css}}},
+                js: {{{js}}}
             }));
           </script>
         </div>

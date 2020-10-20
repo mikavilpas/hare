@@ -52,6 +52,7 @@ module.exports = [
     mode: "production",
     devtool: false,
     entry: {
+      highlighter: "./src/highlighter.js",
       darkTheme: "./src/site-styles/darkTheme.css",
       externalLinksAsNewTabs: "./src/site-scripts/externalLinksAsNewTabs.js",
       addJishoSentenceSearch: "./src/site-scripts/addJishoSentenceSearch.js",
