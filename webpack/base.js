@@ -52,7 +52,7 @@ module.exports = [
     mode: "production",
     devtool: false,
     entry: {
-      darkTheme: "./src/styles/darkTheme.css",
+      darkTheme: "./src/site-styles/darkTheme.css",
       externalLinksAsNewTabs: "./src/site-scripts/externalLinksAsNewTabs.js",
     },
     module: moduleDefinitions,

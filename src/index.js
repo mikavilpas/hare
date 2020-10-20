@@ -2,40 +2,52 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 
 import "highlight.js/styles/github.css";
-import hljs from 'highlight.js/lib/core';
-import javascript from 'highlight.js/lib/languages/javascript';
-hljs.registerLanguage('javascript', javascript);
+import hljs from "highlight.js/lib/core";
+import javascript from "highlight.js/lib/languages/javascript";
+hljs.registerLanguage("javascript", javascript);
+
+import * as Mustache from "mustache";
 
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import * as Mustache from "mustache";
+import "./styles/index.css";
 
-async function loadFileText(path) {
-  const file = await fetch(path);
-  return file.text();
-}
+import * as sourceCodeService from "./sourceCodeService.js";
 
-async function devCssImportCommand() {
-  const source = await loadFileText("darkTheme.css");
-  const template = document.getElementById("css-import-template").innerHTML;
+async function displayDevSourceFile({
+  files,
+  templateText,
+  codeElement,
+  copyButtonElement,
+}) {
+  const file = files[0]; // only one supported for now
+  const source = await sourceCodeService.loadFileText(file);
+  const escapedSource = Mustache.render(templateText, {
+    code: JSON.stringify(source),
+  });
 
-  return Mustache.render(template, { code: JSON.stringify(source) });
-}
+  codeElement.innerHTML = escapedSource;
+  hljs.highlightBlock(codeElement);
 
-async function devJsImportCommand() {
-  const source = await loadFileText("externalLinksAsNewTabs.js");
-  const template = document.getElementById("js-import-template").innerHTML;
-
-  return Mustache.render(template, { code: JSON.stringify(source) });
+  copyButtonElement.onclick = () =>
+    navigator.clipboard.writeText(codeElement.innerText);
 }
 
 // display
 window.onload = async () => {
-  var css = document.getElementById("css-import");
-  css.innerHTML = await devCssImportCommand();
-  hljs.highlightBlock(css);
+  // css
+  await displayDevSourceFile({
+    files: ["darkTheme.css"],
+    templateText: document.getElementById("css-import-template").innerHTML,
+    codeElement: document.getElementById("css-import"),
+    copyButtonElement: document.getElementById("copy-css-button"),
+  });
 
-  var js = document.getElementById("js-import");
-  js.innerHTML = await devJsImportCommand();
-  hljs.highlightBlock(js);
+  // js
+  await displayDevSourceFile({
+    files: ["externalLinksAsNewTabs.js"],
+    templateText: document.getElementById("js-import-template").innerHTML,
+    codeElement: document.getElementById("js-import"),
+    copyButtonElement: document.getElementById("copy-js-button"),
+  });
 };

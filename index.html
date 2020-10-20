@@ -6,22 +6,37 @@
     <link type="text/css" rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <pre>
-      <code class="javascript" id="css-import"></code>
-      <script type="text/plain" id="css-import-template">
+    <div>
+      <pre><code class="javascript" id="css-import"></code></pre>
+
+      <button
+        id="copy-css-button"
+        type="button"
+        class="btn btn-outline-primary btn-sm"
+      >
+        Copy
+      </button>
+      <script id="css-import-template" type="text/plain">
         window.__STORE__.dispatch(window.__ACTIONS__.updateUserConfig({
             css: {{code}}
         }));
       </script>
-    </pre>
+    </div>
 
-    <pre>
-      <code class="javascript" id="js-import"></code>
-      <script type="text/plain" id="js-import-template">
-       window.__STORE__.dispatch(window.__ACTIONS__.updateUserConfig({
-           js: {{code}}
-       }));
+    <div>
+      <pre> <code class="javascript" id="js-import"></code> </pre>
+      <button
+        id="copy-js-button"
+        type="button"
+        class="btn btn-outline-primary btn-sm"
+      >
+        Copy
+      </button>
+      <script id="js-import-template" type="text/plain">
+        window.__STORE__.dispatch(window.__ACTIONS__.updateUserConfig({
+            js: {{code}}
+        }));
       </script>
-    </pre>
+    </div>
   </body>
 </html>
