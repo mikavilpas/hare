@@ -12,6 +12,8 @@ import "./styles/index.css";
 
 import * as sourceCodeService from "./sourceCodeService.js";
 
+require("file-loader?name=[name].[ext]!../index.html");
+
 async function concatFiles(files) {
   const jobs = files.map(sourceCodeService.loadFileText);
   return Promise.all(jobs).then((texts) => texts.join("\n"));
