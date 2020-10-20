@@ -6,37 +6,43 @@
     <link type="text/css" rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <div>
-      <pre><code class="javascript" id="css-import"></code></pre>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg">
+          <h2>Css</h2>
+          <pre><code class="javascript" id="css-import"></code></pre>
 
-      <button
-        id="copy-css-button"
-        type="button"
-        class="btn btn-outline-primary btn-sm"
-      >
-        Copy
-      </button>
-      <script id="css-import-template" type="text/plain">
-        window.__STORE__.dispatch(window.__ACTIONS__.updateUserConfig({
-            css: {{code}}
-        }));
-      </script>
-    </div>
+          <button
+            id="copy-css-button"
+            type="button"
+            class="btn btn-outline-primary btn-sm"
+          >
+            Copy
+          </button>
+          <script id="css-import-template" type="text/plain">
+            window.__STORE__.dispatch(window.__ACTIONS__.updateUserConfig({
+                css: {{code}}
+            }));
+          </script>
+        </div>
 
-    <div>
-      <pre> <code class="javascript" id="js-import"></code> </pre>
-      <button
-        id="copy-js-button"
-        type="button"
-        class="btn btn-outline-primary btn-sm"
-      >
-        Copy
-      </button>
-      <script id="js-import-template" type="text/plain">
-        window.__STORE__.dispatch(window.__ACTIONS__.updateUserConfig({
-            js: {{code}}
-        }));
-      </script>
+        <div class="col-lg">
+          <h2>Js</h2>
+          <pre> <code class="javascript" id="js-import"></code> </pre>
+          <button
+            id="copy-js-button"
+            type="button"
+            class="btn btn-outline-primary btn-sm"
+          >
+            Copy
+          </button>
+          <script id="js-import-template" type="text/plain">
+            window.__STORE__.dispatch(window.__ACTIONS__.updateUserConfig({
+                js: {{code}}
+            }));
+          </script>
+        </div>
+      </div>
     </div>
   </body>
 </html>

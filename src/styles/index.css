@@ -1,3 +1,10 @@
-pre code.hljs {
+.hljs {
   font-size: xx-small;
+  max-height: 100px;
+  overflow: auto;
+}
+
+pre {
+  /* hack */
+  display: grid;
 }
