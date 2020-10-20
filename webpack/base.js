@@ -39,8 +39,8 @@ const plugins = [
 module.exports = [
   {
     name: "devsite",
-    mode: "development",
-    devtool: "eval-source-map",
+    mode: "production",
+    devtool: false,
     entry: {
       index: "./src/index.js",
     },
