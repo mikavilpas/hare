@@ -14,18 +14,24 @@ import "./styles/index.css";
 
 import * as sourceCodeService from "./sourceCodeService.js";
 
-async function displayDevSourceFile({
-  files,
+async function concatFiles(files) {
+  const jobs = files.map(sourceCodeService.loadFileText);
+  return Promise.all(jobs).then((texts) => texts.join("\n"));
+}
+
+async function displayDevSourceFiles({
+  cssFiles,
+  jsFiles,
   templateText,
   codeElement,
   copyButtonElement,
 }) {
-  const sources = await Promise.all(
-    files.map(sourceCodeService.loadFileText)
-  ).then((texts) => texts.join("\n"));
+  const cssText = await concatFiles(cssFiles);
+  const jsText = await concatFiles(jsFiles);
 
   const escapedSource = Mustache.render(templateText, {
-    code: JSON.stringify(sources),
+    css: JSON.stringify(cssText),
+    js: JSON.stringify(jsText),
   });
 
   codeElement.innerHTML = escapedSource;
@@ -37,19 +43,11 @@ async function displayDevSourceFile({
 
 // display
 window.onload = async () => {
-  // css
-  await displayDevSourceFile({
-    files: ["darkTheme.css"],
-    templateText: document.getElementById("css-import-template").innerHTML,
-    codeElement: document.getElementById("css-import"),
-    copyButtonElement: document.getElementById("copy-css-button"),
-  });
-
-  // js
-  await displayDevSourceFile({
-    files: ["externalLinksAsNewTabs.js", "addJishoSentenceSearch.js"],
-    templateText: document.getElementById("js-import-template").innerHTML,
-    codeElement: document.getElementById("js-import"),
-    copyButtonElement: document.getElementById("copy-js-button"),
+  await displayDevSourceFiles({
+    cssFiles: ["darkTheme.css"],
+    jsFiles: ["externalLinksAsNewTabs.js", "addJishoSentenceSearch.js"],
+    templateText: document.getElementById("dev-import-template").innerHTML,
+    codeElement: document.getElementById("dev-import"),
+    copyButtonElement: document.getElementById("copy-dev-button"),
   });
 };
