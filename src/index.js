@@ -19,22 +19,15 @@ async function concatFiles(files) {
   return Promise.all(jobs).then((texts) => texts.join("\n"));
 }
 
-async function displayDevSourceFiles({
-  cssFiles,
-  jsFiles,
+function displaySourceFiles({
+  data,
   templateText,
   codeElement,
   copyButtonElement,
 }) {
-  const cssText = await concatFiles(cssFiles);
-  const jsText = await concatFiles(jsFiles);
+  const sourceText = Mustache.render(templateText, data);
 
-  const escapedSource = Mustache.render(templateText, {
-    css: JSON.stringify(cssText),
-    js: JSON.stringify(jsText),
-  });
-
-  codeElement.innerHTML = escapedSource;
+  codeElement.innerHTML = sourceText;
   hljs.highlightBlock(codeElement);
 
   copyButtonElement.onclick = () =>
@@ -43,9 +36,33 @@ async function displayDevSourceFiles({
 
 // display
 window.onload = async () => {
-  await displayDevSourceFiles({
-    cssFiles: ["darkTheme.css"],
-    jsFiles: ["externalLinksAsNewTabs.js", "addJishoSentenceSearch.js"],
+  const cssText = await concatFiles(["darkTheme.css"]);
+  const jsText = await concatFiles([
+    "externalLinksAsNewTabs.js",
+    "addJishoSentenceSearch.js",
+  ]);
+
+  // production css
+  displaySourceFiles({
+    data: { css: cssText },
+    templateText: "{{css}}",
+    codeElement: document.getElementById("customizations-css"),
+    copyButtonElement: document.getElementById(
+      "copy-css-customizations-button"
+    ),
+  });
+
+  // production javascript
+  displaySourceFiles({
+    data: { js: jsText },
+    templateText: "{{js}}",
+    codeElement: document.getElementById("customizations-js"),
+    copyButtonElement: document.getElementById("copy-js-customizations-button"),
+  });
+
+  // dev import
+  displaySourceFiles({
+    data: { css: JSON.stringify(cssText), js: JSON.stringify(jsText) },
     templateText: document.getElementById("dev-import-template").innerHTML,
     codeElement: document.getElementById("dev-import"),
     copyButtonElement: document.getElementById("copy-dev-button"),
