@@ -39,7 +39,11 @@ header {
 }
 
 a {
-  color: #1599c1 !important;
+  color: #21a4cb !important;
+}
+
+.dict a.active {
+  background-color: #484747;
 }
 
 aside {
@@ -56,8 +60,9 @@ p.msg {
 
 footer {
   /* footer to the bottom  */
-  position: absolute;
+  position: fixed;
   bottom: 0;
+  right: 0;
 
   /* make it less noticeable */
   font-size: xx-small;
@@ -81,4 +86,8 @@ fieldset.dicts > .dict {
 .ReactModal__Content--after-open {
   /* body bgcolor */
   background-color: #36393f !important;
+}
+
+mark {
+  background-color: #4f75b9;
 }
