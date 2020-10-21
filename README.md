@@ -12,3 +12,12 @@
 ./publish.sh
 git commit -m "version: x.x.x"
 ```
+
+## How to run tests
+
+
+```sh
+yarn test
+# or
+jest
+```
