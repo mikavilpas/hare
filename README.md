@@ -9,7 +9,6 @@
 ## How to publish
 
 ```sh
-yarn build
 ./publish.sh
 git commit -m "version: x.x.x"
 ```

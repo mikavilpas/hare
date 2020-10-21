@@ -1,12 +1,84 @@
 body {
   margin: 0;
-  background-color: lightblue;
+  background-color: #36393f !important;
+  color: #dcddde !important;
+}
+
+textarea {
+  background-color: #dcddde !important;
+}
+
+input {
+  background-color: #989898 !important;
+}
+
+.voice-input-btn {
+  display: none;
+}
+
+div.nav-words {
+  display: none;
+}
+
+div.navi-tools {
+  display: none;
+}
+
+.navi-external,
+.external-search,
+a.external {
+  font-family: sans-serif;
+}
+
+.dict > a {
+  color: #6d6d6d;
+}
+
+header {
+  background-color: #27292d;
+}
+
+a {
+  color: #1599c1 !important;
+}
+
+aside {
+  background-color: #27292d;
 }
 
 #main-content {
   font-size: x-large;
 }
 
+p.msg {
+  display: none;
+}
+
+footer {
+  /* footer to the bottom  */
+  position: absolute;
+  bottom: 0;
+
+  /* make it less noticeable */
+  font-size: xx-small;
+}
+
 fieldset.dicts > .dict {
   margin: 6px;
+}
+
+.word-permalink,
+.livepreview-word-permalink .word-title-text {
+  text-decoration: none;
+}
+
+.ReactModal__Overlay,
+.ReactModal__Overlay--after-open {
+  background-color: #3e3e3e !important;
+}
+
+.ReactModal__Content,
+.ReactModal__Content--after-open {
+  /* body bgcolor */
+  background-color: #36393f !important;
 }
