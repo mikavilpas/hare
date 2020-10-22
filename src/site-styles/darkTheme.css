@@ -1,4 +1,5 @@
-body {
+body,
+.livepreview-wrapper {
   margin: 0;
   background-color: #36393f !important;
   color: #dcddde !important;
