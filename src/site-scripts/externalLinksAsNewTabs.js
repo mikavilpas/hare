@@ -3,3 +3,6 @@ export default function externalLinksAsNewTabs() {
     .querySelectorAll(".external-search a.external")
     .forEach((a) => (a.target = "_blank"));
 }
+
+window.addEventListener("DOMNodeInserted", externalLinksAsNewTabs);
+console.log("Loaded externalLinksAsNewTabs.js");
