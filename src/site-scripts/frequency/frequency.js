@@ -1,8 +1,8 @@
 let frequencies = {};
 
-async function initFrequencyList(text) {
+async function initFrequencyList(jsonArray) {
   const freqs = Object.fromEntries(
-    text.split(/\r?\n/).map((word, index) => [word, index])
+    jsonArray.map((word, index) => [word, index])
   );
   frequencies = freqs;
 }
@@ -60,9 +60,9 @@ function addFrequencyInfoToWordTitles() {
 async function initScript() {
   // load in browser
   return fetch(
-    "https://sp3ctum.github.io/sakura-paris-customizations/frequency.txt"
+    "https://sp3ctum.github.io/sakura-paris-customizations/frequency.json"
   )
-    .then((response) => response.text())
+    .then((response) => response.json())
     .then(initFrequencyList)
     .then(() => {
       window.frequency = frequency;
