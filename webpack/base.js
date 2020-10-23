@@ -56,6 +56,7 @@ module.exports = [
       darkTheme: "./src/site-styles/darkTheme.css",
       externalLinksAsNewTabs: "./src/site-scripts/externalLinksAsNewTabs.js",
       addJishoSentenceSearch: "./src/site-scripts/addJishoSentenceSearch.js",
+      frequency: "./src/site-scripts/frequency/frequency.js",
     },
     module: moduleDefinitions,
     plugins: plugins,

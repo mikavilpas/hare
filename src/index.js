@@ -47,6 +47,7 @@ function displaySourceFiles({
 window.onload = async () => {
   const cssText = await concatFiles(["darkTheme.css"]);
   const jsText = await concatFiles([
+    "frequency.js",
     "externalLinksAsNewTabs.js",
     "addJishoSentenceSearch.js",
   ]);
