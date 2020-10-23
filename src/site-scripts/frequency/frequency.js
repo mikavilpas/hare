@@ -1,11 +1,6 @@
-let frequencies;
+let frequencies = {};
 
-async function init() {
-  const response = await fetch(
-    "https://sp3ctum.github.io/sakura-paris-customizations/frequency.txt"
-  );
-  const text = await response.text();
-
+async function initFrequencyList(text) {
   const freqs = Object.fromEntries(
     text.split(/\r?\n/).map((word, index) => [word, index])
   );
@@ -13,7 +8,7 @@ async function init() {
 }
 
 function frequency(word) {
-  const index = frequencies[word];
+  const index = frequencies[word] || 999999;
 
   // migaku dictionary frequency logic
   let rating = 0;
@@ -26,25 +21,56 @@ function frequency(word) {
   return { index, rating };
 }
 
-init().then(() => {
-  window.freq = frequency;
-});
-console.log("Loaded frequency.js");
+export function words(title) {
+  const insideBrackets = () => {
+    const [_, word] = title.match(/【(.+?)】/);
+    return [word];
+  };
 
-export function wordTitleFrequency(title) {
-  const [_pattern, word] = title.match(/【(.+?)】/);
-  return frequency(word);
+  const manyWords = () => {
+    // many words separated by "・"
+    const [wordDefinition] = insideBrackets();
+    return wordDefinition.replace(/＝/g, "").replace(/×/g, "").split("・");
+  };
+
+  try {
+    return manyWords() || insideBrackets();
+  } catch (_) {}
 }
 
-// word-title-text
 function addFrequencyInfoToWordTitles() {
-  document.querySelectorAll(".word-title-text").forEach((elem) => {
-    // data looks like
-    // "あたい【私】"
-    const title = elem.innerText;
-    const text = wordTitleFrequency(title);
-    console.log(`title ${title} frequency ${JSON.stringify(text)}`);
-  });
+  Array.from(document.querySelectorAll(".word-title-text"))
+    .filter((elem) => !elem.dataset.frequencified)
+    .forEach((elem) => {
+      elem.dataset.frequencified = true; // prevent infinite "changed" loop
+      const title = elem.innerText;
+
+      const ws = words(title);
+      if (ws) {
+        const frequencyInfo = ws
+          .map(frequency)
+          .map((i) => "★".repeat(i.rating))
+          .join(",");
+
+        elem.innerHTML += `<span class="frequency-info">${frequencyInfo}</span>`;
+      }
+    });
 }
 
-// window.addEventListener("DOMNodeInserted", externalLinksAsNewTabs);
+async function initScript() {
+  // load in browser
+  return fetch(
+    "https://sp3ctum.github.io/sakura-paris-customizations/frequency.txt"
+  )
+    .then((response) => response.text())
+    .then(initFrequencyList)
+    .then(() => {
+      window.frequency = frequency;
+      console.log("Loaded frequency list.");
+    });
+}
+
+window.addEventListener("load", () => {
+  initScript().then(addFrequencyInfoToWordTitles);
+  window.addEventListener("DOMNodeInserted", addFrequencyInfoToWordTitles);
+});

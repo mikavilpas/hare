@@ -92,3 +92,8 @@ fieldset.dicts > .dict {
 mark {
   background-color: #4f75b9;
 }
+
+.frequency-info {
+  color: cornflowerblue;
+  font-size: small;
+}
