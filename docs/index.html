@@ -27,17 +27,31 @@
           </button>
         </div>
 
-        <div class="col-lg">
-          <h3>Css</h3>
-          <pre><code class="css" id="customizations-css"></code></pre>
-          <button
-            id="copy-css-customizations-button"
-            type="button"
-            class="btn btn-outline-primary btn-sm"
-          >
-            Copy
-          </button>
-        </div>
+        <script id="prod-import-template" type="text/plain">
+          function loadJs(url) {
+              var script = document.createElement("script");
+              script.src = url;
+              document.head.appendChild(script);
+              console.log(`Loaded file ${url}"`);
+          }
+
+          function loadCss(src) {
+              return new Promise(function (resolve, reject) {
+                  let link = document.createElement("link");
+                  link.href = src;
+                  link.rel = "stylesheet";
+
+                  link.onload = () => resolve(link);
+                  link.onerror = () => reject(new Error(`Style load error for ${src}`));
+
+                    document.head.append(link);
+                    console.log(`Loaded file ${src}"`);
+                });
+            }
+
+          loadJs("{{{jsFile}}}");
+          loadCss("{{{cssFile}}}");
+        </script>
       </div>
 
       <hr />
