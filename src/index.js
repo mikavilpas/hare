@@ -20,14 +20,11 @@ async function concatFiles(files) {
 }
 
 function displaySourceFiles({
-  data,
-  templateText,
+  sourceText,
   codeElement,
   copyButtonElement,
   highlight,
 }) {
-  const sourceText = Mustache.render(templateText, data);
-
   if (highlight) {
     // add syntax coloring in a worker
     const worker = new Worker("highlighter.js");
@@ -44,32 +41,28 @@ function displaySourceFiles({
 
 // display
 window.onload = async () => {
-  const cssText = await concatFiles(["prod.css"]);
-  const jsText = await concatFiles(["prod.js"]);
+  // production import
+  const base = "https://sp3ctum.github.io/sakura-paris-customizations";
 
-  // production javascript
   displaySourceFiles({
-    data: { js: jsText, language: "plaintext" },
-    templateText: "{{{js}}}",
+    sourceText: Mustache.render(
+      document.getElementById("prod-import-template").innerHTML,
+      { jsFile: `${base}/prod.js`, cssFile: `${base}/prod.css` }
+    ),
     codeElement: document.getElementById("customizations-js"),
     copyButtonElement: document.getElementById("copy-js-customizations-button"),
-  });
-
-  // production css
-  displaySourceFiles({
-    data: { css: cssText },
-    templateText: "{{{css}}}",
-    codeElement: document.getElementById("customizations-css"),
-    copyButtonElement: document.getElementById(
-      "copy-css-customizations-button"
-    ),
     highlight: true,
   });
 
   // dev import
+  const cssText = await concatFiles(["prod.css"]);
+  const jsText = await concatFiles(["prod.js"]);
+
   displaySourceFiles({
-    data: { css: JSON.stringify(cssText), js: JSON.stringify(jsText) },
-    templateText: document.getElementById("dev-import-template").innerHTML,
+    sourceText: Mustache.render(
+      document.getElementById("dev-import-template").innerHTML,
+      { css: JSON.stringify(cssText), js: JSON.stringify(jsText) }
+    ),
     codeElement: document.getElementById("dev-import"),
     copyButtonElement: document.getElementById("copy-dev-button"),
     highlight: true,
