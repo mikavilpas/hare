@@ -39,18 +39,13 @@ function displaySourceFiles({
 
   codeElement.innerHTML = sourceText;
 
-  copyButtonElement.onclick = () =>
-    navigator.clipboard.writeText(codeElement.innerText);
+  copyButtonElement.onclick = () => navigator.clipboard.writeText(sourceText);
 }
 
 // display
 window.onload = async () => {
-  const cssText = await concatFiles(["darkTheme.css"]);
-  const jsText = await concatFiles([
-    "frequency.js",
-    "externalLinksAsNewTabs.js",
-    "addJishoSentenceSearch.js",
-  ]);
+  const cssText = await concatFiles(["prod.css"]);
+  const jsText = await concatFiles(["prod.js"]);
 
   // production javascript
   displaySourceFiles({

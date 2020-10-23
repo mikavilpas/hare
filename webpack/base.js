@@ -42,6 +42,7 @@ module.exports = [
     mode: "production",
     devtool: false,
     entry: {
+      highlighter: "./src/highlighter.js",
       index: "./src/index.js",
     },
     module: moduleDefinitions,
@@ -52,11 +53,7 @@ module.exports = [
     mode: "production",
     devtool: false,
     entry: {
-      highlighter: "./src/highlighter.js",
-      darkTheme: "./src/site-styles/darkTheme.css",
-      externalLinksAsNewTabs: "./src/site-scripts/externalLinksAsNewTabs.js",
-      addJishoSentenceSearch: "./src/site-scripts/addJishoSentenceSearch.js",
-      frequency: "./src/site-scripts/frequency/frequency.js",
+      prod: "./src/prod.js",
     },
     module: moduleDefinitions,
     plugins: plugins,
