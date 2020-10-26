@@ -97,3 +97,7 @@ mark {
   color: cornflowerblue;
   font-size: small;
 }
+
+.dict.preloaded {
+  background-color: darkslateblue;
+}
