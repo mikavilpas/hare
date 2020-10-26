@@ -43,7 +43,9 @@ export function words(title) {
 }
 
 function addFrequencyInfoToWordTitles() {
-  Array.from(document.querySelectorAll(".word-title-text"))
+  Array.from(
+    document.querySelectorAll(".word-title-text, .livepreview-word-permalink")
+  )
     .filter((elem) => !elem.dataset.frequencified)
     .forEach((elem) => {
       elem.dataset.frequencified = true; // prevent infinite "changed" loop
