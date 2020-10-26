@@ -30,7 +30,11 @@ export function words(title) {
   const manyWords = () => {
     // many words separated by "・"
     const [wordDefinition] = insideBrackets();
-    return wordDefinition.replace(/＝/g, "").replace(/×/g, "").split("・");
+    return wordDefinition
+      .replace(/＝/g, "")
+      .replace(/×/g, "")
+      .replace(/△/g, "")
+      .split("・");
   };
 
   try {

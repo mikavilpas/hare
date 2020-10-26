@@ -12,5 +12,8 @@ describe("words from title", () => {
       "裸足",
       "跣足",
     ]);
+
+    // うつ・す【移す・△遷す】
+    expect(words("うつ・す【移す・△遷す】")).toEqual(["移す", "遷す"]);
   });
 });
