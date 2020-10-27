@@ -5,3 +5,4 @@ import "./site-scripts/addJishoSentenceSearch.js";
 import "./site-scripts/frequency/frequency.js";
 import "./site-scripts/gestures/gestures.js";
 import "./site-scripts/preloadResults/preloadResults.js";
+import "./site-scripts/focusSearch.js";

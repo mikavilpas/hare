@@ -17,6 +17,14 @@ export function dictLinks() {
   return document.querySelectorAll("div.dict a");
 }
 
+export function searchBox() {
+  return document.querySelector("input[type='search']");
+}
+
+export function titleLink() {
+  return document.querySelector("#sitetitle a");
+}
+
 export const myDictionaries = [
   "広辞苑",
   "大辞林",
