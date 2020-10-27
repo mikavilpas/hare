@@ -101,3 +101,9 @@ mark {
 .dict.preloaded {
   background-color: darkslateblue;
 }
+
+.romaji-field,
+a.cloud-link,
+a.notebook-link {
+  display: none !important;
+}
