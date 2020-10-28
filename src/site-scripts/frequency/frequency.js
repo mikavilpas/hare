@@ -34,6 +34,7 @@ export function words(title) {
       .replace(/＝/g, "")
       .replace(/×/g, "")
       .replace(/△/g, "")
+      .replace(/（.*?）/g, "")
       .split("・");
   };
 
