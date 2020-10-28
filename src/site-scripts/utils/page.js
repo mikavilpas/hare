@@ -34,6 +34,11 @@ export function searchButton() {
   return document.querySelector(".search");
 }
 
+export function wordDefinitionDivs() {
+  const wordDivs = document.querySelectorAll("div.word");
+  return Array.from(wordDivs);
+}
+
 export const myDictionaries = [
   "広辞苑",
   "大辞林",

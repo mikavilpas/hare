@@ -6,3 +6,4 @@ import "./site-scripts/frequency/frequency.js";
 import "./site-scripts/gestures/gestures.js";
 import "./site-scripts/preloadResults/preloadResults.js";
 import "./site-scripts/focusSearch.js";
+import "./site-scripts/exactWordLinks.js";
