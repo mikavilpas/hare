@@ -15,20 +15,34 @@ function currentQueryWord() {
   return __STORE__.getState().q;
 }
 
+function showCachedDefinition(dictName, queryWord = currentQueryWord()) {
+  const cached = myCache.get(dictName, queryWord);
+  if (cached) {
+    __STORE__.dispatch(__ACTIONS__.selectDict(dictName));
+    __STORE__.dispatch(__ACTIONS__.search_result(cached));
+  }
+}
+
 function hijackDictLinks() {
   page.dictLinks().forEach((a) =>
     a.addEventListener("click", (e) => {
       const dictName = e.path[1].title;
-      const queryWord = currentQueryWord();
-      const cached = myCache.get(dictName, queryWord);
-      if (cached) {
-        __STORE__.dispatch(__ACTIONS__.selectDict(dictName));
-        __STORE__.dispatch(__ACTIONS__.search_result(cached));
-        e.stopPropagation();
-        e.preventDefault();
-      }
+      showCachedDefinition(dictName);
+      e.stopPropagation();
+      e.preventDefault();
     })
   );
+}
+
+function disableSearchButtonSlowness() {
+  // clicking the search button will perform a normal search by default,
+  // bypassing all preloaded data
+  page.searchButton().addEventListener("click", (e) => {
+    const dictName = __USERCONFIG__.defaultDict || page.dictLinks[0]?.text;
+    showCachedDefinition(dictName);
+    e.stopPropagation();
+    e.preventDefault();
+  });
 }
 
 function preloadResults() {
@@ -46,8 +60,7 @@ function preloadResults() {
 }
 
 window.addEventListener("load", () => {
-  const listener = new ChangeListener(__STORE__, queryChanged);
-  listener.listen(async () => {
+  new ChangeListener(__STORE__, queryChanged).listen(async () => {
     // remove preloaded status from previous run
     page.dictDivs().forEach((div) => div.classList.remove("preloaded"));
     return await preloadResults();
@@ -55,6 +68,7 @@ window.addEventListener("load", () => {
 
   preloadResults();
   hijackDictLinks();
+  disableSearchButtonSlowness();
 });
 
 console.log("Enabled preloading of results for selected dicts.");

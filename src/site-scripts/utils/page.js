@@ -30,6 +30,10 @@ export function titleLink() {
   return document.querySelector("#sitetitle a");
 }
 
+export function searchButton() {
+  return document.querySelector(".search");
+}
+
 export const myDictionaries = [
   "広辞苑",
   "大辞林",
