@@ -9,4 +9,6 @@ function focusSearch() {
 window.addEventListener("load", () => {
   focusSearch();
 });
-focusSearch();
+try {
+  focusSearch();
+} catch (_) {}
