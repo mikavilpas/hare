@@ -44,7 +44,7 @@ a {
 }
 
 .dict a.active {
-  background-color: #484747;
+  background-color: #d0ffa7;
 }
 
 aside {
@@ -106,4 +106,8 @@ mark {
 a.cloud-link,
 a.notebook-link {
   display: none !important;
+}
+
+.dict-hidden {
+  display: none;
 }

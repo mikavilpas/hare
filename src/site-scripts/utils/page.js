@@ -9,12 +9,17 @@ export function dictElement(dictName) {
 }
 
 export function dictDivs() {
-  const divs = document.querySelectorAll("div.dict");
+  const divs = document.querySelectorAll("div.dict:not(.dict-hidden)");
   return Array.from(divs);
 }
 
 export function dictLinks() {
-  return document.querySelectorAll("div.dict a");
+  const links = document.querySelectorAll("div.dict:not(.dict-hidden) a");
+  return Array.from(links);
+}
+
+export function currentDict() {
+  return document.querySelector("div.dict > a.active");
 }
 
 export function searchBox() {
