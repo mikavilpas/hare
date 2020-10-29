@@ -3,7 +3,6 @@ import * as page from "./utils/page";
 function removeWeirdDictionaries() {
   page.dictDivs().forEach((d) => {
     if (!page.myDictionaries.includes(d.title)) {
-      console.log(`removing dict ${d.title}`);
       d.classList.add("dict-hidden");
     }
   });

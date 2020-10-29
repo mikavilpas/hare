@@ -52,3 +52,15 @@ export const myDictionaries = [
   "学研漢和大字典", // "漢和",
   "英辞郎",
 ];
+
+export function dictFullName(shortNameOrFullName) {
+  // __STORE__ might not be ready yet
+  const dicts = __STORE__?.getState().config.DICTINFO.dicts || [];
+  const d = dicts.find(
+    (d) =>
+      d.name == shortNameOrFullName ||
+      d.alias == shortNameOrFullName ||
+      d.id == shortNameOrFullName
+  );
+  return d.name || shortNameOrFullName;
+}
