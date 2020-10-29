@@ -1,11 +1,6 @@
 import { words } from "./frequency/frequency";
 import * as page from "./utils/page";
 
-function wordLink(dict, word, mode = "prefix") {
-  const dictName = page.dictFullName(dict);
-  return `https://sakura-paris.org/dict/${dictName}/${mode}/${word}`;
-}
-
 function replaceWithExactLink(wordDiv) {
   // point to e.g.
   // https://sakura-paris.org/dict/広辞苑/exact/自動運動
@@ -13,7 +8,7 @@ function replaceWithExactLink(wordDiv) {
   const dict = page.currentDict().text;
   const word = words(text)?.[0];
   if (word) {
-    const exact = wordLink(dict, word);
+    const exact = page.wordLink(dict, word);
     wordDiv.querySelector(".word-permalink").href = exact;
   }
 }

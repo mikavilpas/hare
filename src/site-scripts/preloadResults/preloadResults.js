@@ -21,6 +21,20 @@ function showCachedDefinition(dictName, queryWord = currentQueryWord()) {
     __STORE__.dispatch(__ACTIONS__.selectDict(dictName));
     __STORE__.dispatch(__ACTIONS__.search_result(cached));
   }
+
+  const url = page.wordLink(dictName, queryWord);
+  history.pushState(
+    {
+      dict: dictName,
+      offset: null,
+      page: null,
+      q: queryWord,
+      romaji: 1,
+      type: 0,
+    },
+    "", // title, recommended to be empty by MDN
+    url
+  );
 }
 
 function hijackDictLinks() {

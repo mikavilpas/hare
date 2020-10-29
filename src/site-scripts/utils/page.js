@@ -55,12 +55,16 @@ export const myDictionaries = [
 
 export function dictFullName(shortNameOrFullName) {
   // __STORE__ might not be ready yet
-  const dicts = __STORE__?.getState().config.DICTINFO.dicts || [];
+  const dicts = window.__STORE__?.getState().config.DICTINFO.dicts || [];
   const d = dicts.find(
     (d) =>
-      d.name == shortNameOrFullName ||
-      d.alias == shortNameOrFullName ||
-      d.id == shortNameOrFullName
+      d?.name == shortNameOrFullName ||
+      d?.alias == shortNameOrFullName ||
+      d?.id == shortNameOrFullName
   );
-  return d.name || shortNameOrFullName;
+  return d?.name || shortNameOrFullName;
+}
+
+export function wordLink(dict, word, mode = "prefix") {
+  return `https://sakura-paris.org/dict/${dict}/${mode}/${word}`;
 }
