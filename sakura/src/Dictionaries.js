@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 
 import { getDicts } from "./api";
 
-const Dictionaries = ({}) => {
+const Dictionaries = ({ setDict }) => {
   const [dicts, setDicts] = useState([]);
   const [error, setError] = useState();
 
@@ -29,10 +29,17 @@ const Dictionaries = ({}) => {
             const selected = d === selectedDict;
             return (
               <ListGroup.Item
+                action
                 active={selected}
                 variant={selected ? "primary" : ""}
                 key={i}
                 as="span"
+                eventKey={d}
+                onClick={(e, a) => {
+                  const newDict = e.target.textContent;
+                  setSelectedDict(newDict);
+                  setDict(newDict);
+                }}
               >
                 {d}
               </ListGroup.Item>
