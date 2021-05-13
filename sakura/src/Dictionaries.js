@@ -1,4 +1,7 @@
 import Alert from "react-bootstrap/Alert";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import ButtonToolbar from "react-bootstrap/ButtonToolbar";
+import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import React, { useState, useEffect } from "react";
 
@@ -24,28 +27,23 @@ const Dictionaries = ({ setDict }) => {
   } else {
     return (
       <aside id="dictionary-list">
-        <ListGroup>
-          {dicts?.map((d, i) => {
-            const selected = d === selectedDict;
-            return (
-              <ListGroup.Item
-                action
-                active={selected}
-                variant={selected ? "primary" : ""}
-                key={i}
-                as="span"
-                eventKey={d}
-                onClick={(e, a) => {
-                  const newDict = e.target.textContent;
-                  setSelectedDict(newDict);
-                  setDict(newDict);
-                }}
-              >
-                {d}
-              </ListGroup.Item>
-            );
-          })}
-        </ListGroup>
+        {dicts?.map((d, i) => {
+          const selected = d === selectedDict;
+          const selectedClass = selected ? "text-primary" : "text-secondary";
+          return (
+            <span
+              className={"dict-name mr-4 border-dark " + selectedClass}
+              key={i}
+              onClick={(e, a) => {
+                const newDict = e.target.textContent;
+                setSelectedDict(newDict);
+                setDict(newDict);
+              }}
+            >
+              {d}
+            </span>
+          );
+        })}
       </aside>
     );
   }

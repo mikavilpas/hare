@@ -1,13 +1,14 @@
 #dictionary-list {
   background-color: #27292d;
+  padding: 1rem;
 }
 
 body {
   color: #dcddde !important;
 }
 
-#dictionary-list .list-group-item {
-  background-color: #27292d;
+#dictionary-list .dict-name {
+  cursor: pointer;
 }
 
 body {
