@@ -14,3 +14,16 @@ body {
 body {
   background-color: #36393f;
 }
+
+.definition-listing .card {
+  background-color: #27292d;
+}
+
+.definition-listing .card .card-header {
+  cursor: pointer;
+  color: #21a4cb !important;
+}
+
+.definition-listing div.card-body {
+  background-color: #414141;
+}

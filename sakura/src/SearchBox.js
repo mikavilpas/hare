@@ -30,6 +30,8 @@ const SearchBox = ({ dict, setSearchResult, setSearchError }) => {
           <Row>
             <Col>
               <Form.Control
+                type="search"
+                spellCheck={false}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
