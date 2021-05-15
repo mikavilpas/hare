@@ -44,7 +44,11 @@ const Dictionaries = ({ setDict }) => {
 
   useEffect(() => {
     getDicts().then(([response, error]) => {
-      setDicts(response.data);
+      const whitelist = new Set(preferredDictionaries);
+      const whitelistedDictionaries = response.data?.filter((d) =>
+        whitelist.has(d)
+      );
+      setDicts(whitelistedDictionaries);
       setError(error);
     });
   }, []);
