@@ -1,0 +1,17 @@
+{
+  "env": {
+    "coverage": false
+  },
+  "baseUrl": "http://localhost:3000",
+  "ignoreTestFiles": ["**/*.md"],
+  "retries": {
+    "runMode": 5,
+    "openMode": 0
+  },
+  "video": false,
+  "reporter": "cypress-multi-reporters",
+  "reporterOptions": {
+    "configFile": "reporter-config.json"
+  },
+  "nodeVersion": "system"
+}

@@ -6,6 +6,35 @@ import ListGroup from "react-bootstrap/ListGroup";
 import React, { useState, useEffect } from "react";
 
 import { getDicts } from "./api";
+import config from "./config";
+
+// Dictionaries to display and preload results for
+export const preferredDictionaries = [
+  "広辞苑",
+  "大辞林",
+  "大辞泉",
+  "ハイブリッド新辞林", // "新辞林",
+  "学研古語辞典", //  "古語",
+  "日本国語大辞典", // "日国",
+  "学研国語大辞典", // "学国",
+  "明鏡国語辞典", // "明鏡",
+  "新明解国語辞典", // "新明解",
+  "学研漢和大字典", // "漢和",
+  "英辞郎",
+];
+
+// Some dicts are reported by the api with a very long name, but then the api
+// only accepts the short name when querying (bug?). Converts a dict name to
+// short form.
+export function dictShortName(shortNameOrFullName) {
+  const d = config.dictinfo.dicts.find(
+    (d) =>
+      d?.name == shortNameOrFullName ||
+      d?.alias == shortNameOrFullName ||
+      d?.id == shortNameOrFullName
+  );
+  return d?.alias || d?.id || d?.name || shortNameOrFullName;
+}
 
 const Dictionaries = ({ setDict }) => {
   const [dicts, setDicts] = useState([]);
@@ -40,7 +69,7 @@ const Dictionaries = ({ setDict }) => {
                 setDict(newDict);
               }}
             >
-              {d}
+              {dictShortName(d)}
             </span>
           );
         })}
