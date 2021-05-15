@@ -11,22 +11,18 @@ import config from "./config";
 const Definitions = ({ adict, searchResult }) => {
   return (
     <Accordion className="definition-listing" defaultActiveKey="0">
-      <Card>
-        <Accordion.Toggle as={Card.Header} eventKey="0">
-          <h2>Click me!</h2>
-        </Accordion.Toggle>
-        <Accordion.Collapse eventKey="0">
-          <Card.Body>Hello! I'm the body</Card.Body>
-        </Accordion.Collapse>
-      </Card>
-      <Card>
-        <Accordion.Toggle as={Card.Header} eventKey="1">
-          Click me!
-        </Accordion.Toggle>
-        <Accordion.Collapse eventKey="1">
-          <Card.Body>Hello! I'm another body</Card.Body>
-        </Accordion.Collapse>
-      </Card>
+      {searchResult?.words?.map((w, i) => {
+        return (
+          <Card key={i}>
+            <Accordion.Toggle as={Card.Header} eventKey={i.toString()}>
+              <h2>{w?.heading}</h2>
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey={i.toString()}>
+              <Card.Body>{w?.text}</Card.Body>
+            </Accordion.Collapse>
+          </Card>
+        );
+      })}
     </Accordion>
   );
 };
