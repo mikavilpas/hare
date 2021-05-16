@@ -1,10 +1,15 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import Dictionaries from "./Dictionaries";
-import SearchBox from "./SearchBox";
 import Container from "react-bootstrap/Container";
 import React, { useState } from "react";
-import Definitions from "./Definitions";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
+import DictView from "./views/dict/";
 
 function App() {
   const [dict, setDict] = useState("");
@@ -15,22 +20,16 @@ function App() {
   return (
     <div className="App">
       <Container fluid>
-        <div className="mt-3"></div>
-        <SearchBox
-          dict={dict}
-          setSearchResult={setSearchResult}
-          setSearchError={setSearchError}
-          setSearchLoading={setSearchLoading}
-        />
-        <Dictionaries setDict={setDict} />
-        <main className="mt-3">
-          <Definitions
-            dict={dict}
-            searchResult={searchResult}
-            searchError={searchError}
-            searchLoading={searchLoading}
-          />
-        </main>
+        <Router>
+          <Switch>
+            <Route path="/dict">
+              <DictView />
+            </Route>
+            <Route path="/">
+              <Redirect to="/dict" />
+            </Route>
+          </Switch>
+        </Router>
       </Container>
     </div>
   );

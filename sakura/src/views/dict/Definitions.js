@@ -7,11 +7,8 @@ import Spinner from "react-bootstrap/Spinner";
 
 import React, { useState, useEffect } from "react";
 
-import { getDicts, textAnalysis } from "./api";
-import config from "./config";
-
-// import bbobReactRender from "@bbob/react/es/render";
-// import presetReact from "@bbob/preset-react";
+import { getDicts, textAnalysis } from "../../api";
+import config from "../../config";
 
 import html5Preset from "@bbob/preset-html5/es";
 import { render } from "@bbob/html/es";

@@ -6,8 +6,8 @@ import ListGroup from "react-bootstrap/ListGroup";
 import React, { useState, useEffect } from "react";
 import Spinner from "react-bootstrap/Spinner";
 
-import { getDicts } from "./api";
-import config from "./config";
+import { getDicts } from "../../api";
+import config from "../../config";
 
 // Dictionaries to display and preload results for
 export const preferredDictionaries = [
