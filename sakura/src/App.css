@@ -27,3 +27,19 @@ body {
 .definition-listing div.card-body {
   background-color: #414141;
 }
+
+sup superscript {
+  top: -0.5em;
+}
+sub subscript {
+  bottom: -0.25em;
+}
+sub,
+subscript,
+sup,
+superscript {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
