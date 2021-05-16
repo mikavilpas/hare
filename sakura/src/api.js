@@ -43,3 +43,15 @@ export async function getWordDefinitions({ dict, word, searchType = 0 }) {
     return [null, e];
   }
 }
+
+export async function textAnalysis(textHtml) {
+  try {
+    const data = textHtml;
+    const response = await axios.post(`/?api=2&type=4`, data, {
+      headers: { "content-type": "text/plain" },
+    });
+    return [response.data];
+  } catch (e) {
+    return [null, e];
+  }
+}

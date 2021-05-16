@@ -14,9 +14,18 @@ describe("dictionary view", () => {
     cy.intercept("/dict?api=1&dict=&q=%E7%8A%AC&type=0", {
       fixture: "definitions/inu.json",
     });
+    cy.intercept("POST", "/?api=2&type=4", {
+      fixture: "definitions/inu-analysis.html",
+    });
 
     cy.visit("/");
     cy.get("input[type=search]").type("犬");
     cy.contains("Search").click();
+
+    // can display results
+    cy.contains("いぬ【犬】");
+
+    // can display furigana
+    cy.get("ruby").should("exist");
   });
 });
