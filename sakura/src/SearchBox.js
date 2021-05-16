@@ -47,7 +47,7 @@ const SearchBox = ({
                 onChange={(e) => setSearch(e.target.value)}
               />
             </Col>
-            <Col xs={2}>
+            <Col xs={5} md={2}>
               <Button block onClick={() => doSearch()}>
                 Search
               </Button>

@@ -17,15 +17,19 @@ body {
 
 .definition-listing .card {
   background-color: #27292d;
+  border-width: 5px;
+  border-color: #36393f;
 }
 
 .definition-listing .card .card-header {
   cursor: pointer;
   color: #21a4cb !important;
+  padding: 0.2rem;
 }
 
 .definition-listing div.card-body {
   background-color: #414141;
+  padding: 0.2rem;
 }
 
 .definition-row {
