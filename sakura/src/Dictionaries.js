@@ -4,6 +4,7 @@ import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import React, { useState, useEffect } from "react";
+import Spinner from "react-bootstrap/Spinner";
 
 import { getDicts } from "./api";
 import config from "./config";
@@ -39,23 +40,32 @@ export function dictShortName(shortNameOrFullName) {
 const Dictionaries = ({ setDict }) => {
   const [dicts, setDicts] = useState([]);
   const [error, setError] = useState();
+  const [loading, setLoading] = useState();
 
   const [selectedDict, setSelectedDict] = useState("広辞苑");
 
   useEffect(() => {
-    getDicts().then(([response, error]) => {
-      const whitelist = new Set(preferredDictionaries);
-      const whitelistedDictionaries = response.data?.filter((d) =>
-        whitelist.has(d)
-      );
-      setDicts(whitelistedDictionaries);
-      setError(error);
-    });
+    setLoading(true);
+    getDicts()
+      .then(([response, error]) => {
+        const whitelist = new Set(preferredDictionaries);
+        const whitelistedDictionaries = response?.data?.filter((d) =>
+          whitelist.has(d)
+        );
+        setDicts(whitelistedDictionaries);
+        setError(error);
+      })
+      .catch((e) => setError(e))
+      .finally(() => setLoading(false));
   }, []);
 
   if (error) {
+    return <Alert>Unable to load dictionaries. {error.toString()}</Alert>;
+  } else if (loading) {
     return (
-      <Alert>Unable to load dictionaries. Error: {error.toString()}</Alert>
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
     );
   } else {
     return (

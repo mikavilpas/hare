@@ -28,6 +28,11 @@ body {
   background-color: #414141;
 }
 
+.definition-row {
+  line-height: 1.2em;
+  margin: 0.4em;
+}
+
 sup superscript {
   top: -0.5em;
 }

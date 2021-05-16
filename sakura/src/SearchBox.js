@@ -5,17 +5,28 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { getWordDefinitions } from "./api";
 
-const SearchBox = ({ dict, setSearchResult, setSearchError }) => {
+const SearchBox = ({
+  dict,
+  setSearchResult,
+  setSearchError,
+  setSearchLoading,
+}) => {
   const [search, setSearch] = useState("");
 
   const doSearch = () => {
+    setSearchLoading(true);
+    setSearchResult(null);
+    setSearchError(null);
+
     getWordDefinitions({
       dict: dict,
       word: search,
-    }).then(([result, error]) => {
-      setSearchResult(result);
-      setSearchError(error);
-    });
+    })
+      .then(([result, error]) => {
+        setSearchResult(result);
+        setSearchError(error);
+      })
+      .finally(() => setSearchLoading(false));
   };
 
   return (
