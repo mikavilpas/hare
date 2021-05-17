@@ -11,32 +11,36 @@ import config from "../../config";
 
 import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 
-// Dictionaries to display and preload results for
+// Dictionaries to display and preload results for. These are either the id or
+// alias properties from the config.dictinfo
 export const preferredDictionaries = [
   "広辞苑",
   "大辞林",
   "大辞泉",
-  "ハイブリッド新辞林", // "新辞林",
-  "学研古語辞典", //  "古語",
-  "日本国語大辞典", // "日国",
-  "学研国語大辞典", // "学国",
-  "明鏡国語辞典", // "明鏡",
-  "新明解国語辞典", // "新明解",
-  "学研漢和大字典", // "漢和",
+  "新辞林",
+  "古語",
+  "日国",
+  "学国",
+  "明鏡",
+  "新明解",
+  "漢和",
   "英辞郎",
 ];
 
 // Some dicts are reported by the api with a very long name, but then the api
 // only accepts the short name when querying (bug?). Converts a dict name to
 // short form.
-export function dictShortName(shortNameOrFullName) {
+export function dictInfo(dictAliasOrId) {
   const d = config.dictinfo.dicts.find(
-    (d) =>
-      d?.name == shortNameOrFullName ||
-      d?.alias == shortNameOrFullName ||
-      d?.id == shortNameOrFullName
+    (d) => d?.alias == dictAliasOrId || d?.id == dictAliasOrId
   );
-  return d?.alias || d?.id || d?.name || shortNameOrFullName;
+  if (!d) console.warn(`Unable to find the dict ${dictAliasOrId}`);
+  return d;
+}
+
+export function dictShortName(dictAliasOrId) {
+  const dictObject = dictInfo(dictAliasOrId);
+  return dictObject?.alias || dictObject?.id;
 }
 
 const Dictionaries = ({ dict }) => {
@@ -56,9 +60,10 @@ const Dictionaries = ({ dict }) => {
     getDicts()
       .then(([response, error]) => {
         const whitelist = new Set(preferredDictionaries);
-        const whitelistedDictionaries = response?.data?.filter((d) =>
-          whitelist.has(d)
-        );
+        const whitelistedDictionaries = response?.data?.filter((d) => {
+          const shortName = dictShortName(d);
+          return whitelist.has(shortName);
+        });
         setDicts(whitelistedDictionaries);
         setDict(whitelistedDictionaries?.[0]);
         setError(error);
@@ -79,7 +84,7 @@ const Dictionaries = ({ dict }) => {
     return (
       <aside id="dictionary-list">
         {dicts?.map((d, i) => {
-          const selected = d === dict;
+          const selected = dictShortName(d) === dict;
           const selectedClass = selected ? "text-primary" : "text-secondary";
           return (
             <span

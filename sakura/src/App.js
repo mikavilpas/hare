@@ -33,6 +33,9 @@ function App() {
             >
               <DictView />
             </Route>
+            <Route>
+              <Redirect to="/dict" />
+            </Route>
           </Switch>
         </Router>
       </Container>
