@@ -9,6 +9,7 @@ body {
 
 #dictionary-list .dict-name {
   cursor: pointer;
+  display: inline-block;
 }
 
 body {
