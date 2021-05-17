@@ -9,6 +9,8 @@ import Spinner from "react-bootstrap/Spinner";
 import { getDicts } from "../../api";
 import config from "../../config";
 
+import { useHistory, useParams, useRouteMatch } from "react-router-dom";
+
 // Dictionaries to display and preload results for
 export const preferredDictionaries = [
   "広辞苑",
@@ -37,12 +39,17 @@ export function dictShortName(shortNameOrFullName) {
   return d?.alias || d?.id || d?.name || shortNameOrFullName;
 }
 
-const Dictionaries = ({ setDict }) => {
+const Dictionaries = ({ dict }) => {
   const [dicts, setDicts] = useState([]);
   const [error, setError] = useState();
   const [loading, setLoading] = useState();
 
-  const [selectedDict, setSelectedDict] = useState("広辞苑");
+  const history = useHistory();
+  const params = useParams();
+
+  function setDict(d) {
+    history.push(`/dict/${d}`);
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -53,6 +60,7 @@ const Dictionaries = ({ setDict }) => {
           whitelist.has(d)
         );
         setDicts(whitelistedDictionaries);
+        setDict(whitelistedDictionaries?.[0]);
         setError(error);
       })
       .catch((e) => setError(e))
@@ -71,7 +79,7 @@ const Dictionaries = ({ setDict }) => {
     return (
       <aside id="dictionary-list">
         {dicts?.map((d, i) => {
-          const selected = d === selectedDict;
+          const selected = d === dict;
           const selectedClass = selected ? "text-primary" : "text-secondary";
           return (
             <span
@@ -79,7 +87,6 @@ const Dictionaries = ({ setDict }) => {
               key={i}
               onClick={(e, a) => {
                 const newDict = e.target.textContent;
-                setSelectedDict(newDict);
                 setDict(newDict);
               }}
             >

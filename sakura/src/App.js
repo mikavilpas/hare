@@ -22,11 +22,16 @@ function App() {
       <Container fluid>
         <Router>
           <Switch>
-            <Route path="/dict">
+            <Route
+              path={[
+                "/dict/:dictname/:searchmode/:search",
+                // dict selected but no search yet
+                "/dict/:dictname",
+                // no dict selected yet
+                "/dict",
+              ]}
+            >
               <DictView />
-            </Route>
-            <Route path="/">
-              <Redirect to="/dict" />
             </Route>
           </Switch>
         </Router>

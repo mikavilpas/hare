@@ -1,6 +1,12 @@
 import Container from "react-bootstrap/Container";
-import React, { useState } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useParams,
+} from "react-router-dom";
 
 import Dictionaries from "./Dictionaries";
 import SearchBox from "./SearchBox";
@@ -12,6 +18,13 @@ function DictView() {
   const [searchResult, setSearchResult] = useState();
   const [searchError, setSearchError] = useState();
 
+  const { dictname } = useParams();
+  useEffect(() => {
+    if (dictname !== dict) {
+      setDict(dictname);
+    }
+  }, [dictname]);
+
   return (
     <>
       <div className="mt-3"></div>
@@ -21,7 +34,7 @@ function DictView() {
         setSearchError={setSearchError}
         setSearchLoading={setSearchLoading}
       />
-      <Dictionaries setDict={setDict} />
+      <Dictionaries dict={dict} />
       <main className="mt-3">
         <Definitions
           dict={dict}
