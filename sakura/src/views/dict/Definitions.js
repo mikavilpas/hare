@@ -27,9 +27,9 @@ const mypreset = html5Preset.extend((tags, options) => ({
   subscript: (node) => ({ tag: "sub", content: node.content }),
   decoration: (node) => ({ tag: "b", content: node.content }),
   emphasis: (node) => ({ tag: "em", content: node.content }),
+  reference: (node) => ({ tag: "span", content: node.content }),
 
   // →
-  // TODO support reference
   // TODO support image
   // TODO support mono
   // TODO support wav
@@ -45,6 +45,7 @@ function bbcode2Text(text) {
       "subscript",
       "decoration",
       "emphasis",
+      "reference",
     ],
   };
   const textified = bbconverter.process(text, options).html;
