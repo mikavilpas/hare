@@ -60,4 +60,10 @@ describe("dictionary view", () => {
     cy.contains("英辞郎").click();
     assertIsSelected("英辞郎");
   });
+
+  it.only("can preload search results for all dictionaries", () => {
+    cy.visit("");
+    cy.get("input[type=search]").type("人間");
+    cy.contains("Search").click();
+  });
 });

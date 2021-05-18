@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
@@ -6,29 +6,43 @@ import Row from "react-bootstrap/Row";
 import { getWordDefinitions } from "../../api";
 
 const SearchBox = ({
-  dict,
+  dicts,
+  searchResult,
   setSearchResult,
-  setSearchError,
   setSearchLoading,
 }) => {
   const [search, setSearch] = useState("");
 
+  const tempSearchResult = useRef();
+  const singleDictSearchResult = (d, result, error) => {
+    const newResult = {
+      ...tempSearchResult.current,
+      [d]: { result: result, error: error },
+    };
+    tempSearchResult.current = newResult;
+    setSearchResult(newResult);
+  };
+
   const doSearch = () => {
     setSearchLoading(true);
     setSearchResult(null);
-    setSearchError(null);
+    tempSearchResult.current = {};
 
-    getWordDefinitions({
-      dict: dict,
-      word: search,
-    })
-      .then(([result, error]) => {
-        setSearchResult(result);
-        setSearchError(error);
+    const searchPromises = dicts?.map((dict) => {
+      getWordDefinitions({
+        dict: dict,
+        word: search,
       })
-      .finally(() => setSearchLoading(false));
+        .then(([result, error]) => {
+          singleDictSearchResult(dict, result, error);
+        })
+        .finally(() => setSearchLoading(false));
+    });
+
+    return Promise.allSettled(searchPromises);
   };
 
+  if (!dicts?.length) return "";
   return (
     <Form
       onSubmit={(e) => {

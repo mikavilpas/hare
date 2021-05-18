@@ -13,15 +13,15 @@ import SearchBox from "./SearchBox";
 import Definitions from "./Definitions";
 
 function DictView() {
-  const [dict, setDict] = useState("");
+  const [dicts, setDicts] = useState([]);
+  const [currentDict, setCurrentDict] = useState("");
   const [searchLoading, setSearchLoading] = useState();
-  const [searchResult, setSearchResult] = useState();
-  const [searchError, setSearchError] = useState();
+  const [searchResult, setSearchResult] = useState({});
 
   const { dictname } = useParams();
   useEffect(() => {
-    if (dictname !== dict) {
-      setDict(dictname);
+    if (dictname !== currentDict) {
+      setCurrentDict(dictname);
     }
   }, [dictname]);
 
@@ -29,17 +29,21 @@ function DictView() {
     <>
       <div className="mt-3"></div>
       <SearchBox
-        dict={dict}
+        dicts={dicts}
+        searchResult={searchResult}
         setSearchResult={setSearchResult}
-        setSearchError={setSearchError}
         setSearchLoading={setSearchLoading}
       />
-      <Dictionaries dict={dict} />
+      <Dictionaries
+        currentDict={currentDict}
+        dicts={dicts}
+        setDicts={setDicts}
+        searchResult={searchResult}
+      />
       <main className="mt-3">
         <Definitions
-          dict={dict}
+          dict={currentDict}
           searchResult={searchResult}
-          searchError={searchError}
           searchLoading={searchLoading}
         />
       </main>

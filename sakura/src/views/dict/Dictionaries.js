@@ -43,8 +43,7 @@ export function dictShortName(dictAliasOrId) {
   return dictObject?.alias || dictObject?.id;
 }
 
-const Dictionaries = ({ dict }) => {
-  const [dicts, setDicts] = useState([]);
+const Dictionaries = ({ currentDict, dicts, setDicts, searchResult }) => {
   const [error, setError] = useState();
   const [loading, setLoading] = useState();
 
@@ -84,11 +83,16 @@ const Dictionaries = ({ dict }) => {
     return (
       <aside id="dictionary-list">
         {dicts?.map((d, i) => {
-          const selected = dictShortName(d) === dict;
-          const selectedClass = selected ? "text-primary" : "text-secondary";
+          const selected = dictShortName(d) === currentDict;
+
+          const classes = [];
+          if (selected) classes.push("selected");
+          if (searchResult?.[d]?.result) classes.push("has-search-result");
+          if (searchResult?.[d]?.error) classes.push("has-search-error");
+
           return (
             <span
-              className={"dict-name mr-4 border-dark " + selectedClass}
+              className={`dict-name mr-4 border-dark ${classes.join(" ")}`}
               key={i}
               onClick={(e, a) => {
                 const newDict = e.target.textContent;
