@@ -14,7 +14,9 @@ import html5Preset from "@bbob/preset-html5/es";
 import { render } from "@bbob/html/es";
 import bbob from "@bbob/core";
 
+import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import parse from "html-react-parser";
+import { dictInfo } from "./utils";
 
 const mypreset = html5Preset.extend((tags, options) => ({
   ...tags,
@@ -35,8 +37,17 @@ const mypreset = html5Preset.extend((tags, options) => ({
 
 function bbcode2Text(text) {
   const bbconverter = bbob(mypreset());
-  const options = { render, onlyAllowTags: ["keyword", "superscript"] };
-  const textified = bbconverter.process(text, options).html; // <blockquote><p>Text</p></blockquote>
+  const options = {
+    render,
+    onlyAllowTags: [
+      "keyword",
+      "superscript",
+      "subscript",
+      "decoration",
+      "emphasis",
+    ],
+  };
+  const textified = bbconverter.process(text, options).html;
   return textified;
 }
 
@@ -52,17 +63,19 @@ function reactifyLines(text) {
   });
 }
 
+function prettyText(text) {
+  return reactifyLines(bbcode2Text(text));
+}
+
 const Definition = ({ i, definition }) => {
   // always open the first card by default
   const [opened, setOpened] = useState(i === 0);
-  const [text, setText] = useState("");
   const [analysisResult, setAnalysisResult] = useState();
   const [analysisError, setAnalysisError] = useState();
 
   useEffect(() => {
     if (opened && definition?.text) {
       const text = bbcode2Text(definition.text);
-      setText(text);
       textAnalysis(text).then(([html, error]) => {
         setAnalysisResult(html);
         setAnalysisError(error);
@@ -77,16 +90,18 @@ const Definition = ({ i, definition }) => {
         eventKey={i.toString()}
         onClick={() => setOpened(true)}
       >
-        <h4>{definition?.heading}</h4>
+        <h4>{prettyText(definition?.heading)}</h4>
       </Accordion.Toggle>
       <Accordion.Collapse eventKey={i.toString()}>
-        <Card.Body>{reactifyLines(analysisResult || text)}</Card.Body>
+        <Card.Body>{prettyText(definition?.text)}</Card.Body>
       </Accordion.Collapse>
     </Card>
   );
 };
 
 const Definitions = ({ dict, searchResult, searchError, searchLoading }) => {
+  if (!dict) return "";
+
   if (searchLoading) {
     return (
       <Spinner animation="border" role="status">
@@ -102,13 +117,15 @@ const Definitions = ({ dict, searchResult, searchError, searchLoading }) => {
     );
   }
 
-  const result = searchResult[dict]?.result;
+  const dictinfo = dictInfo(dict);
+  const result =
+    searchResult[dictinfo.id]?.result || searchResult[dictinfo.alias]?.result;
   if (!result) return "";
 
   return (
     <Accordion className="definition-listing" defaultActiveKey="0">
       {result.words?.map((w, i) => {
-        return <Definition key={i} i={i} definition={w} />;
+        return <Definition key={`${dict}_${i}`} i={i} definition={w} />;
       })}
     </Accordion>
   );

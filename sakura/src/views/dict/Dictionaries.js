@@ -7,41 +7,9 @@ import React, { useState, useEffect } from "react";
 import Spinner from "react-bootstrap/Spinner";
 
 import { getDicts } from "../../api";
-import config from "../../config";
 
 import { useHistory, useParams, useRouteMatch } from "react-router-dom";
-
-// Dictionaries to display and preload results for. These are either the id or
-// alias properties from the config.dictinfo
-export const preferredDictionaries = [
-  "広辞苑",
-  "大辞林",
-  "大辞泉",
-  "新辞林",
-  "古語",
-  "日国",
-  "学国",
-  "明鏡",
-  "新明解",
-  "漢和",
-  "英辞郎",
-];
-
-// Some dicts are reported by the api with a very long name, but then the api
-// only accepts the short name when querying (bug?). Converts a dict name to
-// short form.
-export function dictInfo(dictAliasOrId) {
-  const d = config.dictinfo.dicts.find(
-    (d) => d?.alias == dictAliasOrId || d?.id == dictAliasOrId
-  );
-  if (!d) console.warn(`Unable to find the dict ${dictAliasOrId}`);
-  return d;
-}
-
-export function dictShortName(dictAliasOrId) {
-  const dictObject = dictInfo(dictAliasOrId);
-  return dictObject?.alias || dictObject?.id;
-}
+import { preferredDictionaries, dictInfo, dictShortName } from "./utils";
 
 const DictionaryLink = ({ name, ownSearchResult, currentDict, setDict }) => {
   const selected = dictShortName(name) === currentDict;
@@ -52,7 +20,6 @@ const DictionaryLink = ({ name, ownSearchResult, currentDict, setDict }) => {
   if (ownSearchResult?.error) classes.push("has-search-error");
 
   if (hasResults) {
-    console.log(`dict ${name} has results`, ownSearchResult);
     classes.push("has-search-result");
   } else {
     classes.push("disabled");
@@ -112,7 +79,8 @@ const Dictionaries = ({ currentDict, dicts, setDicts, searchResult }) => {
     return (
       <aside id="dictionary-list">
         {dicts?.map((d, i) => {
-          const ownSearchResult = searchResult?.[d];
+          const alias = dictInfo(d).alias;
+          const ownSearchResult = searchResult?.[alias] || searchResult?.[d];
           return (
             <DictionaryLink
               key={i}

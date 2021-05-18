@@ -14,16 +14,10 @@ import Definitions from "./Definitions";
 
 function DictView() {
   const [dicts, setDicts] = useState([]);
-  const [currentDict, setCurrentDict] = useState("");
   const [searchLoading, setSearchLoading] = useState();
   const [searchResult, setSearchResult] = useState({});
 
   const { dictname } = useParams();
-  useEffect(() => {
-    if (dictname !== currentDict) {
-      setCurrentDict(dictname);
-    }
-  }, [dictname]);
 
   return (
     <>
@@ -35,14 +29,14 @@ function DictView() {
         setSearchLoading={setSearchLoading}
       />
       <Dictionaries
-        currentDict={currentDict}
+        currentDict={dictname}
         dicts={dicts}
         setDicts={setDicts}
         searchResult={searchResult}
       />
       <main className="mt-3">
         <Definitions
-          dict={currentDict}
+          dict={dictname}
           searchResult={searchResult}
           searchLoading={searchLoading}
         />

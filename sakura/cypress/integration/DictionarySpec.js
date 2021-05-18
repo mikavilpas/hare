@@ -19,46 +19,30 @@ describe("dictionary view", () => {
     cy.get("ruby").should("exist");
   });
 
-  it("stores the current dictionary in the url", () => {
-    const assertIsSelected = (dictname) => {
+  it.only("stores the current dictionary in the url", () => {
+    const assertCanSelect = (dictname) => {
+      cy.contains(dictname).should("have.class", "has-search-result").click();
       cy.url().should("contain", `/dict/${encodeURI(dictname)}`);
       cy.contains(dictname).should("have.class", "selected");
     };
     cy.visit("/dict");
+    cy.get("input[type=search]").type("犬");
+    cy.contains("Search").click();
 
     // preselects the first dictionary
-    assertIsSelected("広辞苑");
+    assertCanSelect("広辞苑");
 
     // selecting a new dict must change the url
-    cy.contains("大辞林").click();
-    assertIsSelected("大辞林");
-
-    cy.contains("大辞泉").click();
-    assertIsSelected("大辞泉");
-
-    cy.contains("新辞林").click();
-    assertIsSelected("新辞林");
-
-    cy.contains("古語").click();
-    assertIsSelected("古語");
-
-    cy.contains("日国").click();
-    assertIsSelected("日国");
-
-    cy.contains("学国").click();
-    assertIsSelected("学国");
-
-    cy.contains("明鏡").click();
-    assertIsSelected("明鏡");
-
-    cy.contains("新明解").click();
-    assertIsSelected("新明解");
-
-    cy.contains("漢和").click();
-    assertIsSelected("漢和");
-
-    cy.contains("英辞郎").click();
-    assertIsSelected("英辞郎");
+    assertCanSelect("大辞林");
+    assertCanSelect("大辞泉");
+    assertCanSelect("新辞林");
+    assertCanSelect("古語");
+    assertCanSelect("日国");
+    assertCanSelect("学国");
+    assertCanSelect("明鏡");
+    assertCanSelect("新明解");
+    assertCanSelect("漢和");
+    assertCanSelect("英辞郎");
   });
 
   it("can preload search results for all dictionaries", () => {
@@ -75,5 +59,7 @@ describe("dictionary view", () => {
     cy.contains("Search").click();
 
     cy.contains("古語").should("have.class", "disabled");
+
+    // TODO if the first dict has no results, display the first one with results automatically
   });
 });
