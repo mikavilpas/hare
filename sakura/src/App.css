@@ -28,6 +28,12 @@ body {
   background-color: #5f2e2e;
 }
 
+#dictionary-list .dict-name.disabled {
+  color: black;
+  background-color: transparent;
+  cursor: default;
+}
+
 body {
   background-color: #36393f;
 }

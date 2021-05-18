@@ -101,11 +101,15 @@ const Definitions = ({ dict, searchResult, searchError, searchLoading }) => {
       </Alert>
     );
   }
+
+  const result = searchResult[dict]?.result;
+  if (!result) return "";
+
   return (
     <Accordion className="definition-listing" defaultActiveKey="0">
-      {searchResult?.words?.map((w, i) => (
-        <Definition key={i} i={i} definition={w} />
-      ))}
+      {result.words?.map((w, i) => {
+        return <Definition key={i} i={i} definition={w} />;
+      })}
     </Accordion>
   );
 };

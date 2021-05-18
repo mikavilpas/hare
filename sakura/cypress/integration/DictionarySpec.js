@@ -22,7 +22,7 @@ describe("dictionary view", () => {
   it("stores the current dictionary in the url", () => {
     const assertIsSelected = (dictname) => {
       cy.url().should("contain", `/dict/${encodeURI(dictname)}`);
-      cy.contains(dictname).should("have.class", "text-primary");
+      cy.contains(dictname).should("have.class", "selected");
     };
     cy.visit("/dict");
 
@@ -61,9 +61,19 @@ describe("dictionary view", () => {
     assertIsSelected("英辞郎");
   });
 
-  it.only("can preload search results for all dictionaries", () => {
+  it("can preload search results for all dictionaries", () => {
     cy.visit("");
     cy.get("input[type=search]").type("人間");
     cy.contains("Search").click();
+
+    cy.get(".has-search-result").should("exist");
+  });
+
+  it("disables dictionaries with no results", () => {
+    cy.visit("");
+    cy.get("input[type=search]").type("人間関係");
+    cy.contains("Search").click();
+
+    cy.contains("古語").should("have.class", "disabled");
   });
 });
