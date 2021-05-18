@@ -94,7 +94,7 @@ const Definition = ({ i, definition }) => {
         <h4>{prettyText(definition?.heading)}</h4>
       </Accordion.Toggle>
       <Accordion.Collapse eventKey={i.toString()}>
-        <Card.Body>{prettyText(definition?.text)}</Card.Body>
+        <Card.Body>{prettyText(analysisResult || definition?.text)}</Card.Body>
       </Accordion.Collapse>
     </Card>
   );
