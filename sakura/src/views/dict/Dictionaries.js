@@ -45,9 +45,10 @@ const Dictionaries = ({ currentDict, dicts, setDicts, searchResult }) => {
   const [loading, setLoading] = useState();
 
   const history = useHistory();
+  const { dictname, searchmode = "prefix", search = "" } = useParams();
 
   function setDict(d) {
-    history.push(`/dict/${d}`);
+    history.push(`/dict/${d}/${searchmode}/${search}`);
   }
 
   useEffect(() => {

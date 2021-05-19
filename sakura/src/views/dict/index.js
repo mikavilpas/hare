@@ -23,6 +23,7 @@ function DictView() {
     <>
       <div className="mt-3"></div>
       <SearchBox
+        currentDict={dictname}
         dicts={dicts}
         searchResult={searchResult}
         setSearchResult={setSearchResult}

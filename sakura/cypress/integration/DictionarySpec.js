@@ -16,7 +16,13 @@ describe("dictionary view", () => {
     cy.contains("いぬ【犬・狗】");
 
     // can display furigana
-    cy.get("ruby").should("exist");
+    // cy.get("ruby").should("exist");
+
+    // saves the current search in the url
+    cy.url().should(
+      "contain",
+      `/dict/${encodeURI("広辞苑")}/prefix/${encodeURI("犬")}`
+    );
   });
 
   it("stores the current dictionary in the url", () => {

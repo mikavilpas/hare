@@ -4,14 +4,17 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { getWordDefinitions } from "../../api";
+import { useHistory, useParams } from "react-router-dom";
 
 const SearchBox = ({
+  currentDict,
   dicts,
   searchResult,
   setSearchResult,
   setSearchLoading,
 }) => {
   const [search, setSearch] = useState("");
+  const history = useHistory();
 
   const tempSearchResult = useRef();
   const singleDictSearchResult = (d, searchQuery, result, error) => {
@@ -29,6 +32,9 @@ const SearchBox = ({
     setSearchLoading(true);
     setSearchResult(null);
     tempSearchResult.current = {};
+
+    const searchmode = "prefix";
+    history.push(`/dict/${currentDict}/${searchmode}/${search}`);
 
     const searchPromises = dicts?.map((dict) => {
       getWordDefinitions({
