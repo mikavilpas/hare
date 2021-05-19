@@ -14,9 +14,11 @@ const SearchBox = ({
   const [search, setSearch] = useState("");
 
   const tempSearchResult = useRef();
-  const singleDictSearchResult = (d, result, error) => {
+  const singleDictSearchResult = (d, searchQuery, result, error) => {
     const newResult = {
       ...tempSearchResult.current,
+      searchQuery: searchQuery,
+      searchMode: "prefix",
       [d]: { result: result, error: error },
     };
     tempSearchResult.current = newResult;
@@ -34,7 +36,7 @@ const SearchBox = ({
         word: search,
       })
         .then(([result, error]) => {
-          singleDictSearchResult(dict, result, error);
+          singleDictSearchResult(dict, search, result, error);
         })
         .finally(() => setSearchLoading(false));
     });
