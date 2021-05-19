@@ -44,6 +44,10 @@ span[data-word] > ruby {
   border-bottom-style: outset;
 }
 
+span[data-word] :hover {
+  color: cyan;
+}
+
 span[data-word] > ruby rt {
   /* the furigana are annoying so hide them. They also make the text change size
    which is a bad experience */
@@ -90,4 +94,10 @@ superscript {
   line-height: 0;
   position: relative;
   vertical-align: baseline;
+}
+
+/* recursive lookups */
+.recursive-lookup .modal-content {
+  background-color: #27292d;
+  border-radius: 5px;
 }

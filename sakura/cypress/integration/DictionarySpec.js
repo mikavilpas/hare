@@ -25,6 +25,10 @@ describe("dictionary view", () => {
     );
   });
 
+  it("can render complex definitions", () => {
+    cy.visit(`/dict/${encodeURI("大辞林")}/prefix/${encodeURI("雪")}`);
+  });
+
   it("stores the current dictionary in the url", () => {
     const assertCanSelect = (dictname) => {
       cy.contains(dictname).should("have.class", "has-search-result").click();
@@ -77,6 +81,15 @@ describe("dictionary view", () => {
 
     // a definition from that dict should be visible
     cy.contains("interhuman relations");
+  });
+
+  it.only("can make recursive lookups", () => {
+    cy.visit("/");
+    cy.get("input[type=search]").type("犬");
+    cy.contains("Search").click();
+
+    // click some word that can be looked up recursively
+    cy.get("[data-word=山辺]").should("exist").click();
   });
 });
 

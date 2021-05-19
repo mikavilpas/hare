@@ -16,6 +16,7 @@ import bbob from "@bbob/core";
 
 import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { dictInfo } from "./utils";
+import RecursiveLookup from "../recursiveLookup/index";
 
 const mypreset = html5Preset.extend((tags, options) => ({
   ...tags,
@@ -66,7 +67,7 @@ function prettyText(text) {
   return lines.join("");
 }
 
-const Definition = ({ i, definition }) => {
+const Definition = ({ i, definition, setRecursiveLookupStartWord }) => {
   // always open the first card by default
   const [opened, setOpened] = useState(i === 0);
   const [analysisResult, setAnalysisResult] = useState();
@@ -96,6 +97,12 @@ const Definition = ({ i, definition }) => {
       <Accordion.Collapse eventKey={i.toString()}>
         <Card.Body>
           <div
+            onClick={(e) => {
+              const word = e?.target?.parentElement?.dataset?.word;
+              if (word) {
+                setRecursiveLookupStartWord(word);
+              }
+            }}
             dangerouslySetInnerHTML={{
               __html: prettyText(analysisResult || definition?.text),
             }}
@@ -107,6 +114,8 @@ const Definition = ({ i, definition }) => {
 };
 
 const Definitions = ({ dict, searchResult, searchError, searchLoading }) => {
+  const [recursiveLookupStartWord, setRecursiveLookupStartWord] = useState("");
+
   if (!dict) return "";
 
   if (searchLoading) {
@@ -130,11 +139,24 @@ const Definitions = ({ dict, searchResult, searchError, searchLoading }) => {
   if (!result) return "";
 
   return (
-    <Accordion className="definition-listing" defaultActiveKey="0">
-      {result.words?.map((w, i) => {
-        return <Definition key={`${dict}_${i}`} i={i} definition={w} />;
-      })}
-    </Accordion>
+    <>
+      <RecursiveLookup
+        word={recursiveLookupStartWord}
+        hide={() => setRecursiveLookupStartWord(null)}
+      />
+      <Accordion className="definition-listing" defaultActiveKey="0">
+        {result.words?.map((w, i) => {
+          return (
+            <Definition
+              key={`${dict}_${i}`}
+              i={i}
+              definition={w}
+              setRecursiveLookupStartWord={setRecursiveLookupStartWord}
+            />
+          );
+        })}
+      </Accordion>
+    </>
   );
 };
 
