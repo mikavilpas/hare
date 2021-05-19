@@ -13,13 +13,13 @@ describe("dictionary view", () => {
     cy.contains("Search").click();
 
     // can display results
-    cy.contains("いぬ【犬】");
+    cy.contains("いぬ【犬・狗】");
 
     // can display furigana
     cy.get("ruby").should("exist");
   });
 
-  it.only("stores the current dictionary in the url", () => {
+  it("stores the current dictionary in the url", () => {
     const assertCanSelect = (dictname) => {
       cy.contains(dictname).should("have.class", "has-search-result").click();
       cy.url().should("contain", `/dict/${encodeURI(dictname)}`);
