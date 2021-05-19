@@ -13,7 +13,8 @@ const SearchBox = ({
   setSearchResult,
   setSearchLoading,
 }) => {
-  const [search, setSearch] = useState("");
+  const { searchmode = "", search = "" } = useParams();
+  const [searchInputText, setSearchInputText] = useState(search);
   const history = useHistory();
 
   const tempSearchResult = useRef();
@@ -28,21 +29,28 @@ const SearchBox = ({
     setSearchResult(newResult);
   };
 
+  useEffect(() => {
+    // on the first load after dicts have been received, redo a search based on
+    // the url (if applicable)
+    if (searchmode && search) {
+      doSearch();
+    }
+  }, [dicts]);
+
   const doSearch = () => {
     setSearchLoading(true);
     setSearchResult(null);
     tempSearchResult.current = {};
 
     const searchmode = "prefix";
-    history.push(`/dict/${currentDict}/${searchmode}/${search}`);
-
+    history.push(`/dict/${currentDict}/${searchmode}/${searchInputText}`);
     const searchPromises = dicts?.map((dict) => {
       getWordDefinitions({
         dict: dict,
-        word: search,
+        word: searchInputText || search,
       })
         .then(([result, error]) => {
-          singleDictSearchResult(dict, search, result, error);
+          singleDictSearchResult(dict, searchInputText, result, error);
         })
         .finally(() => setSearchLoading(false));
     });
@@ -65,8 +73,8 @@ const SearchBox = ({
               <Form.Control
                 type="search"
                 spellCheck={false}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                value={searchInputText}
+                onChange={(e) => setSearchInputText(e.target.value)}
               />
             </Col>
             <Col xs={5} md={2}>

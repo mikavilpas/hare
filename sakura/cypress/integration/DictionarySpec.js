@@ -16,7 +16,7 @@ describe("dictionary view", () => {
     cy.contains("いぬ【犬・狗】");
 
     // can display furigana
-    // cy.get("ruby").should("exist");
+    cy.get("ruby").should("exist");
 
     // saves the current search in the url
     cy.url().should(
@@ -67,5 +67,15 @@ describe("dictionary view", () => {
     cy.contains("古語").should("have.class", "disabled");
 
     // TODO if the first dict has no results, display the first one with results automatically
+  });
+
+  it("can open views from url links", () => {
+    // note: go to the last dictionary to make sure the first dictionary is not
+    // visible just because it's the default
+    cy.visit(`/dict/${encodeURI("英辞郎")}/prefix/${encodeURI("人間関係")}`);
+    cy.contains("英辞郎").should("have.class", "selected");
+
+    // a definition from that dict should be visible
+    cy.contains("interhuman relations");
   });
 });

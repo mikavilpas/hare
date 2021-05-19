@@ -61,7 +61,7 @@ const Dictionaries = ({ currentDict, dicts, setDicts, searchResult }) => {
           return whitelist.has(shortName);
         });
         setDicts(whitelistedDictionaries);
-        setDict(whitelistedDictionaries?.[0]);
+        setDict(currentDict || whitelistedDictionaries?.[0]);
         setError(error);
       })
       .catch((e) => setError(e))
