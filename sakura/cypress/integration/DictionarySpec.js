@@ -90,6 +90,15 @@ describe("dictionary view", () => {
 
     // click some word that can be looked up recursively
     cy.get("[data-word=山辺]").should("exist").click();
+    cy.get(".modal-content").should("be.visible");
+    cy.url().should(
+      "contain",
+      encodeURI("/dict/広辞苑/prefix/犬/recursive/広辞苑/prefix/山辺")
+    );
+
+    // can close the modal
+    cy.get(".modal-backdrop").click({ force: true });
+    cy.url().should("match", new RegExp(encodeURI("/dict/広辞苑/prefix/犬$")));
   });
 });
 

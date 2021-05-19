@@ -14,7 +14,12 @@ import html5Preset from "@bbob/preset-html5/es";
 import { render } from "@bbob/html/es";
 import bbob from "@bbob/core";
 
-import { useHistory, useParams, useRouteMatch } from "react-router-dom";
+import {
+  useHistory,
+  useParams,
+  useRouteMatch,
+  generatePath,
+} from "react-router-dom";
 import { dictInfo } from "./utils";
 import RecursiveLookup from "../recursiveLookup/index";
 
@@ -114,7 +119,26 @@ const Definition = ({ i, definition, setRecursiveLookupStartWord }) => {
 };
 
 const Definitions = ({ dict, searchResult, searchError, searchLoading }) => {
-  const [recursiveLookupStartWord, setRecursiveLookupStartWord] = useState("");
+  const params = useParams();
+  const history = useHistory();
+
+  const setRecursiveLookupStartWord = (word, dict = "広辞苑") => {
+    if (word) {
+      // start recursive lookup
+      const newUrl = generatePath(
+        "/dict/:dictname/:searchmode/:search/recursive/:rdict/:rsearchmode/:rsearch",
+        { ...params, rdict: dict, rsearchmode: "prefix", rsearch: word }
+      );
+      history.push(newUrl);
+    } else {
+      // end recursive lookup and return to normal lookup mode
+      const newUrl = generatePath(
+        "/dict/:dictname/:searchmode/:search",
+        params
+      );
+      history.push(newUrl);
+    }
+  };
 
   if (!dict) return "";
 
@@ -140,10 +164,7 @@ const Definitions = ({ dict, searchResult, searchError, searchLoading }) => {
 
   return (
     <>
-      <RecursiveLookup
-        word={recursiveLookupStartWord}
-        hide={() => setRecursiveLookupStartWord(null)}
-      />
+      <RecursiveLookup hide={() => setRecursiveLookupStartWord(null)} />
       <Accordion className="definition-listing" defaultActiveKey="0">
         {result.words?.map((w, i) => {
           return (

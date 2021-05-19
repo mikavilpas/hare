@@ -24,9 +24,17 @@ function App() {
           <Switch>
             <Route
               path={[
+                // these are all the main states the app can be in.
+
+                // normal + recursive search opened
+                "/dict/:dictname/:searchmode/:search/recursive/:rdict/:rsearchmode/:rsearch",
+
+                // normal search opened
                 "/dict/:dictname/:searchmode/:search",
+
                 // dict selected but no search yet
                 "/dict/:dictname",
+
                 // no dict selected yet
                 "/dict",
               ]}

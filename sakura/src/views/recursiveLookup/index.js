@@ -8,30 +8,32 @@ import Alert from "react-bootstrap/Alert";
 
 import { getWordDefinitions } from "../../api";
 
-function RecursiveLookup({ word, hide }) {
+function RecursiveLookup({ hide }) {
   const [searchResult, setSearchResult] = useState();
   const [searchResultLoading, setSearchResultLoading] = useState(false);
   const [searchResultError, setSearchResultError] = useState();
 
-  const dictname = "広辞苑";
+  // rdict is reserved for the future. currently only a single dict is supported
+  // for recursive searches, but that may change.
+  const { rdict = "広辞苑", rsearch } = useParams();
 
   useEffect(() => {
     setSearchResult(null);
     setSearchResultError(null);
     setSearchResultLoading(true);
-    getWordDefinitions({ dict: dictname, word: word })
+    getWordDefinitions({ dict: rdict, word: rsearch })
       .then(([result, error]) => {
         setSearchResult(result);
         setSearchResultError(error);
       })
       .finally(() => setSearchResultLoading(false));
-  }, [word]);
+  }, [rdict, rsearch]);
 
   const contents = () => {
     if (searchResultLoading) {
       return (
         <div>
-          {word}
+          {rsearch}
           <Spinner animation="border" role="status">
             <span className="sr-only">Loading...</span>
           </Spinner>
@@ -47,12 +49,12 @@ function RecursiveLookup({ word, hide }) {
       );
     }
 
-    return word + " search successful";
+    return rsearch + " search successful";
   };
 
   return (
     <Modal
-      show={word?.length > 0}
+      show={rsearch?.length > 0}
       onHide={() => hide()}
       dialogClassName="recursive-lookup"
     >
