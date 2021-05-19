@@ -15,7 +15,6 @@ import { render } from "@bbob/html/es";
 import bbob from "@bbob/core";
 
 import { useHistory, useParams, useRouteMatch } from "react-router-dom";
-import parse from "html-react-parser";
 import { dictInfo } from "./utils";
 
 const mypreset = html5Preset.extend((tags, options) => ({
@@ -52,20 +51,19 @@ function bbcode2Text(text) {
   return textified;
 }
 
-function reactifyLines(text) {
+function prettifyLines(text) {
   // must receive text in a non-bbcode format!
-  return text?.split(/\n/).map((line, i) => {
-    const reactChildren = parse(line);
-    return (
-      <p className="definition-row" key={i}>
-        {reactChildren}
-      </p>
-    );
-  });
+  return text
+    ?.split(/\n/)
+    .filter((line) => line) // remove empty lines
+    .map((line, i) => {
+      return `<p class="definition-row"> ${line} </p> `;
+    });
 }
 
 function prettyText(text) {
-  return reactifyLines(bbcode2Text(text));
+  const lines = prettifyLines(bbcode2Text(text));
+  return lines.join("");
 }
 
 const Definition = ({ i, definition }) => {
@@ -91,10 +89,18 @@ const Definition = ({ i, definition }) => {
         eventKey={i.toString()}
         onClick={() => setOpened(true)}
       >
-        <h4>{prettyText(definition?.heading)}</h4>
+        <h4
+          dangerouslySetInnerHTML={{ __html: prettyText(definition?.heading) }}
+        ></h4>
       </Accordion.Toggle>
       <Accordion.Collapse eventKey={i.toString()}>
-        <Card.Body>{prettyText(analysisResult || definition?.text)}</Card.Body>
+        <Card.Body>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: prettyText(analysisResult || definition?.text),
+            }}
+          ></div>
+        </Card.Body>
       </Accordion.Collapse>
     </Card>
   );
