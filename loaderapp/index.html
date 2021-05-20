@@ -44,13 +44,18 @@
                   link.onload = () => resolve(link);
                   link.onerror = () => reject(new Error(`Style load error for ${src}`));
 
-                    document.head.append(link);
-                    console.log(`Loaded file ${src}"`);
-                });
-            }
+                  document.head.append(link);
+                  console.log(`Loaded file ${src}"`);
+              });
+          }
 
+          // load the old ui
           loadJs("{{{jsFile}}}");
           loadCss("{{{cssFile}}}");
+
+          // or load the new ui
+          loadJs("{{{newUiJsFile}}}");
+          loadCss("{{{newUiCssFile}}}");
         </script>
       </div>
 
@@ -68,6 +73,28 @@
             Copy
           </button>
           <script id="dev-import-template" type="text/plain">
+            window.__STORE__.dispatch(window.__ACTIONS__.updateUserConfig({
+                css: {{{css}}},
+                js: {{{js}}}
+            }));
+          </script>
+        </div>
+      </div>
+      <hr />
+
+      <div class="row">
+        <div class="col-lg">
+          <h2>Developer import</h2>
+          <pre><code class="javascript" id="new-ui-dev-import"></code></pre>
+
+          <button
+            id="copy-new-ui-dev-button"
+            type="button"
+            class="btn btn-outline-primary btn-sm"
+          >
+            Copy
+          </button>
+          <script id="new-ui-dev-import-template" type="text/plain">
             window.__STORE__.dispatch(window.__ACTIONS__.updateUserConfig({
                 css: {{{css}}},
                 js: {{{js}}}
