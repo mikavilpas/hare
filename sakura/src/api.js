@@ -47,7 +47,7 @@ export async function getWordDefinitions({ dict, word, searchType = 0 }) {
 export async function textAnalysis(textHtml) {
   try {
     const data = textHtml;
-    const response = await axios.post(`/?api=2&type=4`, data, {
+    const response = await axios.post(`/dict/?api=2&type=4`, data, {
       headers: { "content-type": "text/plain" },
     });
     return [response.data];
