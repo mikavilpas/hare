@@ -83,7 +83,7 @@ describe("dictionary view", () => {
     cy.contains("interhuman relations");
   });
 
-  it.only("can make recursive lookups", () => {
+  it("can make recursive lookups", () => {
     cy.visit("/");
     cy.get("input[type=search]").type("犬");
     cy.contains("Search").click();
@@ -99,6 +99,10 @@ describe("dictionary view", () => {
     // can close the modal
     cy.get(".modal-backdrop").click({ force: true });
     cy.url().should("match", new RegExp(encodeURI("/dict/広辞苑/prefix/犬$")));
+
+    // can open recursive lookup from url
+    cy.visit(encodeURI("/dict/広辞苑/prefix/犬/recursive/広辞苑/prefix/山辺"));
+    cy.get(".modal-content").should("be.visible");
   });
 });
 

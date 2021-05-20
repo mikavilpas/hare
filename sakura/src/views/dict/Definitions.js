@@ -19,8 +19,9 @@ import {
   useParams,
   useRouteMatch,
   generatePath,
+  useLocation,
 } from "react-router-dom";
-import { dictInfo } from "./utils";
+import { dictInfo, urls } from "./utils";
 import RecursiveLookup from "../recursiveLookup/index";
 
 const mypreset = html5Preset.extend((tags, options) => ({
@@ -119,25 +120,27 @@ const Definition = ({ i, definition, setRecursiveLookupStartWord }) => {
 };
 
 const Definitions = ({ dict, searchResult, searchError, searchLoading }) => {
-  const params = useParams();
+  const location = useLocation();
   const history = useHistory();
+  const match = useRouteMatch();
+
+  useEffect(() => {
+    if (
+      match.path === urls.recursiveLookup &&
+      location.pathname !== match.url
+    ) {
+      setRecursiveLookupStartWord(match.params.rsearch, match.params.rdict);
+    }
+  }, [match]);
 
   const setRecursiveLookupStartWord = (word, dict = "広辞苑") => {
-    if (word) {
-      // start recursive lookup
-      const newUrl = generatePath(
-        "/dict/:dictname/:searchmode/:search/recursive/:rdict/:rsearchmode/:rsearch",
-        { ...params, rdict: dict, rsearchmode: "prefix", rsearch: word }
-      );
-      history.push(newUrl);
-    } else {
-      // end recursive lookup and return to normal lookup mode
-      const newUrl = generatePath(
-        "/dict/:dictname/:searchmode/:search",
-        params
-      );
-      history.push(newUrl);
-    }
+    const url = generatePath(urls.recursiveLookup, {
+      ...match.params,
+      rdict: dict,
+      rsearchmode: "prefix",
+      rsearch: word,
+    });
+    history.push(url);
   };
 
   if (!dict) return "";
@@ -164,7 +167,12 @@ const Definitions = ({ dict, searchResult, searchError, searchLoading }) => {
 
   return (
     <>
-      <RecursiveLookup hide={() => setRecursiveLookupStartWord(null)} />
+      <RecursiveLookup
+        hide={() => {
+          const dictUrl = generatePath(urls.lookup, match.params);
+          history.push(dictUrl);
+        }}
+      />
       <Accordion className="definition-listing" defaultActiveKey="0">
         {result.words?.map((w, i) => {
           return (

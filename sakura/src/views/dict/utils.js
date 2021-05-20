@@ -1,5 +1,7 @@
 import config from "../../config";
 
+import { generatePath } from "react-router-dom";
+
 // Dictionaries to display and preload results for. These are either the id or
 // alias properties from the config.dictinfo
 export const preferredDictionaries = [
@@ -31,3 +33,9 @@ export function dictShortName(dictAliasOrId) {
   const dictObject = dictInfo(dictAliasOrId);
   return dictObject?.alias || dictObject?.id;
 }
+
+export const urls = {
+  recursiveLookup:
+    "/dict/:dictname/:searchmode/:search/recursive/:rdict/:rsearchmode/:rsearch",
+  lookup: "/dict/:dictname/:searchmode/:search",
+};

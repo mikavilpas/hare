@@ -4,7 +4,8 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { getWordDefinitions } from "../../api";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, generatePath } from "react-router-dom";
+import { urls } from "./utils";
 
 const SearchBox = ({
   currentDict,
@@ -13,7 +14,8 @@ const SearchBox = ({
   setSearchResult,
   setSearchLoading,
 }) => {
-  const { searchmode = "", search = "" } = useParams();
+  const params = useParams();
+  const { searchmode = "", search = "" } = params;
   const [searchInputText, setSearchInputText] = useState(search);
   const history = useHistory();
 
@@ -42,8 +44,16 @@ const SearchBox = ({
     setSearchResult(null);
     tempSearchResult.current = {};
 
-    const searchmode = "prefix";
-    history.push(`/dict/${currentDict}/${searchmode}/${searchInputText}`);
+    if (params.search !== searchInputText) {
+      // if a new search is made, go to the lookup page
+      const lookupUrl = generatePath(urls.lookup, {
+        dictname: currentDict,
+        searchmode: "prefix",
+        search: searchInputText,
+      });
+      history.push(lookupUrl);
+    }
+
     const searchPromises = dicts?.map((dict) => {
       getWordDefinitions({
         dict: dict,

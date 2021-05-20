@@ -12,7 +12,6 @@ import {
 import DictView from "./views/dict/";
 
 function App() {
-  const [dict, setDict] = useState("");
   const [searchLoading, setSearchLoading] = useState();
   const [searchResult, setSearchResult] = useState();
   const [searchError, setSearchError] = useState();
