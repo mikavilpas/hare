@@ -73,7 +73,7 @@ function prettyText(text) {
   return lines.join("");
 }
 
-const Definition = ({ i, definition, setRecursiveLookupStartWord }) => {
+const Definition = ({ i, definition, goToRecursiveLookupPage }) => {
   // always open the first card by default
   const [opened, setOpened] = useState(i === 0);
   const [analysisResult, setAnalysisResult] = useState();
@@ -106,7 +106,7 @@ const Definition = ({ i, definition, setRecursiveLookupStartWord }) => {
             onClick={(e) => {
               const word = e?.target?.parentElement?.dataset?.word;
               if (word) {
-                setRecursiveLookupStartWord(word);
+                goToRecursiveLookupPage(word);
               }
             }}
             dangerouslySetInnerHTML={{
@@ -119,30 +119,13 @@ const Definition = ({ i, definition, setRecursiveLookupStartWord }) => {
   );
 };
 
-const Definitions = ({ dict, searchResult, searchError, searchLoading }) => {
-  const location = useLocation();
-  const history = useHistory();
-  const match = useRouteMatch();
-
-  useEffect(() => {
-    if (
-      match.path === urls.recursiveLookup &&
-      location.pathname !== match.url
-    ) {
-      setRecursiveLookupStartWord(match.params.rsearch, match.params.rdict);
-    }
-  }, [match]);
-
-  const setRecursiveLookupStartWord = (word, dict = "広辞苑") => {
-    const url = generatePath(urls.recursiveLookup, {
-      ...match.params,
-      rdict: dict,
-      rsearchmode: "prefix",
-      rsearch: word,
-    });
-    history.push(url);
-  };
-
+const Definitions = ({
+  dict,
+  searchResult,
+  searchError,
+  searchLoading,
+  goToRecursiveLookupPage,
+}) => {
   if (!dict) return "";
 
   if (searchLoading) {
@@ -166,26 +149,18 @@ const Definitions = ({ dict, searchResult, searchError, searchLoading }) => {
   if (!result) return "";
 
   return (
-    <>
-      <RecursiveLookup
-        hide={() => {
-          const dictUrl = generatePath(urls.lookup, match.params);
-          history.push(dictUrl);
-        }}
-      />
-      <Accordion className="definition-listing" defaultActiveKey="0">
-        {result.words?.map((w, i) => {
-          return (
-            <Definition
-              key={`${dict}_${i}`}
-              i={i}
-              definition={w}
-              setRecursiveLookupStartWord={setRecursiveLookupStartWord}
-            />
-          );
-        })}
-      </Accordion>
-    </>
+    <Accordion className="definition-listing" defaultActiveKey="0">
+      {result.words?.map((w, i) => {
+        return (
+          <Definition
+            key={`${dict}_${i}`}
+            i={i}
+            definition={w}
+            goToRecursiveLookupPage={goToRecursiveLookupPage}
+          />
+        );
+      })}
+    </Accordion>
   );
 };
 

@@ -5,19 +5,48 @@ import {
   Switch,
   Route,
   Link,
+  generatePath,
   useParams,
+  useLocation,
+  useHistory,
+  useRouteMatch,
 } from "react-router-dom";
 
 import Dictionaries from "./Dictionaries";
 import SearchBox from "./SearchBox";
 import Definitions from "./Definitions";
+import { dictInfo, urls } from "./utils";
+import RecursiveLookup from "../recursiveLookup/index";
 
 function DictView() {
   const [dicts, setDicts] = useState([]);
   const [searchLoading, setSearchLoading] = useState();
   const [searchResult, setSearchResult] = useState({});
 
+  const location = useLocation();
+  const history = useHistory();
+  const match = useRouteMatch();
+
   const { dictname } = useParams();
+
+  useEffect(() => {
+    if (
+      match.path === urls.recursiveLookup &&
+      location.pathname !== match.url
+    ) {
+      goToRecursiveLookupPage(match.params.rsearch, match.params.rdict);
+    }
+  }, [match]);
+
+  const goToRecursiveLookupPage = (word, dict = "広辞苑") => {
+    const url = generatePath(urls.recursiveLookup, {
+      ...match.params,
+      rdict: dict,
+      rsearchmode: "prefix",
+      rsearch: word,
+    });
+    history.push(url);
+  };
 
   return (
     <>
@@ -40,8 +69,15 @@ function DictView() {
           dict={dictname}
           searchResult={searchResult}
           searchLoading={searchLoading}
+          goToRecursiveLookupPage={goToRecursiveLookupPage}
         />
       </main>
+      <RecursiveLookup
+        hide={() => {
+          const dictUrl = generatePath(urls.lookup, match.params);
+          history.push(dictUrl);
+        }}
+      />
     </>
   );
 }
