@@ -1,8 +1,26 @@
-import axios from "axios";
+import { setup } from "axios-cache-adapter";
+
+// Create `axios` instance with pre-configured `axios-cache-adapter` attached to it
+const api = setup({
+  // `axios` options
+  // baseURL: 'http://some-rest.api',
+
+  //
+  // `axios-cache-adapter` options
+  cache: {
+    maxAge: 15 * 60 * 1000,
+    exclude: {
+      // allow caching requests with ?query parameters
+      query: false,
+      // Only exclude PUT, PATCH and DELETE methods from cache
+      methods: ["put", "patch", "delete"],
+    },
+  },
+});
 
 export async function getDicts() {
   try {
-    const dicts = await axios.get("/dict?api=1");
+    const dicts = await api.get("/dict?api=1");
     return [dicts];
   } catch (e) {
     return [null, e];
@@ -27,7 +45,7 @@ export async function getWordDefinitions({ dict, word, searchType = 0 }) {
     params.append("q", word);
     params.append("type", searchType);
 
-    const result = await axios.get(`/dict?${params.toString()}`);
+    const result = await api.get(`/dict?${params.toString()}`);
 
     const data = result?.data;
     if (Array.isArray(data)) {
@@ -47,7 +65,7 @@ export async function getWordDefinitions({ dict, word, searchType = 0 }) {
 export async function textAnalysis(textHtml) {
   try {
     const data = textHtml;
-    const response = await axios.post(`/dict/?api=2&type=4`, data, {
+    const response = await api.post(`/dict/?api=2&type=4`, data, {
       headers: { "content-type": "text/plain" },
     });
     return [response.data];

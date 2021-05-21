@@ -10,6 +10,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
+    "axios-cache-adapter": "^2.7.3",
     "bootstrap": "^4.6.0",
     "craco": "^0.0.3",
     "p-retry": "^4.5.0",
