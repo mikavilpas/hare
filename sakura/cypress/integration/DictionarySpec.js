@@ -93,7 +93,7 @@ describe("dictionary view", () => {
     cy.get(".modal-content").should("be.visible");
     cy.url().should(
       "contain",
-      encodeURI("/dict/広辞苑/prefix/犬/recursive/広辞苑/prefix/山辺")
+      encodeURI("/dict/広辞苑/prefix/犬/recursive/大辞林/prefix/山辺")
     );
 
     // can close the modal
@@ -101,7 +101,7 @@ describe("dictionary view", () => {
     cy.url().should("match", new RegExp(encodeURI("/dict/広辞苑/prefix/犬$")));
 
     // can open recursive lookup from url
-    cy.visit(encodeURI("/dict/広辞苑/prefix/犬/recursive/広辞苑/prefix/山辺"));
+    cy.visit(encodeURI("/dict/広辞苑/prefix/犬/recursive/大辞林/prefix/山辺"));
     cy.get(".modal-content").should("be.visible");
   });
 });

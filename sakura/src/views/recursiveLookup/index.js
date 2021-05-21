@@ -15,7 +15,7 @@ function RecursiveLookup({ hide }) {
 
   // rdict is reserved for the future. currently only a single dict is supported
   // for recursive searches, but that may change.
-  const { rdict = "広辞苑", rsearch } = useParams();
+  const { rdict = "大辞林", rsearch } = useParams();
 
   useEffect(() => {
     setSearchResult(null);

@@ -38,7 +38,7 @@ function DictView() {
     }
   }, [match]);
 
-  const goToRecursiveLookupPage = (word, dict = "広辞苑") => {
+  const goToRecursiveLookupPage = (word, dict = "大辞林") => {
     const url = generatePath(urls.recursiveLookup, {
       ...match.params,
       rdict: dict,
