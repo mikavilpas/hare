@@ -32,8 +32,8 @@ const SearchBox = ({
   };
 
   useEffect(() => {
-    // on the first load after dicts have been received, redo a search based on
-    // the url (if applicable)
+    // on the first load after the dicts have been received, redo a search based
+    // on the url (if applicable)
     if (searchmode && search) {
       doSearch();
     }

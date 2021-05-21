@@ -7,8 +7,9 @@ import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
 
 import { getWordDefinitions } from "../../api";
+import Definitions from "../dict/Definitions";
 
-function RecursiveLookup({ hide }) {
+function RecursiveLookup({ goToRecursiveLookupPage, hide }) {
   const [searchResult, setSearchResult] = useState();
   const [searchResultLoading, setSearchResultLoading] = useState(false);
   const [searchResultError, setSearchResultError] = useState();
@@ -49,7 +50,14 @@ function RecursiveLookup({ hide }) {
       );
     }
 
-    return rsearch + " search successful";
+    return (
+      <Definitions
+        dict={rdict}
+        definitions={searchResult}
+        searchLoading={searchResultLoading}
+        goToRecursiveLookupPage={goToRecursiveLookupPage}
+      />
+    );
   };
 
   return (

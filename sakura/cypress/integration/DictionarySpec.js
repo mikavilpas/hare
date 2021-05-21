@@ -83,7 +83,7 @@ describe("dictionary view", () => {
     cy.contains("interhuman relations");
   });
 
-  it("can make recursive lookups", () => {
+  it.only("can make recursive lookups", () => {
     cy.visit("/");
     cy.get("input[type=search]").type("犬");
     cy.contains("Search").click();

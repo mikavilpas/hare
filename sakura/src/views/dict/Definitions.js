@@ -121,13 +121,11 @@ const Definition = ({ i, definition, goToRecursiveLookupPage }) => {
 
 const Definitions = ({
   dict,
-  searchResult,
+  definitions,
   searchError,
   searchLoading,
   goToRecursiveLookupPage,
 }) => {
-  if (!dict) return "";
-
   if (searchLoading) {
     return (
       <Spinner animation="border" role="status">
@@ -143,14 +141,11 @@ const Definitions = ({
     );
   }
 
-  const dictinfo = dictInfo(dict);
-  const result =
-    searchResult[dictinfo.id]?.result || searchResult[dictinfo.alias]?.result;
-  if (!result) return "";
+  if (!definitions) return "";
 
   return (
     <Accordion className="definition-listing" defaultActiveKey="0">
-      {result.words?.map((w, i) => {
+      {definitions.words?.map((w, i) => {
         return (
           <Definition
             key={`${dict}_${i}`}

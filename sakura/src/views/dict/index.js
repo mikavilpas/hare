@@ -48,6 +48,16 @@ function DictView() {
     history.push(url);
   };
 
+  const currentDefinitions = () => {
+    if (!dictname) return null;
+
+    const dictinfo = dictInfo(dictname);
+    const result =
+      searchResult?.[dictinfo.id]?.result ||
+      searchResult?.[dictinfo.alias]?.result;
+    return result;
+  };
+
   return (
     <>
       <div className="mt-3"></div>
@@ -67,12 +77,13 @@ function DictView() {
       <main className="mt-3">
         <Definitions
           dict={dictname}
-          searchResult={searchResult}
+          definitions={currentDefinitions()}
           searchLoading={searchLoading}
           goToRecursiveLookupPage={goToRecursiveLookupPage}
         />
       </main>
       <RecursiveLookup
+        goToRecursiveLookupPage={goToRecursiveLookupPage}
         hide={() => {
           const dictUrl = generatePath(urls.lookup, match.params);
           history.push(dictUrl);
