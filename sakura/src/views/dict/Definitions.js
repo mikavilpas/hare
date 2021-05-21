@@ -75,26 +75,26 @@ function prettyText(text) {
 
 const Definition = ({ i, definition, goToRecursiveLookupPage }) => {
   // always open the first card by default
-  const [opened, setOpened] = useState(i === 0);
+  const [hasBeenOpened, setHasBeenOpened] = useState(i === 0);
   const [analysisResult, setAnalysisResult] = useState();
   const [analysisError, setAnalysisError] = useState();
 
   useEffect(() => {
-    if (opened && definition?.text) {
+    if (hasBeenOpened && definition?.text) {
       const text = bbcode2Text(definition.text);
       textAnalysis(text).then(([html, error]) => {
         setAnalysisResult(html);
         setAnalysisError(error);
       });
     }
-  }, [opened, definition]);
+  }, [hasBeenOpened, definition]);
 
   return (
     <Card key={i}>
       <Accordion.Toggle
         as={Card.Header}
         eventKey={i.toString()}
-        onClick={() => setOpened(true)}
+        onClick={() => setHasBeenOpened(true)}
       >
         <h4
           dangerouslySetInnerHTML={{ __html: prettyText(definition?.heading) }}
