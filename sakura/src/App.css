@@ -102,3 +102,9 @@ superscript {
   background-color: #27292d;
   border-radius: 5px;
 }
+
+.recursive-lookup .modal-content .modal-body {
+  padding: 0;
+  max-height: 83vh;
+  overflow-y: auto;
+}
