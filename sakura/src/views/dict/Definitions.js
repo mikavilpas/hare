@@ -76,19 +76,23 @@ function prettyText(text) {
 
 const Definition = ({ i, definition, goToRecursiveLookupPage, isOpened }) => {
   // always open the first card by default
-  const [hasBeenOpened, setHasBeenOpened] = useState(isOpened);
   const [analysisResult, setAnalysisResult] = useState();
   const [analysisError, setAnalysisError] = useState();
 
-  useEffect(() => {
-    if (hasBeenOpened && definition?.text) {
+  const getTextAnalysis = () => {
+    if (isOpened && definition?.text) {
+      // successive api calls get cached
       const text = bbcode2Text(definition.text);
       textAnalysis(text).then(([html, error]) => {
         setAnalysisResult(html);
         setAnalysisError(error);
       });
     }
-  }, [hasBeenOpened, definition]);
+  };
+
+  useEffect(() => {
+    getTextAnalysis();
+  }, [isOpened, definition]);
 
   const toolbar = () => {
     return (
@@ -109,11 +113,7 @@ const Definition = ({ i, definition, goToRecursiveLookupPage, isOpened }) => {
 
   return (
     <Card key={i}>
-      <Accordion.Toggle
-        as={Card.Header}
-        eventKey={i.toString()}
-        onClick={() => setHasBeenOpened(true)}
-      >
+      <Accordion.Toggle as={Card.Header} eventKey={i.toString()}>
         <div className="d-flex justify-content-between align-items-center">
           <h4
             dangerouslySetInnerHTML={{
