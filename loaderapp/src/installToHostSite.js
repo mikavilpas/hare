@@ -5,4 +5,4 @@ import { loadJs, base } from "./loader/utils";
 loadJs(`${base}/loader.js`);
 
 // now that loader.js has been loaded, we can use its functions
-load();
+window.load();
