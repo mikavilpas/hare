@@ -53,6 +53,25 @@ module.exports = [
     plugins: plugins,
   },
   {
+    name: "installToHostSite",
+    mode: "production",
+    devtool: false,
+    entry: {
+      installToHostSite: "./src/installToHostSite.js",
+    },
+    module: moduleDefinitions,
+  },
+  {
+    name: "loader",
+    mode: "production",
+    devtool: false,
+    entry: {
+      loader: "./src/loader/loader.js",
+    },
+    module: moduleDefinitions,
+  },
+
+  {
     name: "scriptfiles",
     mode: "production",
     devtool: false,
