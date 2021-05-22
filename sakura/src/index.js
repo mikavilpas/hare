@@ -17,7 +17,7 @@ function prepareHostSite() {
       (attempt) =>
         new Promise((resolve, reject) => {
           const runningInProduction =
-            window.location.hostname === "sakura-paris";
+            window.location.hostname === "sakura-paris.org";
           if (runningInProduction) {
             // if the root element of the host app is present, we need to unload the host app
             const hostAppLoaded = document.getElementById("rr") !== null;
