@@ -126,6 +126,8 @@ const Definitions = ({
   searchLoading,
   goToRecursiveLookupPage,
 }) => {
+  const [currentTab, setCurrentTab] = useState("0");
+
   if (searchLoading) {
     return (
       <Spinner animation="border" role="status">
@@ -144,7 +146,13 @@ const Definitions = ({
   if (!definitions) return "";
 
   return (
-    <Accordion className="definition-listing" defaultActiveKey="0">
+    <Accordion
+      activeKey={currentTab}
+      onSelect={(tab) => {
+        setCurrentTab(tab);
+      }}
+      className="definition-listing"
+    >
       {definitions.words?.map((w, i) => {
         return (
           <Definition
