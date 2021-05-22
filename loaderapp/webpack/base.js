@@ -36,13 +36,7 @@ const plugins = [
     canPrint: true,
   }),
   new CopyPlugin({
-    patterns: [
-      { from: "../sakura/build/static/js/main.js", to: "new-ui/" },
-      { from: "../sakura/build/static/js/main.js.map", to: "new-ui/" },
-      { from: "../sakura/build/static/js/main.js.LICENSE.txt", to: "new-ui/" },
-      { from: "../sakura/build/static/css/main.css", to: "new-ui/" },
-      { from: "../sakura/build/static/css/main.css.map", to: "new-ui/" },
-    ],
+    patterns: [{ from: "../sakura/build/static/", to: "static/" }],
   }),
 ];
 

@@ -2,7 +2,7 @@
 set -e
 set +x
 
-rm ./dist/* -r
+rm ./dist/* -rf
 mkdir -p ../docs
 
 (cd ../sakura/ && yarn build)

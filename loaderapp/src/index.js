@@ -51,8 +51,8 @@ window.onload = async () => {
         {
           jsFile: `${base}/prod.js`,
           cssFile: `${base}/prod.css`,
-          newUiJsFile: `${base}/new-ui/main.js`,
-          newUiCssFile: `${base}/new-ui/main.css`,
+          newUiJsFile: `${base}/static/js/main.js`,
+          newUiCssFile: `${base}/static/css/main.css`,
         }
       ),
       codeElement: document.getElementById("customizations-js"),
@@ -81,8 +81,8 @@ window.onload = async () => {
 
   async function newUiDevImport() {
     // dev import
-    const cssText = await concatFiles(["new-ui/main.css"]);
-    const jsText = await concatFiles(["new-ui/main.js"]);
+    const cssText = await concatFiles(["static/css/main.css"]);
+    const jsText = await concatFiles(["static/js/main.js"]);
 
     displaySourceFiles({
       sourceText: Mustache.render(
