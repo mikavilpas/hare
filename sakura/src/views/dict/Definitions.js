@@ -15,6 +15,7 @@ import { render } from "@bbob/html/es";
 import bbob from "@bbob/core";
 
 import {
+  Link,
   useHistory,
   useParams,
   useRouteMatch,
@@ -73,7 +74,7 @@ function prettyText(text) {
   return lines.join("");
 }
 
-const Definition = ({ i, definition, goToRecursiveLookupPage }) => {
+const Definition = ({ i, definition, goToRecursiveLookupPage, isOpened }) => {
   // always open the first card by default
   const [hasBeenOpened, setHasBeenOpened] = useState(i === 0);
   const [analysisResult, setAnalysisResult] = useState();
@@ -89,6 +90,22 @@ const Definition = ({ i, definition, goToRecursiveLookupPage }) => {
     }
   }, [hasBeenOpened, definition]);
 
+  const toolbar = () => {
+    return (
+      <nav>
+        <Button
+          as={Link}
+          to={`/dict/searchmode/search/openitem/export`}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <i className="bi bi-link"></i>
+        </Button>
+      </nav>
+    );
+  };
+
   return (
     <Card key={i}>
       <Accordion.Toggle
@@ -96,9 +113,14 @@ const Definition = ({ i, definition, goToRecursiveLookupPage }) => {
         eventKey={i.toString()}
         onClick={() => setHasBeenOpened(true)}
       >
-        <h4
-          dangerouslySetInnerHTML={{ __html: prettyText(definition?.heading) }}
-        ></h4>
+        <div className="d-flex justify-content-between align-items-center">
+          <h4
+            dangerouslySetInnerHTML={{
+              __html: prettyText(definition?.heading),
+            }}
+          ></h4>
+          {isOpened && toolbar()}
+        </div>
       </Accordion.Toggle>
       <Accordion.Collapse eventKey={i.toString()}>
         <Card.Body>
@@ -160,6 +182,7 @@ const Definitions = ({
             i={i}
             definition={w}
             goToRecursiveLookupPage={goToRecursiveLookupPage}
+            isOpened={i.toString() === currentTab}
           />
         );
       })}

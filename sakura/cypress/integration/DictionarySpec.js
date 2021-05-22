@@ -23,6 +23,9 @@ describe("dictionary view", () => {
       "contain",
       `/dict/${encodeURI("広辞苑")}/prefix/${encodeURI("犬")}`
     );
+
+    // displays action buttons
+    cy.get(".card-header nav").should("be.visible");
   });
 
   it("can render complex definitions", () => {
@@ -83,7 +86,7 @@ describe("dictionary view", () => {
     cy.contains("interhuman relations");
   });
 
-  it.only("can make recursive lookups", () => {
+  it("can make recursive lookups", () => {
     cy.visit("/");
     cy.get("input[type=search]").type("犬");
     cy.contains("Search").click();
