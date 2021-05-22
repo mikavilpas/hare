@@ -1,8 +1,14 @@
 export function loadJs(url) {
-  var script = document.createElement("script");
-  script.src = url;
-  document.head.appendChild(script);
-  console.log(`Loaded file ${url}"`);
+  return new Promise(function (resolve, reject) {
+    var script = document.createElement("script");
+    script.src = url;
+    script.onload = () => {
+      console.log(`Loaded file ${url}"`);
+      resolve(link);
+    };
+    script.onerror = () => reject(new Error(`Style load error for ${src}`));
+    document.head.appendChild(script);
+  });
 }
 
 export function loadCss(src) {
@@ -12,11 +18,13 @@ export function loadCss(src) {
     link.rel = "stylesheet";
     link.id = "sakura-customizations-css";
 
-    link.onload = () => resolve(link);
+    link.onload = () => {
+      console.log(`Loaded file ${src}"`);
+      resolve(link);
+    };
     link.onerror = () => reject(new Error(`Style load error for ${src}`));
 
     document.head.append(link);
-    console.log(`Loaded file ${src}"`);
   });
 }
 
