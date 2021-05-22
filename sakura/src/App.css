@@ -1,0 +1,114 @@
+#dictionary-list {
+  background-color: #27292d;
+  padding: 1rem;
+}
+
+body {
+  color: #dcddde !important;
+  font-size: 1.7em;
+}
+
+#dictionary-list .dict-name {
+  cursor: pointer;
+  display: inline-block;
+  padding-left: 3px;
+  padding-right: 3px;
+  border-radius: 5px;
+}
+
+#dictionary-list .dict-name.selected {
+  color: #00feff !important;
+}
+
+#dictionary-list .dict-name.has-search-result {
+  color: lightgray;
+  background-color: #2e435f;
+}
+#dictionary-list .dict-name.has-search-error {
+  color: lightgray;
+  background-color: #5f2e2e;
+}
+
+#dictionary-list .dict-name.disabled {
+  color: black;
+  background-color: transparent;
+  cursor: default;
+}
+
+span[data-word] {
+  color: lightgray;
+}
+
+span[data-word] > ruby {
+  /* words that can be recursively looked up */
+  border-bottom-color: darkgray;
+  border-bottom-style: outset;
+}
+
+span[data-word] :hover {
+  color: cyan;
+}
+
+span[data-word] > ruby rt {
+  /* the furigana are annoying so hide them. They also make the text change size
+   which is a bad experience */
+  display: none;
+}
+
+body {
+  background-color: #36393f;
+}
+
+.definition-listing .card {
+  background-color: #27292d;
+  border-width: 5px;
+  border-color: #36393f;
+}
+
+.definition-listing .card .card-header {
+  cursor: pointer;
+  color: #21a4cb !important;
+  padding: 0.2rem;
+}
+
+.card-header nav i {
+  font-size: 1.5em;
+}
+
+.definition-listing div.card-body {
+  background-color: #414141;
+  padding: 0.2rem;
+}
+
+.definition-row {
+  line-height: 1.2em;
+  margin: 0.4em;
+}
+
+sup superscript {
+  top: -0.5em;
+}
+sub subscript {
+  bottom: -0.25em;
+}
+sub,
+subscript,
+sup,
+superscript {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+/* recursive lookups */
+.recursive-lookup .modal-content {
+  background-color: #27292d;
+  border-radius: 5px;
+}
+
+.recursive-lookup .modal-content .modal-body {
+  padding: 0;
+  max-height: 83vh;
+  overflow-y: auto;
+}
