@@ -28,7 +28,11 @@ function prepareHostSite() {
 
             log("starting host app cleanup");
             Array.from(document.head.children)
-              .filter((c) => c.id !== "user-config-css")
+              .filter(
+                (c) =>
+                  c.id !== "user-config-css" &&
+                  c.id !== "sakura-customizations-css"
+              )
               .forEach((c) => c.remove());
             document.body.innerHTML = "";
 
