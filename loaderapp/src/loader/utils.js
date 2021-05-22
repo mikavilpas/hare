@@ -4,7 +4,7 @@ export function loadJs(url) {
     script.src = url;
     script.onload = () => {
       console.log(`Loaded file ${url}"`);
-      resolve(link);
+      resolve(script);
     };
     script.onerror = () => reject(new Error(`Style load error for ${src}`));
     document.head.appendChild(script);
