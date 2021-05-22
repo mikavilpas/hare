@@ -28,10 +28,10 @@ function App() {
                 // these are all the main states the app can be in.
 
                 // normal + recursive search opened
-                "/dict/:dictname/:searchmode/:search/recursive/:rdict/:rsearchmode/:rsearch",
+                "/dict/:dictname/:searchmode/:search/:openeditem/recursive/:rdict/:rsearchmode/:rsearch/:ropeneditem",
 
                 // normal search opened
-                "/dict/:dictname/:searchmode/:search",
+                "/dict/:dictname/:searchmode/:search/:openeditem",
 
                 // dict selected but no search yet
                 "/dict/:dictname",

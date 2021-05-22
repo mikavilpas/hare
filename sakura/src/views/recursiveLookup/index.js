@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import { useHistory, useParams } from "react-router-dom";
+import {
+  useHistory,
+  useRouteMatch,
+  useParams,
+  generatePath,
+} from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
 
@@ -13,6 +18,8 @@ function RecursiveLookup({ goToRecursiveLookupPage, hide }) {
   const [searchResult, setSearchResult] = useState();
   const [searchResultLoading, setSearchResultLoading] = useState(false);
   const [searchResultError, setSearchResultError] = useState();
+  const match = useRouteMatch();
+  const history = useHistory();
 
   // rdict is reserved for the future. currently only a single dict is supported
   // for recursive searches, but that may change.
@@ -56,6 +63,14 @@ function RecursiveLookup({ goToRecursiveLookupPage, hide }) {
         definitions={searchResult}
         searchLoading={searchResultLoading}
         goToRecursiveLookupPage={goToRecursiveLookupPage}
+        currentTab={match.params.ropeneditem}
+        openTab={(index) => {
+          const url = generatePath(match.path, {
+            ...match.params,
+            ropeneditem: index || "-",
+          });
+          history.push(url);
+        }}
       />
     );
   };

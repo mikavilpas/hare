@@ -49,7 +49,7 @@ const Dictionaries = ({ currentDict, dicts, setDicts, searchResult }) => {
 
   function setDict(d) {
     if (d !== currentDict) {
-      history.push(`/dict/${d}/${searchmode}/${search}`);
+      history.push(`/dict/${d}/${searchmode}/${search}/0`);
     }
   }
 

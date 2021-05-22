@@ -76,7 +76,7 @@ function prettyText(text) {
 
 const Definition = ({ i, definition, goToRecursiveLookupPage, isOpened }) => {
   // always open the first card by default
-  const [hasBeenOpened, setHasBeenOpened] = useState(i === 0);
+  const [hasBeenOpened, setHasBeenOpened] = useState(isOpened);
   const [analysisResult, setAnalysisResult] = useState();
   const [analysisError, setAnalysisError] = useState();
 
@@ -95,6 +95,7 @@ const Definition = ({ i, definition, goToRecursiveLookupPage, isOpened }) => {
       <nav>
         <Button
           as={Link}
+          variant="link"
           to={`/dict/searchmode/search/openitem/export`}
           onClick={(e) => {
             e.stopPropagation();
@@ -147,9 +148,9 @@ const Definitions = ({
   searchError,
   searchLoading,
   goToRecursiveLookupPage,
+  currentTab,
+  openTab,
 }) => {
-  const [currentTab, setCurrentTab] = useState("0");
-
   if (searchLoading) {
     return (
       <Spinner animation="border" role="status">
@@ -171,7 +172,7 @@ const Definitions = ({
     <Accordion
       activeKey={currentTab}
       onSelect={(tab) => {
-        setCurrentTab(tab);
+        openTab(tab);
       }}
       className="definition-listing"
     >

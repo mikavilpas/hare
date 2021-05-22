@@ -36,6 +36,6 @@ export function dictShortName(dictAliasOrId) {
 
 export const urls = {
   recursiveLookup:
-    "/dict/:dictname/:searchmode/:search/recursive/:rdict/:rsearchmode/:rsearch",
-  lookup: "/dict/:dictname/:searchmode/:search",
+    "/dict/:dictname/:searchmode/:search/:openeditem/recursive/:rdict/:rsearchmode/:rsearch/:ropeneditem",
+  lookup: "/dict/:dictname/:searchmode/:search/:openeditem",
 };

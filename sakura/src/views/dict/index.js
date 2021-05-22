@@ -30,13 +30,14 @@ function DictView() {
   const { dictname } = useParams();
 
   useEffect(() => {
+    console.log(match);
     if (
       match.path === urls.recursiveLookup &&
       location.pathname !== match.url
     ) {
       goToRecursiveLookupPage(match.params.rsearch, match.params.rdict);
     }
-  }, [match]);
+  }, [match.params, match.path]);
 
   const goToRecursiveLookupPage = (word, dict = "大辞林") => {
     const url = generatePath(urls.recursiveLookup, {
@@ -44,6 +45,7 @@ function DictView() {
       rdict: dict,
       rsearchmode: "prefix",
       rsearch: word,
+      ropeneditem: 0, // open first search result
     });
     history.push(url);
   };
@@ -80,6 +82,14 @@ function DictView() {
           definitions={currentDefinitions()}
           searchLoading={searchLoading}
           goToRecursiveLookupPage={goToRecursiveLookupPage}
+          currentTab={match.params.openeditem}
+          openTab={(index) => {
+            const url = generatePath(match.path, {
+              ...match.params,
+              openeditem: index || "-",
+            });
+            history.push(url);
+          }}
         />
       </main>
       <RecursiveLookup

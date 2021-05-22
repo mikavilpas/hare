@@ -50,6 +50,7 @@ const SearchBox = ({
         dictname: currentDict,
         searchmode: "prefix",
         search: searchInputText,
+        openeditem: 0, // open first result
       });
       history.push(lookupUrl);
     }

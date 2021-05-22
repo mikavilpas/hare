@@ -19,17 +19,21 @@ describe("dictionary view", () => {
     cy.get("ruby").should("exist");
 
     // saves the current search in the url
-    cy.url().should(
-      "contain",
-      `/dict/${encodeURI("広辞苑")}/prefix/${encodeURI("犬")}`
-    );
+    cy.url().should("contain", encodeURI("/dict/広辞苑/prefix/犬/0"));
 
     // displays action buttons
     cy.get(".card-header nav").should("be.visible");
+
+    // can hide the current definition
+    cy.contains("いぬ【犬・狗】").click();
+    cy.url().should("contain", encodeURI("/dict/広辞苑/prefix/犬/-"));
+
+    // card should be closed and nav controls hidden
+    cy.get(".card-header nav").should("not.exist");
   });
 
   it("can render complex definitions", () => {
-    cy.visit(`/dict/${encodeURI("大辞林")}/prefix/${encodeURI("雪")}`);
+    cy.visit(encodeURI("/dict/大辞林/prefix/雪/0"));
   });
 
   it("stores the current dictionary in the url", () => {
@@ -79,14 +83,23 @@ describe("dictionary view", () => {
   it("can open views from url links", () => {
     // note: go to the last dictionary to make sure the first dictionary is not
     // visible just because it's the default
-    cy.visit(`/dict/${encodeURI("英辞郎")}/prefix/${encodeURI("人間関係")}`);
+    cy.visit(encodeURI(`/dict/英辞郎/prefix/人間関係/0`));
     cy.contains("英辞郎").should("have.class", "selected");
 
     // a definition from that dict should be visible
     cy.contains("interhuman relations");
+
+    // can open recursive lookup from url
+    cy.visit(
+      encodeURI("/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/山辺/1")
+    );
+
+    // the recursive search should be opened, thus the nav controls should be
+    // visible
+    cy.get(".modal-content nav").should("be.visible");
   });
 
-  it("can make recursive lookups", () => {
+  it.only("can make recursive lookups", () => {
     cy.visit("/");
     cy.get("input[type=search]").type("犬");
     cy.contains("Search").click();
@@ -96,16 +109,30 @@ describe("dictionary view", () => {
     cy.get(".modal-content").should("be.visible");
     cy.url().should(
       "contain",
-      encodeURI("/dict/広辞苑/prefix/犬/recursive/大辞林/prefix/山辺")
+      encodeURI("/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/山辺/0")
     );
 
     // can close the modal
     cy.get(".modal-backdrop").click({ force: true });
-    cy.url().should("match", new RegExp(encodeURI("/dict/広辞苑/prefix/犬$")));
+    cy.url().should(
+      "match",
+      new RegExp(encodeURI("/dict/広辞苑/prefix/犬/0$"))
+    );
 
     // can open recursive lookup from url
-    cy.visit(encodeURI("/dict/広辞苑/prefix/犬/recursive/大辞林/prefix/山辺"));
+    cy.visit(
+      encodeURI("/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/山辺/1")
+    );
     cy.get(".modal-content").should("be.visible");
+    // should contain furigana
+    cy.get(".modal-content ruby").should("be.visible");
+
+    // can hide the currently opened item
+    cy.get("h4").contains(" やまのべ-の-みち【山辺の道】 ").click();
+    cy.url().should(
+      "contain",
+      encodeURI("/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/山辺/-")
+    );
   });
 });
 
