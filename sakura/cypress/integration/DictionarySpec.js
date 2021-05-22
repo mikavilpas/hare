@@ -3,12 +3,12 @@ describe("dictionary view", () => {
 
   it("can display a list of dictionaries", () => {
     //
-    cy.visit("/");
+    cy.visit("#/");
     cy.contains("広辞苑");
   });
 
   it("can display search results for a word", () => {
-    cy.visit("/");
+    cy.visit("#/");
     cy.get("input[type=search]").type("犬");
     cy.contains("Search").click();
 
@@ -42,7 +42,7 @@ describe("dictionary view", () => {
       cy.url().should("contain", `/dict/${encodeURI(dictname)}`);
       cy.contains(dictname).should("have.class", "selected");
     };
-    cy.visit("/dict");
+    cy.visit("#/dict");
     cy.get("input[type=search]").type("犬");
     cy.contains("Search").click();
 
@@ -83,7 +83,7 @@ describe("dictionary view", () => {
   it("can open views from url links", () => {
     // note: go to the last dictionary to make sure the first dictionary is not
     // visible just because it's the default
-    cy.visit(encodeURI(`/dict/英辞郎/prefix/人間関係/0`));
+    cy.visit(encodeURI(`#/dict/英辞郎/prefix/人間関係/0`));
     cy.contains("英辞郎").should("have.class", "selected");
 
     // a definition from that dict should be visible
@@ -91,7 +91,7 @@ describe("dictionary view", () => {
 
     // can open recursive lookup from url
     cy.visit(
-      encodeURI("/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/山辺/1")
+      encodeURI("#/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/山辺/1")
     );
 
     // the recursive search should be opened, thus the nav controls should be
@@ -99,8 +99,8 @@ describe("dictionary view", () => {
     cy.get(".modal-content nav").should("be.visible");
   });
 
-  it.only("can make recursive lookups", () => {
-    cy.visit("/");
+  it("can make recursive lookups", () => {
+    cy.visit("#/");
     cy.get("input[type=search]").type("犬");
     cy.contains("Search").click();
 
@@ -121,7 +121,7 @@ describe("dictionary view", () => {
 
     // can open recursive lookup from url
     cy.visit(
-      encodeURI("/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/山辺/1")
+      encodeURI("#/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/山辺/1")
     );
     cy.get(".modal-content").should("be.visible");
     // should contain furigana
@@ -131,7 +131,7 @@ describe("dictionary view", () => {
     cy.get("h4").contains(" やまのべ-の-みち【山辺の道】 ").click();
     cy.url().should(
       "contain",
-      encodeURI("/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/山辺/-")
+      encodeURI("#/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/山辺/-")
     );
   });
 });
