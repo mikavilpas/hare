@@ -16,3 +16,8 @@ function loadOldUi() {
   loadJs(`${base}/prod.js`);
   loadCss(`${base}/prod.js`);
 }
+
+if (window) {
+  window.load = load;
+  window.loadOldUi = loadOldUi;
+}
