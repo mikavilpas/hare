@@ -28,36 +28,8 @@
         </div>
 
         <script id="prod-import-template" type="text/plain">
-          function loadJs(url) {
-              var script = document.createElement("script");
-              script.src = url;
-              document.head.appendChild(script);
-              console.log(`Loaded file ${url}"`);
-          }
-
-          function loadCss(src) {
-              return new Promise(function (resolve, reject) {
-                  let link = document.createElement("link");
-                  link.href = src;
-                  link.rel = "stylesheet";
-                  link.id = "sakura-customizations-css";
-
-                  link.onload = () => resolve(link);
-                  link.onerror = () => reject(new Error(`Style load error for ${src}`));
-
-                  document.head.append(link);
-                  console.log(`Loaded file ${src}"`);
-              });
-          }
-
-          // load the old ui
-          // loadJs("{{{jsFile}}}");
-          // loadCss("{{{cssFile}}}");
-
-          // or load the new ui
-          loadCss("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css")
-          loadCss("{{{newUiCssFile}}}");
-          loadJs("{{{newUiJsFile}}}");
+          // copy this to the host app's javascript customizations setting
+          {{{installScript}}};
         </script>
       </div>
 

@@ -45,14 +45,12 @@ window.onload = async () => {
   const base = "https://sp3ctum.github.io/sakura-paris-customizations";
 
   async function productionImport() {
+    const installScript = await concatFiles(["installToHostSite.js"]);
     displaySourceFiles({
       sourceText: Mustache.render(
         document.getElementById("prod-import-template").innerHTML,
         {
-          jsFile: `${base}/prod.js`,
-          cssFile: `${base}/prod.css`,
-          newUiJsFile: `${base}/static/js/main.js`,
-          newUiCssFile: `${base}/static/css/main.css`,
+          installScript: installScript,
         }
       ),
       codeElement: document.getElementById("customizations-js"),
