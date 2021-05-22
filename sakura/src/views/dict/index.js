@@ -30,7 +30,6 @@ function DictView() {
   const { dictname } = useParams();
 
   useEffect(() => {
-    console.log(match);
     if (
       match.path === urls.recursiveLookup &&
       location.pathname !== match.url

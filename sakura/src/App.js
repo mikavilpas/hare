@@ -12,6 +12,7 @@ import {
   Redirect,
 } from "react-router-dom";
 import DictView from "./views/dict/";
+import VersionIndicator from "./views/versionIndicator/VersionIndicator";
 
 function App() {
   const [searchLoading, setSearchLoading] = useState();
@@ -47,6 +48,7 @@ function App() {
             </Route>
           </Switch>
         </Router>
+        <VersionIndicator />
       </Container>
     </div>
   );

@@ -112,3 +112,10 @@ superscript {
   max-height: 83vh;
   overflow-y: auto;
 }
+
+#version-indicator {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: x-small;
+}
