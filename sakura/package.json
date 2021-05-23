@@ -45,7 +45,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://sakura-paris.org/dict/",
+  "proxy": "https://sakura-paris.org/",
   "devDependencies": {
     "cypress": "^7.3.0"
   }

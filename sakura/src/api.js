@@ -20,7 +20,7 @@ const api = setup({
 
 export async function getDicts() {
   try {
-    const dicts = await api.get("/dict?api=1");
+    const dicts = await api.get("/dict/?api=1");
     return [dicts];
   } catch (e) {
     return [null, e];
@@ -45,7 +45,7 @@ export async function getWordDefinitions({ dict, word, searchType = 0 }) {
     params.append("q", word);
     params.append("type", searchType);
 
-    const result = await api.get(`/dict?${params.toString()}`);
+    const result = await api.get(`/dict/?${params.toString()}`);
 
     const data = result?.data;
     if (Array.isArray(data)) {
