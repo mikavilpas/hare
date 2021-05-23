@@ -80,9 +80,9 @@ body {
   padding: 0.2rem;
 }
 
-.definition-row {
-  line-height: 1.2em;
-  margin: 0.4em;
+.definition-listing .definition-row {
+    line-height: 1.2em;
+    margin: 0.4em;
 }
 
 sup superscript {
@@ -118,4 +118,15 @@ superscript {
     bottom: 5px;
     right: 5px;
     font-size: x-small;
+}
+
+/* export */
+#export .card {
+    background-color: #27292d;
+    max-height: 50vh;
+    overflow: auto;
+}
+
+#definition-preview {
+    overflow: overlay;
 }
