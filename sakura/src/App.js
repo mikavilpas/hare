@@ -13,6 +13,7 @@ import {
 } from "react-router-dom";
 import DictView from "./views/dict/";
 import VersionIndicator from "./views/versionIndicator/VersionIndicator";
+import ExportView from "./views/export/ExportView";
 
 function App() {
   const [searchLoading, setSearchLoading] = useState();
@@ -26,7 +27,7 @@ function App() {
           <Switch>
             <Route
               path={[
-                // these are all the main states the app can be in.
+                // these are all the main states the dict view can be in.
 
                 // normal + recursive search opened
                 "/dict/:dictname/:searchmode/:search/:openeditem/recursive/:rdict/:rsearchmode/:rsearch/:ropeneditem",
@@ -42,6 +43,9 @@ function App() {
               ]}
             >
               <DictView />
+            </Route>
+            <Route path={["/export/:dictname/:searchmode/:search/:openeditem"]}>
+              <ExportView />
             </Route>
             <Route>
               <Redirect to="/dict" />

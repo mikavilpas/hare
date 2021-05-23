@@ -59,6 +59,10 @@ function DictView() {
     return result;
   };
 
+  const p = match?.params;
+  const makeExportLink = () =>
+    `/export/${p?.dictname}/${p?.searchmode}/${p?.search}/${p?.openeditem}`;
+
   return (
     <>
       <div className="mt-3"></div>
@@ -89,6 +93,7 @@ function DictView() {
             });
             history.push(url);
           }}
+          makeExportLink={makeExportLink}
         />
       </main>
       <RecursiveLookup

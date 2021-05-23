@@ -74,10 +74,17 @@ function prettyText(text) {
   return lines.join("");
 }
 
-const Definition = ({ i, definition, goToRecursiveLookupPage, isOpened }) => {
+const Definition = ({
+  i,
+  definition,
+  goToRecursiveLookupPage,
+  isOpened,
+  makeExportLink,
+}) => {
   // always open the first card by default
   const [analysisResult, setAnalysisResult] = useState();
   const [analysisError, setAnalysisError] = useState();
+  const match = useRouteMatch();
 
   const getTextAnalysis = () => {
     if (isOpened && definition?.text) {
@@ -100,7 +107,7 @@ const Definition = ({ i, definition, goToRecursiveLookupPage, isOpened }) => {
         <Button
           as={Link}
           variant="link"
-          to={`/dict/searchmode/search/openitem/export`}
+          to={makeExportLink()}
           onClick={(e) => {
             e.stopPropagation();
           }}
@@ -150,6 +157,7 @@ const Definitions = ({
   goToRecursiveLookupPage,
   currentTab,
   openTab,
+  makeExportLink,
 }) => {
   if (searchLoading) {
     return (
@@ -184,6 +192,7 @@ const Definitions = ({
             definition={w}
             goToRecursiveLookupPage={goToRecursiveLookupPage}
             isOpened={i.toString() === currentTab}
+            makeExportLink={makeExportLink}
           />
         );
       })}

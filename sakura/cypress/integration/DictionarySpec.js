@@ -24,6 +24,11 @@ describe("dictionary view", () => {
     // displays action buttons
     cy.get(".card-header nav").should("be.visible");
 
+    // has a link to the export page
+    cy.get(".card-header nav a")
+      .should("have.attr", "href")
+      .should("contain", "#/export/広辞苑/prefix/犬/0");
+
     // can hide the current definition
     cy.contains("いぬ【犬・狗】").click();
     cy.url().should("contain", encodeURI("/dict/広辞苑/prefix/犬/-"));
@@ -126,6 +131,10 @@ describe("dictionary view", () => {
     cy.get(".modal-content").should("be.visible");
     // should contain furigana
     cy.get(".modal-content ruby").should("be.visible");
+
+    cy.get(".modal-content .card-header nav a")
+      .should("have.attr", "href")
+      .should("contain", "#/export/大辞林/prefix/山辺/1");
 
     // can hide the currently opened item
     cy.get("h4").contains(" やまのべ-の-みち【山辺の道】 ").click();

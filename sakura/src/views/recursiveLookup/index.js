@@ -21,6 +21,12 @@ function RecursiveLookup({ goToRecursiveLookupPage, hide }) {
   const match = useRouteMatch();
   const history = useHistory();
 
+  const p = match?.params;
+  const makeExportLink = () => {
+    console.log(p);
+    return `/export/${p?.rdict}/${p?.rsearchmode}/${p?.rsearch}/${p?.ropeneditem}`;
+  };
+
   // rdict is reserved for the future. currently only a single dict is supported
   // for recursive searches, but that may change.
   const { rdict = "大辞林", rsearch } = useParams();
@@ -71,6 +77,7 @@ function RecursiveLookup({ goToRecursiveLookupPage, hide }) {
           });
           history.push(url);
         }}
+        makeExportLink={makeExportLink}
       />
     );
   };
