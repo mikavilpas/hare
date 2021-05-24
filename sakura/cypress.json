@@ -15,5 +15,11 @@
   },
   "viewportHeight": 850,
   "viewportWidth": 400,
-  "nodeVersion": "system"
+  "nodeVersion": "system",
+  "component": {
+    "testFiles": "**/*.test.{js,ts,jsx,tsx}",
+    "componentFolder": "src",
+    "viewportWidth": 800,
+    "viewportHeight": 800
+  }
 }
