@@ -125,8 +125,18 @@ superscript {
     background-color: #27292d;
     max-height: 50vh;
     overflow: auto;
+    color: gray;
 }
 
 #definition-preview {
     overflow: overlay;
+}
+
+#definition-preview .card-text {
+    line-height: 2rem;
+}
+
+#definition-preview .definition-row {
+    margin-top: 0;
+    margin-bottom: 0;
 }

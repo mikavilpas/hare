@@ -74,6 +74,7 @@ function ExportView({}) {
   const bodyText = prettyText(searchResult.text);
   return (
     <Container id="export" className="mt-2">
+      <h3>辞典内容を共有する</h3>
       <Row id="definition-preview" className="d-flex flex-column h-50">
         <div className="card">
           <div className="card-body" ref={definitionRef}>
@@ -91,9 +92,10 @@ function ExportView({}) {
             ></p>
           </div>
         </div>
-        <div>
+        <div className="mt-3">
           <CopyToClipboard text={copiableText} onCopy={() => {}}>
             <Button
+              block
               variant="outline-primary"
               onClick={() => {
                 const text = definitionRef.current?.innerText
@@ -103,7 +105,7 @@ function ExportView({}) {
                 setCopiableText(text);
               }}
             >
-              Copy text
+              TXTをコピー
             </Button>
           </CopyToClipboard>
         </div>
