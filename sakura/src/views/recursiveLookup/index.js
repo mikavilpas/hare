@@ -23,7 +23,6 @@ function RecursiveLookup({ goToRecursiveLookupPage, hide }) {
 
   const p = match?.params;
   const makeExportLink = () => {
-    console.log(p);
     return `/export/${p?.rdict}/${p?.rsearchmode}/${p?.rsearch}/${p?.ropeneditem}`;
   };
 

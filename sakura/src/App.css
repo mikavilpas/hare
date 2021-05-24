@@ -81,8 +81,8 @@ body {
 }
 
 .definition-listing .definition-row {
-    line-height: 1.2em;
-    margin: 0.4em;
+  line-height: 1.2em;
+  margin: 0.4em;
 }
 
 sup superscript {
@@ -114,29 +114,29 @@ superscript {
 }
 
 #version-indicator {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    font-size: x-small;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  font-size: x-small;
 }
 
 /* export */
 #export .card {
-    background-color: #27292d;
-    max-height: 50vh;
-    overflow: auto;
-    color: gray;
+  background-color: #27292d;
+  max-height: 50vh;
+  overflow: auto;
+  color: gray;
 }
 
 #definition-preview {
-    overflow: overlay;
+  overflow: overlay;
 }
 
 #definition-preview .card-text {
-    line-height: 2rem;
+  line-height: 2rem;
 }
 
 #definition-preview .definition-row {
-    margin-top: 0;
-    margin-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }

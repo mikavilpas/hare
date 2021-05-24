@@ -87,7 +87,9 @@ const Definition = ({
         <Card.Body>
           <div
             onClick={(e) => {
-              const word = e?.target?.parentElement?.dataset?.word;
+              const wordFromKanji = e?.target?.parentElement?.dataset?.word;
+              const wordFromKana = e?.target?.dataset?.word;
+              const word = wordFromKanji || wordFromKana;
               if (word) {
                 goToRecursiveLookupPage(word);
               }
