@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
@@ -22,11 +22,14 @@ function ExportView({}) {
   const [loading, setLoading] = useState(false);
   const [searchResult, setSearchResult] = useState();
   const [searchError, setSearchError] = useState();
+  const definitionRef = useRef();
 
   const match = useRouteMatch();
   const dict = match.params.dictname;
   const search = match.params.search;
   const openeditem = match.params.openeditem;
+
+  const [copiableText, setCopiableText] = useState();
 
   useEffect(() => {
     if (!dict || !search || !openeditem) {
@@ -66,14 +69,14 @@ function ExportView({}) {
   if (!searchResult) {
     return "";
   }
-  const headingText = prettyText(searchResult.heading, (line) => line);
-  const bodyText = prettyText(searchResult.text, (line) => line);
 
+  const headingText = prettyText(searchResult.heading);
+  const bodyText = prettyText(searchResult.text);
   return (
     <Container id="export" className="mt-2">
       <Row id="definition-preview" className="d-flex flex-column h-50">
         <div className="card">
-          <div className="card-body">
+          <div className="card-body" ref={definitionRef}>
             <h3
               className="card-title"
               dangerouslySetInnerHTML={{
@@ -88,13 +91,22 @@ function ExportView({}) {
             ></p>
           </div>
         </div>
-        {false && (
-          <div>
-            <CopyToClipboard text={headingText + bodyText} onCopy={() => {}}>
-              <Button variant="outline-primary">Copy text</Button>
-            </CopyToClipboard>
-          </div>
-        )}
+        <div>
+          <CopyToClipboard text={copiableText} onCopy={() => {}}>
+            <Button
+              variant="outline-primary"
+              onClick={() => {
+                const text = definitionRef.current?.innerText
+                  ?.split("\n")
+                  .filter((l) => l.length > 0)
+                  .join("\n");
+                setCopiableText(text);
+              }}
+            >
+              Copy text
+            </Button>
+          </CopyToClipboard>
+        </div>
       </Row>
     </Container>
   );
