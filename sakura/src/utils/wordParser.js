@@ -21,7 +21,7 @@ export function parse(inputText) {
   }
 }
 
-export const wordChar = p.noCharOf("【】〖〗{}（）〔〕()");
+const wordChar = p.noCharOf("【】〖〗{}（）〔〕()");
 
 const quoted = (sepA, sepB) => {
   return wordChar.pipe(
@@ -32,7 +32,7 @@ const quoted = (sepA, sepB) => {
   );
 };
 
-export const quotedText = quoted("【", "】").pipe(
+const quotedText = quoted("【", "】").pipe(
   // different dictionaries have various ways of quoting
   or(
     quoted("〖", "〗"), //
@@ -46,7 +46,7 @@ export const quotedText = quoted("【", "】").pipe(
 // parses a heading with only kana, no kanji part.
 //
 // け‐ども
-export const kanaHeadingPart = wordChar.pipe(
+const kanaHeadingPart = wordChar.pipe(
   //
   many(),
   stringify(),
@@ -56,7 +56,7 @@ export const kanaHeadingPart = wordChar.pipe(
 // parses the kanji part of a heading, such as
 //
 // 【捜査】サウ‥
-export const kanjiHeadingPart = quotedText.pipe(
+const kanjiHeadingPart = quotedText.pipe(
   thenq(p.anyChar().pipe(many())), // ignore the rest
   map((insideQuotes) => {
     const kanjiOptions = insideQuotes
@@ -70,7 +70,7 @@ export const kanjiHeadingPart = quotedText.pipe(
 );
 
 // all kanji headings start with the kana, followed by optional quoted kanji
-export const heading = kanaHeadingPart.pipe(
+const heading = kanaHeadingPart.pipe(
   then(kanjiHeadingPart.pipe(maybe())),
   map(([kana, kanji]) => {
     return { ...kana, ...kanji };

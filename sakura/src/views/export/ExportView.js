@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
@@ -13,12 +14,28 @@ import {
 } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
+import * as wordParser from "../../utils/wordParser";
 
 import { getWordDefinitions } from "../../api";
 import { bbcode2Text, prettyText } from "../dict/utils";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
-function ExportView({}) {
+const SearchLink = ({ iconUrl, children, url }) => {
+  return (
+    <a
+      className="external-site"
+      rel="noopener noreferrer"
+      target="_blank"
+      href={url}
+    >
+      <img src={iconUrl} className="inline icon"></img>
+      &nbsp;
+      {children}
+    </a>
+  );
+};
+
+const ExportView = ({}) => {
   const [loading, setLoading] = useState(false);
   const [searchResult, setSearchResult] = useState();
   const [searchError, setSearchError] = useState();
@@ -30,6 +47,8 @@ function ExportView({}) {
   const openeditem = match.params.openeditem;
 
   const [copiableText, setCopiableText] = useState();
+  const [wordOptions, setWordOptions] = useState([]);
+  const [selectedWord, setSelectedWord] = useState();
 
   useEffect(() => {
     if (!dict || !search || !openeditem) {
@@ -50,6 +69,15 @@ function ExportView({}) {
         } else {
           setSearchResult(searchResultItem);
           setSearchError(error);
+
+          // parse possible words
+          const parseResult = wordParser.parse(searchResultItem.heading);
+          const options = [
+            ...parseResult.value.kanjiOptions,
+            parseResult.value.kana,
+          ];
+          setWordOptions(options);
+          setSelectedWord(options?.[0]);
         }
       })
       .finally(() => setLoading(false));
@@ -72,6 +100,7 @@ function ExportView({}) {
 
   const headingText = prettyText(searchResult.heading);
   const bodyText = prettyText(searchResult.text);
+
   return (
     <Container id="export" className="mt-2">
       <h3>辞典内容を共有する</h3>
@@ -92,26 +121,75 @@ function ExportView({}) {
             ></p>
           </div>
         </div>
-        <div className="mt-3">
-          <CopyToClipboard text={copiableText} onCopy={() => {}}>
-            <Button
-              block
-              variant="outline-primary"
-              onClick={() => {
-                const text = definitionRef.current?.innerText
-                  ?.split("\n")
-                  .filter((l) => l.length > 0)
-                  .join("\n");
-                setCopiableText(text);
-              }}
-            >
-              TXTをコピー
-            </Button>
-          </CopyToClipboard>
-        </div>
       </Row>
+      <Row>
+        <CopyToClipboard className="mt-2" text={copiableText} onCopy={() => {}}>
+          <Button
+            block
+            variant="outline-primary"
+            onClick={() => {
+              const text = definitionRef.current?.innerText
+                ?.split("\n")
+                .filter((l) => l.length > 0)
+                .join("\n");
+              setCopiableText(text);
+            }}
+          >
+            TXTをコピー
+          </Button>
+        </CopyToClipboard>
+      </Row>
+      {selectedWord && (
+        <>
+          <hr />
+          <Row>
+            <h6>外部サイトで「{selectedWord}」を検索 </h6>
+            <Form.Control
+              as="select"
+              custom
+              value={selectedWord}
+              onChange={(e) => setSelectedWord(e.target.value)}
+            >
+              {wordOptions.map((w, i) => (
+                <option value={w} key={i}>
+                  {w}
+                </option>
+              ))}
+            </Form.Control>
+            <ul className="external-sites list-unstyled mt-3">
+              <li>
+                <SearchLink
+                  word={selectedWord}
+                  iconUrl={"/dict/icons/google.png"}
+                  url={`https://www.google.co.jp/search?tbm=isch&q=${selectedWord}`}
+                >
+                  Google 画像
+                </SearchLink>
+              </li>
+              <li>
+                <SearchLink
+                  word={selectedWord}
+                  iconUrl={"/dict/icons/jisho.png"}
+                  url={`https://jisho.org/search/${selectedWord}%20%23sentences`}
+                >
+                  Jisho sentences
+                </SearchLink>
+              </li>
+              <li>
+                <SearchLink
+                  word={selectedWord}
+                  iconUrl={"/dict/icons/jisho.png"}
+                  url={`https://jisho.org/search/${selectedWord}`}
+                >
+                  Jisho
+                </SearchLink>
+              </li>
+            </ul>
+          </Row>
+        </>
+      )}
     </Container>
   );
-}
+};
 
 export default ExportView;

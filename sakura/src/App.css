@@ -132,6 +132,10 @@ superscript {
   overflow: overlay;
 }
 
+#definition-preview mark {
+  background-color: inherit;
+}
+
 #definition-preview .card-text {
   line-height: 2rem;
 }
@@ -139,4 +143,12 @@ superscript {
 #definition-preview .definition-row {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+#export .external-sites {
+  font-size: 80%;
+}
+
+#export .external-sites a {
+  color: lightgray;
 }
