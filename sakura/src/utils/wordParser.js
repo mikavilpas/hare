@@ -21,7 +21,8 @@ export function parse(inputText) {
   }
 }
 
-const wordChar = p.noCharOf("【】〖〗{}（）〔〕()");
+const normalize = (str) => str.replaceAll(/[‐・-]/g, "");
+const wordChar = p.noCharOf("【】〖〗{}（）〔〕");
 
 const quoted = (sepA, sepB) => {
   return wordChar.pipe(
@@ -38,8 +39,7 @@ const quotedText = quoted("【", "】").pipe(
     quoted("〖", "〗"), //
     quoted("{", "}"),
     quoted("（", "）"),
-    quoted("〔", "〕"),
-    quoted("(", ")")
+    quoted("〔", "〕")
   )
 );
 
@@ -50,7 +50,7 @@ const kanaHeadingPart = wordChar.pipe(
   //
   many(),
   stringify(),
-  map((str) => ({ kana: str.replace("‐", "") }))
+  map((str) => ({ kana: normalize(str) }))
 );
 
 // parses the kanji part of a heading, such as
@@ -60,9 +60,11 @@ const kanjiHeadingPart = quotedText.pipe(
   thenq(p.anyChar().pipe(many())), // ignore the rest
   map((insideQuotes) => {
     const kanjiOptions = insideQuotes
-      .replace("△", "")
-      .replace("×", "")
-      .split("・");
+      .replaceAll("△", "")
+      .replaceAll("×", "")
+      .split("・")
+      .map((str) => normalize(str));
+
     return {
       kanjiOptions: kanjiOptions,
     };

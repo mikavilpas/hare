@@ -97,14 +97,24 @@ const ExportView = ({}) => {
           setSearchError(error);
 
           // parse possible words
-          const parseResult = wordParser.parse(searchResultItem.heading);
-          const options = [
-            ...parseResult.value.kanjiOptions,
-            parseResult.value.kana,
-            searchResultItem.heading,
-          ];
-          setWordOptions(options);
-          setSelectedWord(options?.[0]);
+          try {
+            const parseResult = wordParser.parse(searchResultItem.heading);
+            const options = [
+              ...parseResult.value.kanjiOptions,
+              parseResult.value.kana,
+              searchResultItem.heading,
+            ];
+            setWordOptions(options);
+            setSelectedWord(options?.[0]);
+          } catch (e) {
+            console.warn(
+              "Could not parse this word. Please report a bug with the current url.",
+              searchResultItem.heading
+            );
+            // fall back to just the unexpected input as the selection
+            setWordOptions([searchResultItem.heading]);
+            setSelectedWord(searchResultItem.heading);
+          }
         }
       })
       .finally(() => setLoading(false));

@@ -34,4 +34,14 @@ it("can parse the search result from headings", () => {
   expect(wordParser.parse("け‐ども")).to.deep.include({
     value: { kana: "けども" },
   });
+
+  // case with kanji that has alternate forms
+  // なり-た・つ【成(り)立つ】
+  // https://sakura-paris.org/dict/#/export/大辞林/prefix/成り立つ/0
+  expect(wordParser.parse("なり-た・つ【成(り)立つ】")).to.deep.include({
+    value: {
+      kanjiOptions: ["成(り)立つ"],
+      kana: "なりたつ",
+    },
+  });
 });
