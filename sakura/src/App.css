@@ -137,6 +137,7 @@ superscript {
 }
 
 #definition-preview .card-text {
+  font-size: smaller;
   line-height: 2rem;
 }
 

@@ -159,30 +159,9 @@ const ExportView = ({}) => {
           </div>
         </div>
       </Row>
-      <Row>
-        <Col>
-          <CopyButton
-            buttonText="TXTをコピー"
-            getTextToCopy={() => {
-              const text = definitionRef.current?.innerText
-                ?.split("\n")
-                .filter((l) => l.length > 0)
-                .join("\n");
-              return text;
-            }}
-          />
-        </Col>
-        <Col>
-          <CopyButton
-            buttonText="Copy word"
-            getTextToCopy={() => selectedWord}
-          />
-        </Col>
-      </Row>
-      {selectedWord && (
+      {wordOptions?.length > 0 && (
         <>
-          <hr />
-          <Row>
+          <Row className="mt-2">
             <h6>外部サイトで「{selectedWord}」を検索 </h6>
             <Form.Control
               as="select"
@@ -196,7 +175,29 @@ const ExportView = ({}) => {
                 </option>
               ))}
             </Form.Control>
-            <ul className="external-sites list-unstyled mt-3">
+          </Row>
+          <Row className="mt-2">
+            <Col>
+              <CopyButton
+                buttonText="TXTをコピー"
+                getTextToCopy={() => {
+                  const text = definitionRef.current?.innerText
+                    ?.split("\n")
+                    .filter((l) => l.length > 0)
+                    .join("\n");
+                  return text;
+                }}
+              />
+            </Col>
+            <Col>
+              <CopyButton
+                buttonText="Copy word"
+                getTextToCopy={() => selectedWord}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <ul className="external-sites list-unstyled mt-2">
               <li>
                 <SearchLink
                   word={selectedWord}
