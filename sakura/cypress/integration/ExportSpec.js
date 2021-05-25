@@ -1,6 +1,13 @@
 describe("export view", () => {
-  it("can display a list of dictionaries", () => {
+  it("can display the export view", () => {
     cy.visit("#/export/大辞林/prefix/犬/0");
-    // cy.contains("広辞苑");
+    cy.contains("いぬ【犬・狗】");
+    cy.contains("TXTをコピー");
+
+    // can select other options for the target word
+    cy.get("select").select("狗");
+
+    // export links must be visible
+    cy.contains("Jisho sentences");
   });
 });

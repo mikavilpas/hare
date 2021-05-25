@@ -18,7 +18,32 @@ import * as wordParser from "../../utils/wordParser";
 
 import { getWordDefinitions } from "../../api";
 import { bbcode2Text, prettyText } from "../dict/utils";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import copy from "copy-to-clipboard";
+
+const CopyButton = ({ getTextToCopy, buttonText }) => {
+  const [wordWasCopied, setWordWasCopied] = useState(false);
+
+  return (
+    <Button
+      block
+      className="mt-2"
+      variant={wordWasCopied ? "outline-success" : "outline-primary"}
+      onClick={() => {
+        const text = getTextToCopy();
+        copy(text);
+        setWordWasCopied(true);
+      }}
+    >
+      {wordWasCopied ? (
+        <span>
+          {buttonText} <i className="bi bi-check fs-1"></i>
+        </span>
+      ) : (
+        <span>{buttonText}</span>
+      )}
+    </Button>
+  );
+};
 
 const SearchLink = ({ iconUrl, children, url }) => {
   return (
@@ -49,6 +74,7 @@ const ExportView = ({}) => {
   const [copiableText, setCopiableText] = useState();
   const [wordOptions, setWordOptions] = useState([]);
   const [selectedWord, setSelectedWord] = useState();
+  const [wordWasCopied, setWordWasCopied] = useState();
 
   useEffect(() => {
     if (!dict || !search || !openeditem) {
@@ -75,6 +101,7 @@ const ExportView = ({}) => {
           const options = [
             ...parseResult.value.kanjiOptions,
             parseResult.value.kana,
+            searchResultItem.heading,
           ];
           setWordOptions(options);
           setSelectedWord(options?.[0]);
@@ -123,21 +150,24 @@ const ExportView = ({}) => {
         </div>
       </Row>
       <Row>
-        <CopyToClipboard className="mt-2" text={copiableText} onCopy={() => {}}>
-          <Button
-            block
-            variant="outline-primary"
-            onClick={() => {
+        <Col>
+          <CopyButton
+            buttonText="TXTをコピー"
+            getTextToCopy={() => {
               const text = definitionRef.current?.innerText
                 ?.split("\n")
                 .filter((l) => l.length > 0)
                 .join("\n");
-              setCopiableText(text);
+              return text;
             }}
-          >
-            TXTをコピー
-          </Button>
-        </CopyToClipboard>
+          />
+        </Col>
+        <Col>
+          <CopyButton
+            buttonText="Copy word"
+            getTextToCopy={() => selectedWord}
+          />
+        </Col>
       </Row>
       {selectedWord && (
         <>
