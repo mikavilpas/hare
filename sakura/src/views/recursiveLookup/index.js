@@ -7,6 +7,7 @@ import {
   useRouteMatch,
   useParams,
   generatePath,
+  Link,
 } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
@@ -58,6 +59,21 @@ function RecursiveLookup({ goToRecursiveLookupPage, hide }) {
         <Alert variant={"danger"}>
           <p>Error loading results</p>
           <p>{searchResultError.toString()}</p>
+        </Alert>
+      );
+    }
+
+    if (searchResult?.words?.length === 0) {
+      return (
+        <Alert variant={"secondary"}>
+          <p>No results found for {rsearch}.</p>
+          <p>
+            Try{" "}
+            <Alert.Link to={`/dict/${rdict}/prefix/${rsearch}/0`} as={Link}>
+              searching in all dictionaries
+            </Alert.Link>
+            .
+          </p>
         </Alert>
       );
     }

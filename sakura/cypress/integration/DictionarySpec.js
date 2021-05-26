@@ -143,6 +143,16 @@ describe("dictionary view", () => {
       encodeURI("#/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/山辺/-")
     );
   });
+
+  it.only("can show 'no results' when a recursive search provides no results", () => {
+    cy.visit("#/dict/広辞苑/prefix/学ぶ/0");
+
+    // click a search word which happens to be included in the definition and
+    // which provides no results
+    cy.get("span[data-word-reading=まなび]").click();
+
+    cy.contains("No results found for 学ぶ");
+  });
 });
 
 // TODO can't render the first definition's last line properly http://localhost:4000/dict/%E5%BA%83%E8%BE%9E%E8%8B%91/prefix/%E7%A7%8B
