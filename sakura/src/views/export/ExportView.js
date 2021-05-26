@@ -53,7 +53,11 @@ const SearchLink = ({ iconUrl, children, url }) => {
       target="_blank"
       href={url}
     >
-      <img src={iconUrl} className="inline icon"></img>
+      <img
+        src={iconUrl}
+        style={{ height: "16px", width: "16px" }}
+        className="inline icon"
+      ></img>
       &nbsp;
       {children}
     </a>
@@ -223,6 +227,15 @@ const ExportView = ({}) => {
                   url={`https://jisho.org/search/${selectedWord}`}
                 >
                   Jisho
+                </SearchLink>
+              </li>
+              <li>
+                <SearchLink
+                  word={selectedWord}
+                  iconUrl={"https://sentencesearch.neocities.org/favicon.png"}
+                  url={`https://sentencesearch.neocities.org/#${selectedWord}`}
+                >
+                  Audio sentences
                 </SearchLink>
               </li>
             </ul>
