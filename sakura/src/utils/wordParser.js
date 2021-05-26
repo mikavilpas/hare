@@ -21,7 +21,7 @@ export function parse(inputText) {
   }
 }
 
-const normalize = (str) => str.replaceAll(/[‐・-]/g, "");
+const normalize = (str) => str.replaceAll(/[‐・-]/g, "").replaceAll("●", "");
 const wordChar = p.noCharOf("【】〖〗{}（）〔〕");
 
 const quoted = (sepA, sepB) => {

@@ -44,4 +44,10 @@ it("can parse the search result from headings", () => {
       kana: "なりたつ",
     },
   });
+
+  // case with weird leading symbol
+  // ●幸いする
+  expect(wordParser.parse("●幸いする")).to.deep.include({
+    value: { kana: "幸いする" },
+  });
 });
