@@ -16,8 +16,9 @@ export function parse(inputText) {
   try {
     const parseResult = heading.parse(inputText);
     return parseResult;
-  } catch (_error) {
-    throw _error;
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 }
 
@@ -25,7 +26,7 @@ const normalize = (str) => str.replaceAll(/[‐・-]/g, "").replaceAll("●", ""
 const wordChar = p.noCharOf("【】〖〗{}（）〔〕");
 
 const quoted = (sepA, sepB) => {
-  return wordChar.pipe(
+  return p.noCharOf([sepA, sepB]).pipe(
     //
     many(),
     between(sepA, sepB),

@@ -32,7 +32,7 @@ it("can parse the search result from headings", () => {
 
   // case with no kanji
   expect(wordParser.parse("け‐ども")).to.deep.include({
-    value: { kana: "けども" },
+    value: { kana: "けども", kanjiOptions: [] },
   });
 
   // case with kanji that has alternate forms
@@ -48,6 +48,13 @@ it("can parse the search result from headings", () => {
   // case with weird leading symbol
   // ●幸いする
   expect(wordParser.parse("●幸いする")).to.deep.include({
-    value: { kana: "幸いする" },
+    value: { kana: "幸いする", kanjiOptions: [] },
+  });
+
+  // weird case
+  expect(
+    wordParser.parse("さいわい‐おり【幸い織（り）】さいはひ‐")
+  ).to.deep.include({
+    value: { kana: "さいわいおり", kanjiOptions: ["幸い織（り）"] },
   });
 });
