@@ -1,4 +1,5 @@
 import { setup } from "axios-cache-adapter";
+import { dictInfo } from "./views/dict/utils";
 
 // Create `axios` instance with pre-configured `axios-cache-adapter` attached to it
 const api = setup({
@@ -39,9 +40,10 @@ export async function getWordDefinitions({ dict, word, searchType = 0 }) {
   //   page & offset: use these params (instead of "q" param) to fetch a specific word from dict.
 
   const params = new URLSearchParams();
+  const dictObject = dictInfo(dict);
   try {
     params.append("api", 1);
-    params.append("dict", dict);
+    params.append("dict", dictObject.id);
     params.append("q", word);
     params.append("type", searchType);
 

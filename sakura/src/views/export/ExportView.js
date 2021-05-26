@@ -90,7 +90,7 @@ const ExportView = ({}) => {
       .then(([result, error]) => {
         const searchResultItem = result?.words?.[openeditem];
         if (!searchResultItem) {
-          setSearchError("search result did not contain the searched word");
+          setSearchError("the search result did not contain the searched word");
           setSearchResult(null);
         } else {
           setSearchResult(searchResultItem);
