@@ -73,7 +73,7 @@ const kanjiHeadingPart = quotedText.pipe(
 
 // all kanji headings start with the kana, followed by optional quoted kanji
 const heading = kanaHeadingPart.pipe(
-  then(kanjiHeadingPart.pipe(maybe())),
+  then(kanjiHeadingPart.pipe(maybe({ kanjiOptions: [] }))),
   map(([kana, kanji]) => {
     return { ...kana, ...kanji };
   })
