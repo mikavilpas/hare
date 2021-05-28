@@ -11,7 +11,7 @@ describe("export view", () => {
     cy.contains("Jisho sentences");
   });
 
-  it.only("exports the correct word", () => {
+  it("exports the correct word", () => {
     cy.visit("#/export/日国/prefix/幸い/0");
     cy.contains("●幸いする");
   });

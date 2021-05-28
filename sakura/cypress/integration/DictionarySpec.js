@@ -144,7 +144,7 @@ describe("dictionary view", () => {
     );
   });
 
-  it.only("can show 'no results' when a recursive search provides no results", () => {
+  it("can show 'no results' when a recursive search provides no results", () => {
     cy.visit("#/dict/広辞苑/prefix/学ぶ/0");
 
     // click a search word which happens to be included in the definition and

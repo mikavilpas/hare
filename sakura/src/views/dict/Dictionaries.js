@@ -2,7 +2,7 @@ import Alert from "react-bootstrap/Alert";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Button from "react-bootstrap/Button";
-import ListGroup from "react-bootstrap/ListGroup";
+import ToggleButton from "react-bootstrap/ToggleButton";
 import React, { useState, useEffect } from "react";
 import Spinner from "react-bootstrap/Spinner";
 
@@ -12,7 +12,8 @@ import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { preferredDictionaries, dictInfo, dictShortName } from "./utils";
 
 const DictionaryLink = ({ name, ownSearchResult, currentDict, setDict }) => {
-  const selected = dictShortName(name) === currentDict;
+  const shortName = dictShortName(name);
+  const selected = shortName === currentDict;
   const hasResults = ownSearchResult?.result?.words?.length;
 
   const classes = [];
@@ -24,6 +25,26 @@ const DictionaryLink = ({ name, ownSearchResult, currentDict, setDict }) => {
   } else {
     classes.push("disabled");
   }
+
+  return (
+    <ToggleButton
+      className={classes.join(" ")}
+      type="radio"
+      size="lg"
+      variant="secondary"
+      name="radio"
+      value={shortName}
+      checked={currentDict === shortName}
+      onChange={(e) => {
+        if (selected || !hasResults) return;
+
+        const newDict = e.currentTarget.value;
+        setDict(newDict);
+      }}
+    >
+      {shortName}
+    </ToggleButton>
+  );
 
   return (
     <span
@@ -80,7 +101,7 @@ const Dictionaries = ({ currentDict, dicts, setDicts, searchResult }) => {
     );
   } else {
     return (
-      <aside id="dictionary-list">
+      <ButtonGroup toggle id="dictionary-list">
         {dicts?.map((d, i) => {
           const alias = dictInfo(d).alias;
           const ownSearchResult = searchResult?.[alias] || searchResult?.[d];
@@ -94,7 +115,7 @@ const Dictionaries = ({ currentDict, dicts, setDicts, searchResult }) => {
             />
           );
         })}
-      </aside>
+      </ButtonGroup>
     );
   }
 };

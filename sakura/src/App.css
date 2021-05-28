@@ -8,28 +8,31 @@ body {
   font-size: 1.7em;
 }
 
-#dictionary-list .dict-name {
-  cursor: pointer;
-  display: inline-block;
-  padding-left: 3px;
-  padding-right: 3px;
-  border-radius: 5px;
+#dictionary-list {
+  flex-wrap: wrap;
 }
 
-#dictionary-list .dict-name.selected {
+#dictionary-list label {
+  /* remove rounded edges from base style */
+  border-radius: 0 !important;
+  border: none;
+  margin-left: 0 !important;
+}
+
+#dictionary-list .selected {
   color: #00feff !important;
 }
 
-#dictionary-list .dict-name.has-search-result {
+#dictionary-list .has-search-result {
   color: lightgray;
   background-color: #2e435f;
 }
-#dictionary-list .dict-name.has-search-error {
+#dictionary-list .has-search-error {
   color: lightgray;
   background-color: #5f2e2e;
 }
 
-#dictionary-list .dict-name.disabled {
+#dictionary-list .disabled {
   color: black;
   background-color: transparent;
   cursor: default;
@@ -114,7 +117,7 @@ superscript {
 }
 
 #version-indicator {
-  position: absolute;
+  position: fixed;
   bottom: 5px;
   right: 5px;
   font-size: x-small;
