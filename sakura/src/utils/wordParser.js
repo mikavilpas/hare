@@ -63,6 +63,7 @@ const kanjiHeadingPart = quotedText.pipe(
     const kanjiOptions = insideQuotes
       .replaceAll("△", "")
       .replaceAll("×", "")
+      .replaceAll("＝", "")
       .split("・")
       .map((str) => normalize(str));
 

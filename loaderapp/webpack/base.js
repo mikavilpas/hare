@@ -37,6 +37,7 @@ const plugins = [
   }),
   new CopyPlugin({
     patterns: [{ from: "../sakura/build/static/", to: "static/" }],
+    patterns: [{ from: "../sakura/public", to: "static/public/" }],
   }),
 ];
 

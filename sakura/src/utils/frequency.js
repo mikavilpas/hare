@@ -1,13 +1,7 @@
-let frequencies = {};
+let frequencies;
 
-async function initFrequencyList(jsonArray) {
-  const freqs = Object.fromEntries(
-    jsonArray.map((word, index) => [word, index])
-  );
-  frequencies = freqs;
-}
-
-function frequency(word) {
+export function frequency(word) {
+  if (!frequencies) return null;
   const index = frequencies[word] || 999999;
 
   // migaku dictionary frequency logic
@@ -21,35 +15,20 @@ function frequency(word) {
   return { index, rating };
 }
 
-export function words(title) {
-  const insideBrackets = () => {
-    const [_, word] = title.match(/【(.+?)】/);
-    return [word];
-  };
+export function initFrequencyList() {
+  if (frequencies) return null;
 
-  const manyWords = () => {
-    // many words separated by "・"
-    const [wordDefinition] = insideBrackets();
-    return wordDefinition
-      .replace(/＝/g, "")
-      .replace(/×/g, "")
-      .replace(/△/g, "")
-      .replace(/（.*?）/g, "")
-      .split("・");
-  };
-
-  try {
-    return manyWords() || insideBrackets();
-  } catch (_) {}
-}
-
-async function initScript() {
   // load in browser
   return fetch(
-    "https://sp3ctum.github.io/sakura-paris-customizations/frequency.json"
+    "https://sp3ctum.github.io/sakura-paris-customizations/static/public/frequency.json"
   )
     .then((response) => response.json())
-    .then(initFrequencyList)
+    .then((jsonArray) => {
+      const freqs = Object.fromEntries(
+        jsonArray.map((word, index) => [word, index])
+      );
+      frequencies = freqs;
+    })
     .then(() => {
       window.frequency = frequency;
       console.log("Loaded frequency list.");

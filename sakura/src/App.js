@@ -3,7 +3,7 @@ import "./App.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 import Container from "react-bootstrap/Container";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   HashRouter as Router,
   Switch,
@@ -14,11 +14,16 @@ import {
 import DictView from "./views/dict/";
 import VersionIndicator from "./views/versionIndicator/VersionIndicator";
 import ExportView from "./views/export/ExportView";
+import { initFrequencyList } from "./utils/frequency";
 
 function App() {
   const [searchLoading, setSearchLoading] = useState();
   const [searchResult, setSearchResult] = useState();
   const [searchError, setSearchError] = useState();
+
+  useEffect(() => {
+    initFrequencyList();
+  }, []);
 
   return (
     <div className="App">

@@ -26,6 +26,8 @@ import {
   prettyText,
 } from "./utils";
 import RecursiveLookup from "../recursiveLookup/index";
+import { frequency } from "../../utils/frequency";
+import { parse } from "../../utils/wordParser";
 
 const Definition = ({
   i,
@@ -38,6 +40,21 @@ const Definition = ({
   const [analysisResult, setAnalysisResult] = useState();
   const [analysisError, setAnalysisError] = useState();
   const match = useRouteMatch();
+
+  const definitionFrequency = () => {
+    const wordAnalysis = parse(definition?.heading);
+    const words = [wordAnalysis.value.kana, ...wordAnalysis.value.kanjiOptions];
+    const frequencies = words.map(frequency);
+
+    const highestFrequency = frequencies
+      .filter((f) => f) // might not have been loaded yet - just ignore
+      .map((f) => f.rating)
+      .sort()
+      .reverse()?.[0];
+    if (highestFrequency) {
+      return <span className="badge badge-secondary">{highestFrequency}</span>;
+    }
+  };
 
   const getTextAnalysis = () => {
     if (isOpened && definition?.text) {
@@ -75,11 +92,14 @@ const Definition = ({
     <Card key={i}>
       <Accordion.Toggle as={Card.Header} eventKey={i.toString()}>
         <div className="d-flex justify-content-between align-items-center">
-          <h4
-            dangerouslySetInnerHTML={{
-              __html: prettyText(definition?.heading),
-            }}
-          ></h4>
+          <span className="definition-title d-flex justify-content-between w-100 align-items-center">
+            <span
+              dangerouslySetInnerHTML={{
+                __html: bbcode2Text(definition?.heading),
+              }}
+            ></span>
+            {definitionFrequency()}
+          </span>
           {isOpened && toolbar()}
         </div>
       </Accordion.Toggle>

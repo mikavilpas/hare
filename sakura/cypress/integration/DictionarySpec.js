@@ -29,6 +29,9 @@ describe("dictionary view", () => {
       .should("have.attr", "href")
       .should("contain", "#/export/広辞苑/prefix/犬/0");
 
+    // indicates the frequency of the word
+    cy.contains("5");
+
     // can hide the current definition
     cy.contains("いぬ【犬・狗】").click();
     cy.url().should("contain", encodeURI("/dict/広辞苑/prefix/犬/-"));
@@ -137,7 +140,7 @@ describe("dictionary view", () => {
       .should("contain", "#/export/大辞林/prefix/山辺/1");
 
     // can hide the currently opened item
-    cy.get("h4").contains(" やまのべ-の-みち【山辺の道】 ").click();
+    cy.contains("やまのべ-の-みち【山辺の道】").click();
     cy.url().should(
       "contain",
       encodeURI("#/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/山辺/-")

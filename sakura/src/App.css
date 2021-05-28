@@ -88,6 +88,19 @@ body {
   margin: 0.4em;
 }
 
+.definition-title {
+  margin-left: 0.6rem;
+  margin-right: 0.6rem;
+  font-size: 90%;
+}
+
+.definition-title .badge-secondary {
+  font-size: 73%;
+  background-color: #3e3e3e;
+  color: gray;
+  height: fit-content;
+}
+
 sup superscript {
   top: -0.5em;
 }
