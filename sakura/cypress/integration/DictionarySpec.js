@@ -22,10 +22,10 @@ describe("dictionary view", () => {
     cy.url().should("contain", encodeURI("/dict/広辞苑/prefix/犬/0"));
 
     // displays action buttons
-    cy.get(".card-header nav").should("be.visible");
+    cy.get(".card-header .definition-toolbar").should("be.visible");
 
     // has a link to the export page
-    cy.get(".card-header nav a")
+    cy.get(".card-header .definition-toolbar a")
       .should("have.attr", "href")
       .should("contain", "#/export/広辞苑/prefix/犬/0");
 
@@ -37,11 +37,20 @@ describe("dictionary view", () => {
     cy.url().should("contain", encodeURI("/dict/広辞苑/prefix/犬/-"));
 
     // card should be closed and nav controls hidden
-    cy.get(".card-header nav").should("not.exist");
+    cy.get(".card-header .definition-toolbar").should("not.exist");
+
+    // can do a new search
+    cy.contains("いぬ【犬・狗】").click();
+    cy.get("button").contains("検索").click();
+    // now the word selection list (dropdown) is open. Select the word to search with.
+    cy.get("a").contains("狗").click();
+    cy.url().should("contain", encodeURI("/#/dict/広辞苑/prefix/狗/0"));
+    cy.get("input[type=search]").should("have.value", "狗");
   });
 
   it("can render complex definitions", () => {
-    cy.visit(encodeURI("/dict/大辞林/prefix/雪/0"));
+    cy.visit(encodeURI("#/dict/大辞林/prefix/雪/0"));
+    cy.contains("〔古くは「すすく」と清音〕");
   });
 
   it("stores the current dictionary in the url", () => {
@@ -104,7 +113,7 @@ describe("dictionary view", () => {
 
     // the recursive search should be opened, thus the nav controls should be
     // visible
-    cy.get(".modal-content nav").should("be.visible");
+    cy.get(".modal-content .definition-toolbar").should("be.visible");
   });
 
   it("can make recursive lookups", () => {
@@ -135,7 +144,7 @@ describe("dictionary view", () => {
     // should contain furigana
     cy.get(".modal-content ruby").should("be.visible");
 
-    cy.get(".modal-content .card-header nav a")
+    cy.get(".modal-content .card-header a")
       .should("have.attr", "href")
       .should("contain", "#/export/大辞林/prefix/山辺/1");
 
@@ -145,6 +154,15 @@ describe("dictionary view", () => {
       "contain",
       encodeURI("#/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/山辺/-")
     );
+
+    //
+    // can perform a new search from a definition
+    cy.contains("やまのべ-の-みち【山辺の道】").click();
+    cy.get(".modal-content button").contains("検索").click();
+    // now the word selection list (dropdown) is open. Select the word to search with.
+    cy.get(".modal-content a").contains("山辺の道").click();
+    cy.url().should("contain", encodeURI("/#/dict/広辞苑/prefix/山辺の道/0"));
+    cy.get("input[type=search]").should("have.value", "山辺の道");
   });
 
   it("can show 'no results' when a recursive search provides no results", () => {
@@ -155,6 +173,8 @@ describe("dictionary view", () => {
     cy.get("span[data-word-reading=まなび]").click();
 
     cy.contains("No results found for 学ぶ");
+    cy.contains("searching in all dictionaries").click();
+    cy.get("input[type=search]").should("have.value", "学ぶ");
   });
 });
 

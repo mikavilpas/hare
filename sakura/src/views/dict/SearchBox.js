@@ -32,19 +32,15 @@ const SearchBox = ({
   };
 
   useEffect(() => {
-    // on the first load after the dicts have been received, redo a search based
-    // on the url (if applicable)
+    // redo a search based on the url
     if (searchmode && search) {
-      doSearch();
+      setSearchInputText(search);
+      doSearch(search);
     }
-  }, [dicts]);
+  }, [dicts, searchmode, search]);
 
-  const doSearch = () => {
-    setSearchLoading(true);
-    setSearchResult(null);
-    tempSearchResult.current = {};
-
-    if (params.search !== searchInputText) {
+  const applySearchToUrl = () => {
+    if (search !== searchInputText) {
       // if a new search is made, go to the lookup page
       const lookupUrl = generatePath(urls.lookup, {
         dictname: currentDict,
@@ -54,14 +50,20 @@ const SearchBox = ({
       });
       history.push(lookupUrl);
     }
+  };
+
+  const doSearch = (word) => {
+    setSearchLoading(true);
+    setSearchResult(null);
+    tempSearchResult.current = {};
 
     const searchPromises = dicts?.map((dict) => {
       getWordDefinitions({
         dict: dict,
-        word: searchInputText || search,
+        word: word,
       })
         .then(([result, error]) => {
-          singleDictSearchResult(dict, searchInputText, result, error);
+          singleDictSearchResult(dict, word, result, error);
         })
         .finally(() => setSearchLoading(false));
     });
@@ -74,7 +76,7 @@ const SearchBox = ({
     <Form
       onSubmit={(e) => {
         e.preventDefault(); // don't reload page
-        doSearch();
+        applySearchToUrl();
       }}
     >
       <Form.Group>
@@ -89,7 +91,7 @@ const SearchBox = ({
               />
             </Col>
             <Col xs={5} md={2}>
-              <Button block onClick={() => doSearch()}>
+              <Button block onClick={() => applySearchToUrl()}>
                 Search
               </Button>
             </Col>

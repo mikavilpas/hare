@@ -4,6 +4,9 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import Spinner from "react-bootstrap/Spinner";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import Dropdown from "react-bootstrap/Dropdown";
 
 import React, { useState, useEffect } from "react";
 
@@ -32,6 +35,7 @@ import { parse } from "../../utils/wordParser";
 const Definition = ({
   i,
   definition,
+  openTab,
   goToRecursiveLookupPage,
   isOpened,
   makeExportLink,
@@ -39,12 +43,27 @@ const Definition = ({
   // always open the first card by default
   const [analysisResult, setAnalysisResult] = useState();
   const [analysisError, setAnalysisError] = useState();
+  const [definitionWords, setDefinitionWords] = useState([]);
   const match = useRouteMatch();
+  const history = useHistory();
+
+  useEffect(() => {
+    // parse the words from the current definition's heading
+    try {
+      const wordAnalysis = parse(definition?.heading);
+      const words = [
+        wordAnalysis.value.kana,
+        ...wordAnalysis.value.kanjiOptions,
+      ].filter((w) => w);
+      setDefinitionWords(words);
+    } catch (e) {
+      console.warn("Unable to parse definition words", e);
+      setDefinitionWords([]);
+    }
+  }, [definition.heading]);
 
   const definitionFrequency = () => {
-    const wordAnalysis = parse(definition?.heading);
-    const words = [wordAnalysis.value.kana, ...wordAnalysis.value.kanjiOptions];
-    const frequencies = words.map(frequency);
+    const frequencies = definitionWords.map(frequency);
 
     const highestFrequency = frequencies
       .filter((f) => f) // might not have been loaded yet - just ignore
@@ -52,6 +71,8 @@ const Definition = ({
       .sort()
       .reverse()?.[0];
     if (highestFrequency) {
+      // words that are not included in the frequency list do not get displayed
+      // at all - this will allow for quick visual scanning
       return <span className="badge badge-secondary">{highestFrequency}</span>;
     }
   };
@@ -72,10 +93,34 @@ const Definition = ({
   }, [isOpened, definition]);
 
   const toolbar = () => {
+    const { rdict, rsearchmode, rsearch } = match.params;
     return (
-      <nav>
+      <ButtonGroup
+        size="lg"
+        className="definition-toolbar align-items-center"
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          return false;
+        }}
+      >
+        <DropdownButton title="検索" variant="secondary" size="sm">
+          {definitionWords.map((w, i) => {
+            const href = generatePath(urls.lookup, {
+              ...match.params,
+              search: w,
+              openeditem: "0",
+            });
+            return (
+              <Dropdown.Item as={Link} to={href} key={i}>
+                {w}
+              </Dropdown.Item>
+            );
+          })}
+        </DropdownButton>
         <Button
           as={Link}
+          className="icon-button"
           variant="link"
           to={makeExportLink()}
           onClick={(e) => {
@@ -84,13 +129,21 @@ const Definition = ({
         >
           <i className="bi bi-link"></i>
         </Button>
-      </nav>
+      </ButtonGroup>
     );
   };
 
   return (
     <Card key={i}>
-      <Accordion.Toggle as={Card.Header} eventKey={i.toString()}>
+      <Accordion.Toggle
+        as={Card.Header}
+        onClick={(e) => {
+          if (isOpened) openTab("-");
+          else openTab(i.toString());
+          return false;
+        }}
+        eventKey={i.toString()}
+      >
         <div className="d-flex justify-content-between align-items-center">
           <span className="definition-title d-flex justify-content-between w-100 align-items-center">
             <span
@@ -152,18 +205,13 @@ const Definitions = ({
   if (!definitions) return "";
 
   return (
-    <Accordion
-      activeKey={currentTab}
-      onSelect={(tab) => {
-        openTab(tab);
-      }}
-      className="definition-listing"
-    >
+    <Accordion activeKey={currentTab} className="definition-listing">
       {definitions.words?.map((w, i) => {
         return (
           <Definition
             key={`${dict}_${i}`}
             i={i}
+            openTab={openTab}
             definition={w}
             goToRecursiveLookupPage={goToRecursiveLookupPage}
             isOpened={i.toString() === currentTab}

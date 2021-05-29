@@ -89,7 +89,7 @@ function DictView() {
           openTab={(index) => {
             const url = generatePath(match.path, {
               ...match.params,
-              openeditem: index || "-",
+              openeditem: index,
             });
             history.push(url);
           }}
