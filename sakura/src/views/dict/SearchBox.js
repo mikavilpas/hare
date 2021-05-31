@@ -53,6 +53,7 @@ const SearchBox = ({
   };
 
   const doSearch = (word) => {
+    document.activeElement?.blur();
     setSearchLoading(true);
     setSearchResult(null);
     tempSearchResult.current = {};
