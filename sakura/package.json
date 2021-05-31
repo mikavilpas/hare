@@ -1,6 +1,6 @@
 {
   "name": "sakura",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "private": true,
   "dependencies": {
     "@bbob/preset-react": "^2.6.2",
