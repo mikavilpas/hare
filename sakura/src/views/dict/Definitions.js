@@ -70,12 +70,9 @@ const Definition = ({
       .map((f) => f.rating)
       .sort()
       .reverse()?.[0];
-    if (highestFrequency) {
-      // words that are not included in the frequency list do not get displayed
-      // at all - this will allow for quick visual scanning
-      return <span className="badge badge-secondary">{highestFrequency}</span>;
-    }
+    return highestFrequency;
   };
+  const currentFrequency = definitionFrequency();
 
   const getTextAnalysis = () => {
     if (isOpened && definition?.text) {
@@ -134,7 +131,7 @@ const Definition = ({
   };
 
   return (
-    <Card key={i}>
+    <Card key={i} className={`order-${currentFrequency}`}>
       <Accordion.Toggle
         as={Card.Header}
         onClick={(e) => {
@@ -151,7 +148,11 @@ const Definition = ({
                 __html: bbcode2Text(definition?.heading),
               }}
             ></span>
-            {definitionFrequency()}
+            {/* words that are not included in the frequency list do not get
+                displayed at all - this will allow for quick visual scanning */}
+            {currentFrequency > 0 && (
+              <span className="badge badge-secondary">{currentFrequency}</span>
+            )}
           </span>
           {isOpened && toolbar()}
         </div>
@@ -205,7 +206,10 @@ const Definitions = ({
   if (!definitions) return "";
 
   return (
-    <Accordion activeKey={currentTab} className="definition-listing">
+    <Accordion
+      activeKey={currentTab}
+      className="definition-listing d-flex flex-column-reverse"
+    >
       {definitions.words?.map((w, i) => {
         return (
           <Definition
