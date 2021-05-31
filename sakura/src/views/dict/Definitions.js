@@ -44,6 +44,8 @@ const Definition = ({
   const [analysisResult, setAnalysisResult] = useState();
   const [analysisError, setAnalysisError] = useState();
   const [definitionWords, setDefinitionWords] = useState([]);
+  const [currentFrequency, setCurrentFrequency] = useState(0);
+  const [currentOrderNumber, setCurrentOrderNumber] = useState();
   const match = useRouteMatch();
   const history = useHistory();
 
@@ -62,7 +64,7 @@ const Definition = ({
     }
   }, [definition.heading]);
 
-  const definitionFrequency = () => {
+  useEffect(() => {
     const frequencies = definitionWords.map(frequency);
 
     const highestFrequency = frequencies
@@ -70,9 +72,16 @@ const Definition = ({
       .map((f) => f.rating)
       .sort()
       .reverse()?.[0];
-    return highestFrequency;
-  };
-  const currentFrequency = definitionFrequency();
+
+    if (highestFrequency === 5) setCurrentOrderNumber(1);
+    else if (highestFrequency === 4) setCurrentOrderNumber(2);
+    else if (highestFrequency === 3) setCurrentOrderNumber(3);
+    else if (highestFrequency === 2) setCurrentOrderNumber(4);
+    else if (highestFrequency === 1) setCurrentOrderNumber(5);
+    else setCurrentOrderNumber(6); // don't change the ordering
+
+    setCurrentFrequency(highestFrequency);
+  }, [definitionWords]);
 
   const getTextAnalysis = () => {
     if (isOpened && definition?.text) {
@@ -131,7 +140,10 @@ const Definition = ({
   };
 
   return (
-    <Card key={i} className={`order-${currentFrequency}`}>
+    <Card
+      key={i}
+      className={currentOrderNumber > 0 ? `order-${currentOrderNumber}` : ""}
+    >
       <Accordion.Toggle
         as={Card.Header}
         onClick={(e) => {
@@ -208,7 +220,7 @@ const Definitions = ({
   return (
     <Accordion
       activeKey={currentTab}
-      className="definition-listing d-flex flex-column-reverse"
+      className="definition-listing d-flex flex-column"
     >
       {definitions.words?.map((w, i) => {
         return (
