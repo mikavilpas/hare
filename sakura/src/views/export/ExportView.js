@@ -17,7 +17,7 @@ import Alert from "react-bootstrap/Alert";
 import * as wordParser from "../../utils/wordParser";
 
 import { getWordDefinitions } from "../../api";
-import { bbcode2Text, prettyText } from "../dict/utils";
+import { prettyText } from "../dict/utils";
 import copy from "copy-to-clipboard";
 
 const CopyButton = ({ getTextToCopy, buttonText }) => {
@@ -139,8 +139,8 @@ const ExportView = ({}) => {
     return "";
   }
 
-  const headingText = prettyText(searchResult.heading);
-  const bodyText = prettyText(searchResult.text);
+  const headingHtml = prettyText(searchResult.heading, { dict: dict });
+  const bodyHtml = prettyText(searchResult.text, { dict: dict });
 
   return (
     <Container id="export" className="mt-2">
@@ -151,13 +151,13 @@ const ExportView = ({}) => {
             <h3
               className="card-title"
               dangerouslySetInnerHTML={{
-                __html: headingText,
+                __html: headingHtml,
               }}
             ></h3>
             <p
               className="card-text"
               dangerouslySetInnerHTML={{
-                __html: bodyText,
+                __html: bodyHtml,
               }}
             ></p>
           </div>

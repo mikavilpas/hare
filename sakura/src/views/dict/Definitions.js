@@ -24,9 +24,9 @@ import {
 import {
   dictInfo,
   urls,
-  bbcode2Text,
   prettifyLines,
   prettyText,
+  bbcode2Html,
 } from "./utils";
 import RecursiveLookup from "../recursiveLookup/index";
 import { frequency } from "../../utils/frequency";
@@ -40,14 +40,21 @@ const Definition = ({
   isOpened,
   makeExportLink,
 }) => {
+  const match = useRouteMatch();
+  const history = useHistory();
+
   // always open the first card by default
   const [analysisResult, setAnalysisResult] = useState();
   const [analysisError, setAnalysisError] = useState();
   const [definitionWords, setDefinitionWords] = useState([]);
+  const [definitionHtml, setDefinitionHtml] = useState(
+    prettyText(definition?.text || "", {
+      dict: match.params.dictname,
+    })
+  );
+
   const [currentFrequency, setCurrentFrequency] = useState(0);
   const [currentOrderNumber, setCurrentOrderNumber] = useState();
-  const match = useRouteMatch();
-  const history = useHistory();
 
   useEffect(() => {
     // parse the words from the current definition's heading
@@ -86,9 +93,13 @@ const Definition = ({
   const getTextAnalysis = () => {
     if (isOpened && definition?.text) {
       // successive api calls get cached
-      const text = bbcode2Text(definition.text);
-      textAnalysis(text).then(([html, error]) => {
-        setAnalysisResult(html);
+      textAnalysis(definition.text).then(([html, error]) => {
+        if (html) {
+          const formatted = prettyText(html || "", {
+            dict: match.params.dictname,
+          });
+          setAnalysisResult(formatted);
+        }
         setAnalysisError(error);
       });
     }
@@ -157,7 +168,7 @@ const Definition = ({
           <span className="definition-title d-flex justify-content-between w-100 align-items-center">
             <span
               dangerouslySetInnerHTML={{
-                __html: bbcode2Text(definition?.heading),
+                __html: bbcode2Html(definition?.heading),
               }}
             ></span>
             {/* words that are not included in the frequency list do not get
@@ -181,7 +192,7 @@ const Definition = ({
               }
             }}
             dangerouslySetInnerHTML={{
-              __html: prettyText(analysisResult || definition?.text),
+              __html: analysisResult || definitionHtml,
             }}
           ></div>
         </Card.Body>

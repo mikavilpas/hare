@@ -5,6 +5,8 @@ import { generatePath } from "react-router-dom";
 import html5Preset from "@bbob/preset-html5/es";
 import { render } from "@bbob/html/es";
 import bbob from "@bbob/core";
+import bbcode from "../../utils/bbcode";
+import { tokenize } from "../../utils/bbcode";
 
 // Dictionaries to display and preload results for. These are either the id or
 // alias properties from the config.dictinfo
@@ -44,38 +46,39 @@ export const urls = {
   lookup: "/dict/:dictname/:searchmode/:search/:openeditem",
 };
 
-const mypreset = html5Preset.extend((tags, options) => ({
-  ...tags,
+export function bbcode2Html(bbcodeText, options) {
+  const convertTokensToHtml = (t) => {
+    if (typeof t === "string") {
+      return t;
+    }
 
-  // TODO: rendering rules from the host site. These need beautifying
-  keyword: (node) => ({ tag: "mark", content: node.content }),
-  superscript: (node) => ({ tag: "sup", content: node.content }),
-  subscript: (node) => ({ tag: "sub", content: node.content }),
-  decoration: (node) => ({ tag: "b", content: node.content }),
-  emphasis: (node) => ({ tag: "em", content: node.content }),
-  reference: (node) => ({ tag: "span", content: node.content }),
+    // recurse
+    const content = t.content.map((c) => convertTokensToHtml(c)).join("");
 
-  // →
-  // TODO support image
-  // TODO support mono
-  // TODO support wav
-}));
+    if (t.type === "keyword") return `<mark>${content}</mark>`;
+    if (t.type === "subscript") return `<sub>${content}</sub>`;
+    if (t.type === "superscript") return `<sup>${content}</sup>`;
+    if (t.type === "decoration") return `<b>${content}</b>`;
+    if (t.type === "emphasis") return `<em>${content}</em>`;
 
-export function bbcode2Text(text) {
-  const bbconverter = bbob(mypreset());
-  const options = {
-    render,
-    onlyAllowTags: [
-      "keyword",
-      "superscript",
-      "subscript",
-      "decoration",
-      "emphasis",
-      "reference",
-    ],
+    // TODO render <a>
+    if (t.type === "reference") return content;
+    if (t.type === "image") {
+      const src = `/dict/?api=1&binary=${t.format}&dict=${options.dict}&offset=${t.offset}&page=${t.page}`;
+      return `<img title=${t.content} src=${src} />`;
+    }
+
+    return t?.content || t; // unknown tags or no tags at all
   };
-  const textified = bbconverter.process(text, options).html;
-  return textified;
+
+  try {
+    const parseResult = tokenize(bbcodeText);
+    return parseResult.value.map((t) => convertTokensToHtml(t)).join("");
+  } catch (e) {
+    // fallback in case the format changes - the user must see something
+    console.warn("Unable to htmlize bbcode", bbcodeText, e);
+    return bbcodeText;
+  }
 }
 
 export function prettifyLines(text) {
@@ -88,7 +91,7 @@ export function prettifyLines(text) {
     });
 }
 
-export function prettyText(text) {
-  const lines = prettifyLines(bbcode2Text(text));
+export function prettyText(text, options) {
+  const lines = prettifyLines(bbcode2Html(text, options));
   return lines.join("");
 }
