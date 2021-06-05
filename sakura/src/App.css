@@ -52,7 +52,7 @@ span[data-word] :hover {
   color: cyan;
 }
 
-span[data-word] > ruby rt {
+ruby rt {
   /* the furigana are annoying so hide them. They also make the text change size
    which is a bad experience */
   display: none;
