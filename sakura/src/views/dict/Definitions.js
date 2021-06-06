@@ -55,6 +55,7 @@ const Definition = ({
 
   const [currentFrequency, setCurrentFrequency] = useState(0);
   const [currentOrderNumber, setCurrentOrderNumber] = useState();
+  const [furiganaEnabled, setFuriganaEnabled] = useState(false);
 
   useEffect(() => {
     // parse the words from the current definition's heading
@@ -182,7 +183,15 @@ const Definition = ({
       </Accordion.Toggle>
       <Accordion.Collapse eventKey={i.toString()}>
         <Card.Body>
+          <Button
+            variant="outline-secondary"
+            className="float-right"
+            onClick={() => setFuriganaEnabled(!furiganaEnabled)}
+          >
+            振
+          </Button>
           <div
+            className={furiganaEnabled ? "furigana-shown" : "furigana-hidden"}
             onClick={(e) => {
               const wordFromKanji = e?.target?.parentElement?.dataset?.word;
               const wordFromKana = e?.target?.dataset?.word;

@@ -52,10 +52,9 @@ span[data-word] :hover {
   color: cyan;
 }
 
-ruby rt {
-  /* the furigana are annoying so hide them. They also make the text change size
-   which is a bad experience */
-  display: none;
+#menu:hover #list {
+  max-height: 50px;
+  transition: max-height 0.25s ease-in;
 }
 
 body {
@@ -84,8 +83,45 @@ body {
 }
 
 .definition-listing .definition-row {
-  line-height: 1.2em;
   margin: 0.4em;
+}
+
+.furigana-hidden ruby rt {
+  animation: fadeout 0.25s linear 1 forwards;
+  display: none;
+}
+
+.furigana-shown ruby rt {
+  animation: fadein 0.25s linear 1 forwards;
+}
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    display: none;
+  }
+}
+
+.definition-listing .furigana-hidden {
+  line-height: 1.3em;
+  transition: line-height 0.25s ease-in;
+}
+
+.definition-listing .furigana-shown {
+  line-height: 1.8em;
+  transition: line-height 0.25s ease-in;
 }
 
 .definition-title {

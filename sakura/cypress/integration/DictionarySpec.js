@@ -15,8 +15,10 @@ describe("dictionary view", () => {
     // can display results
     cy.contains("いぬ【犬・狗】");
 
-    // can display furigana
-    cy.get("ruby").should("exist");
+    // can toggle furigana
+    cy.get("ruby rt").should("not.be.visible");
+    cy.contains("振").click();
+    cy.get("ruby rt").should("be.visible");
 
     // saves the current search in the url
     cy.url().should("contain", encodeURI("/dict/広辞苑/prefix/犬/0"));
