@@ -210,3 +210,7 @@ superscript {
 #export .external-sites a {
   color: lightgray;
 }
+
+#settings {
+  font-size: initial;
+}

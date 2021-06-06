@@ -14,6 +14,7 @@ import {
 import DictView from "./views/dict/";
 import VersionIndicator from "./views/versionIndicator/VersionIndicator";
 import ExportView from "./views/export/ExportView";
+import SettingsView from "./views/help/SettingsView";
 import { initFrequencyList } from "./utils/frequency";
 
 function App() {
@@ -52,8 +53,11 @@ function App() {
             <Route path={["/export/:dictname/:searchmode/:search/:openeditem"]}>
               <ExportView />
             </Route>
+            <Route path={["/settings"]}>
+              <SettingsView />
+            </Route>
             <Route>
-              <Redirect to="/dict" />
+              <Redirect to="/settings" />
             </Route>
           </Switch>
         </Router>
