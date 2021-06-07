@@ -1,9 +1,9 @@
-<center>
+<p align="center">
 <img src="./pics/jisyo_jiten_boy.png" 
      width="200px" 
      height="200px" 
      alt="happy immersion learner reading a book" />
-</center>
+</p>
 
 # sakura-paris-customizations
 
@@ -15,3 +15,4 @@ A Japanese web dictionary that is
 
 The dictionary is free to use and requires the installation of no extra
 software.
+
