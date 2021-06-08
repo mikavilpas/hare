@@ -57,7 +57,7 @@ function App() {
               <SettingsView />
             </Route>
             <Route>
-              <Redirect to="/settings" />
+              <Redirect to="/dict" />
             </Route>
           </Switch>
         </Router>
