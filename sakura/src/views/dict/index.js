@@ -17,6 +17,7 @@ import SearchBox from "./SearchBox";
 import Definitions from "./Definitions";
 import { dictInfo, urls } from "./utils";
 import RecursiveLookup from "../recursiveLookup/index";
+import Navbar from "../navbar/Navbar";
 
 function DictView() {
   const [dicts, setDicts] = useState([]);
@@ -65,14 +66,16 @@ function DictView() {
 
   return (
     <>
+      <Navbar>
+        <SearchBox
+          currentDict={dictname}
+          dicts={dicts}
+          searchResult={searchResult}
+          setSearchResult={setSearchResult}
+          setSearchLoading={setSearchLoading}
+        />
+      </Navbar>
       <div className="mt-3"></div>
-      <SearchBox
-        currentDict={dictname}
-        dicts={dicts}
-        searchResult={searchResult}
-        setSearchResult={setSearchResult}
-        setSearchLoading={setSearchLoading}
-      />
       <Dictionaries
         currentDict={dictname}
         dicts={dicts}

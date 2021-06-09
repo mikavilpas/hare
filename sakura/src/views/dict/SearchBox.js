@@ -6,6 +6,7 @@ import Row from "react-bootstrap/Row";
 import { getWordDefinitions } from "../../api";
 import { useHistory, useParams, generatePath } from "react-router-dom";
 import { urls } from "./utils";
+import InputGroup from "react-bootstrap/InputGroup";
 
 const SearchBox = ({
   currentDict,
@@ -80,25 +81,19 @@ const SearchBox = ({
         applySearchToUrl();
       }}
     >
-      <Form.Group>
-        <div className="flex justify-content-end">
-          <Row>
-            <Col>
-              <Form.Control
-                type="search"
-                spellCheck={false}
-                value={searchInputText}
-                onChange={(e) => setSearchInputText(e.target.value)}
-              />
-            </Col>
-            <Col xs={5} md={2}>
-              <Button block onClick={() => applySearchToUrl()}>
-                Search
-              </Button>
-            </Col>
-          </Row>
-        </div>
-      </Form.Group>
+      <InputGroup>
+        <Form.Control
+          type="search"
+          spellCheck={false}
+          value={searchInputText}
+          onChange={(e) => setSearchInputText(e.target.value)}
+        />
+        <InputGroup.Append>
+          <Button block onClick={() => applySearchToUrl()}>
+            Search
+          </Button>
+        </InputGroup.Append>
+      </InputGroup>
     </Form>
   );
   return "hello";

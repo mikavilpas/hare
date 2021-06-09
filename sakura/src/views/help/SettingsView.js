@@ -6,6 +6,7 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Navbar from "../navbar/Navbar";
 
 const resetToHostSite = () => {
   window.__STORE__.dispatch(
@@ -18,13 +19,10 @@ const resetToHostSite = () => {
 
 const SettingsView = ({}) => {
   return (
-    <Container id="settings" className="mt-2">
+    <Container fluid id="settings" className="mt-2">
+      <Navbar />
       <Form>
-        <Row>
-          <Col>
-            <h3 className="mb-3">Settings</h3>
-          </Col>
-        </Row>
+        <h3 className="mb-3">Settings</h3>
         <Row>
           <Col>
             <h4>Reset to host site</h4>
