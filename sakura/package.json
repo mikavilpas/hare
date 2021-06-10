@@ -3,8 +3,6 @@
   "version": "0.17.0",
   "private": true,
   "dependencies": {
-    "@bbob/preset-react": "^2.6.2",
-    "@bbob/react": "^2.6.2",
     "@jsier/retrier": "^1.2.4",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
