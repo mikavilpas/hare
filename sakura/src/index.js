@@ -1,8 +1,8 @@
+import { Retrier } from "@jsier/retrier";
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 import App from "./App";
-import { Retrier } from "@jsier/retrier";
+import "./index.css";
 
 function log(msg) {
   console.log(`sakura-customizations: ${msg}`);

@@ -1,11 +1,4 @@
 import config from "../../config";
-
-import { generatePath } from "react-router-dom";
-
-import html5Preset from "@bbob/preset-html5/es";
-import { render } from "@bbob/html/es";
-import bbob from "@bbob/core";
-import bbcode from "../../utils/bbcode";
 import { tokenize } from "../../utils/bbcode";
 
 // Dictionaries to display and preload results for. These are either the id or

@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
+import React, { useEffect, useState } from "react";
+import Alert from "react-bootstrap/Alert";
 import Modal from "react-bootstrap/Modal";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Spinner from "react-bootstrap/Spinner";
 import {
-  useHistory,
-  useRouteMatch,
-  useParams,
   generatePath,
   Link,
+  useHistory,
+  useParams,
+  useRouteMatch,
 } from "react-router-dom";
-import Spinner from "react-bootstrap/Spinner";
-import Alert from "react-bootstrap/Alert";
-
 import { getWordDefinitions } from "../../api";
 import Definitions from "../dict/Definitions";
 

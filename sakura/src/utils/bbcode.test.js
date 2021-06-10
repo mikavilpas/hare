@@ -1,7 +1,5 @@
 /* eslint-disable jest/valid-expect */
 
-import React from "react";
-import { mount } from "@cypress/react";
 import * as bbcode from "./bbcode";
 
 describe("tokenizing", () => {

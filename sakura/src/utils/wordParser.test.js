@@ -1,7 +1,5 @@
 /* eslint-disable jest/valid-expect */
 
-import React from "react";
-import { mount } from "@cypress/react";
 import * as wordParser from "./wordParser";
 
 it("can parse the search result from headings", () => {

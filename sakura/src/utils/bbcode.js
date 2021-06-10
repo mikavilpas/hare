@@ -1,20 +1,17 @@
+import { initial, last } from "lodash";
 import * as p from "parjs";
 import {
-  between,
-  many,
-  manyTill,
-  manySepBy,
-  map,
-  maybe,
-  or,
   backtrack,
+  later,
+  many,
+  manySepBy,
+  manyTill,
+  map,
+  or,
   qthen,
-  thenq,
   stringify,
   then,
-  later,
 } from "parjs/combinators";
-import { last, initial } from "lodash";
 
 export function tokenize(inputText) {
   try {

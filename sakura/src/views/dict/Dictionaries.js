@@ -1,14 +1,11 @@
+import React, { useEffect, useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Button from "react-bootstrap/Button";
-import ToggleButton from "react-bootstrap/ToggleButton";
-import React, { useState, useEffect } from "react";
 import Spinner from "react-bootstrap/Spinner";
-
+import ToggleButton from "react-bootstrap/ToggleButton";
+import { useHistory, useParams } from "react-router-dom";
 import { getDicts } from "../../api";
-
-import { useHistory, useParams, useRouteMatch } from "react-router-dom";
-import { preferredDictionaries, dictInfo, dictShortName } from "./utils";
+import { dictInfo, dictShortName, preferredDictionaries } from "./utils";
 
 const DictionaryLink = ({ name, ownSearchResult, currentDict, setDict }) => {
   const shortName = dictShortName(name);

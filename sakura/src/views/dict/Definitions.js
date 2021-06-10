@@ -1,36 +1,22 @@
-import Alert from "react-bootstrap/Alert";
+import React, { useEffect, useState } from "react";
 import Accordion from "react-bootstrap/Accordion";
-import Card from "react-bootstrap/Card";
+import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
-import ListGroup from "react-bootstrap/ListGroup";
-import Spinner from "react-bootstrap/Spinner";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-import DropdownButton from "react-bootstrap/DropdownButton";
+import Card from "react-bootstrap/Card";
 import Dropdown from "react-bootstrap/Dropdown";
-
-import React, { useState, useEffect } from "react";
-
-import { getDicts, textAnalysis } from "../../api";
-import config from "../../config";
-
+import DropdownButton from "react-bootstrap/DropdownButton";
+import Spinner from "react-bootstrap/Spinner";
 import {
+  generatePath,
   Link,
   useHistory,
-  useParams,
   useRouteMatch,
-  generatePath,
-  useLocation,
 } from "react-router-dom";
-import {
-  dictInfo,
-  urls,
-  prettifyLines,
-  prettyText,
-  bbcode2Html,
-} from "./utils";
-import RecursiveLookup from "../recursiveLookup/index";
+import { textAnalysis } from "../../api";
 import { frequency } from "../../utils/frequency";
 import { parse } from "../../utils/wordParser";
+import { bbcode2Html, prettyText, urls } from "./utils";
 
 const Definition = ({
   i,

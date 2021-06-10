@@ -2,14 +2,12 @@ import * as p from "parjs";
 import {
   between,
   many,
-  manySepBy,
   map,
   maybe,
   or,
-  qthen,
-  thenq,
   stringify,
   then,
+  thenq,
 } from "parjs/combinators";
 
 export function parse(inputText) {

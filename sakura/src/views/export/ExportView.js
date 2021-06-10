@@ -1,24 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import copy from "copy-to-clipboard";
+import React, { useEffect, useRef, useState } from "react";
+import Alert from "react-bootstrap/Alert";
+import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
-import Container from "react-bootstrap/Container";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import {
-  useHistory,
-  useRouteMatch,
-  useParams,
-  generatePath,
-} from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
-import Alert from "react-bootstrap/Alert";
-import * as wordParser from "../../utils/wordParser";
-
+import { useRouteMatch } from "react-router-dom";
 import { getWordDefinitions } from "../../api";
+import * as wordParser from "../../utils/wordParser";
 import { prettyText } from "../dict/utils";
-import copy from "copy-to-clipboard";
 
 const CopyButton = ({ getTextToCopy, buttonText }) => {
   const [wordWasCopied, setWordWasCopied] = useState(false);

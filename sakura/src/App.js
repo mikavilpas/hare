@@ -1,21 +1,19 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-
+import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
-import React, { useState, useEffect } from "react";
 import {
   HashRouter as Router,
-  Switch,
-  Route,
-  Link,
   Redirect,
+  Route,
+  Switch,
 } from "react-router-dom";
+import "./App.css";
+import { initFrequencyList } from "./utils/frequency";
 import DictView from "./views/dict/";
-import VersionIndicator from "./views/versionIndicator/VersionIndicator";
 import ExportView from "./views/export/ExportView";
 import SettingsView from "./views/help/SettingsView";
-import { initFrequencyList } from "./utils/frequency";
+import VersionIndicator from "./views/versionIndicator/VersionIndicator";
 
 function App() {
   const [searchLoading, setSearchLoading] = useState();

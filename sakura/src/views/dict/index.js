@@ -1,23 +1,17 @@
-import Container from "react-bootstrap/Container";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
   generatePath,
-  useParams,
-  useLocation,
   useHistory,
+  useLocation,
+  useParams,
   useRouteMatch,
 } from "react-router-dom";
-
+import Navbar from "../navbar/Navbar";
+import RecursiveLookup from "../recursiveLookup/index";
+import Definitions from "./Definitions";
 import Dictionaries from "./Dictionaries";
 import SearchBox from "./SearchBox";
-import Definitions from "./Definitions";
 import { dictInfo, urls } from "./utils";
-import RecursiveLookup from "../recursiveLookup/index";
-import Navbar from "../navbar/Navbar";
 
 function DictView() {
   const [dicts, setDicts] = useState([]);

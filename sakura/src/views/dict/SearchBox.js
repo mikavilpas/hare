@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
-import Form from "react-bootstrap/Form";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import { getWordDefinitions } from "../../api";
-import { useHistory, useParams, generatePath } from "react-router-dom";
-import { urls } from "./utils";
+import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
+import { generatePath, useHistory, useParams } from "react-router-dom";
+import { getWordDefinitions } from "../../api";
+import { urls } from "./utils";
 
 const SearchBox = ({
   currentDict,

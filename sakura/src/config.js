@@ -133,8 +133,7 @@ export default {
         gaijiMap: "",
       },
       {
-        name:
-          "Ｃｏｌｌｉｎｓ　ＣＯＢＵＩＬＤ　Ｅｎｇｌｉｓｈ　Ｄｉｃｔｉｏｎａｒｙ",
+        name: "Ｃｏｌｌｉｎｓ　ＣＯＢＵＩＬＤ　Ｅｎｇｌｉｓｈ　Ｄｉｃｔｉｏｎａｒｙ",
         id: "Collins Cobuild English Dictionary",
         alias: "英英",
       },
