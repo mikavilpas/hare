@@ -35,7 +35,8 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",
-    "prettier": "prettier --write --ignore-unknown 'src/**/*.js' 'cypress/**/*.js' ./package.json ./README.md"
+    "prettier-check": "prettier --check 'src/**/*.js' 'cypress/**/*.js' ./package.json ./README.md",
+    "prettier": "prettier --write 'src/**/*.js' 'cypress/**/*.js' ./package.json ./README.md"
   },
   "eslintConfig": {
     "extends": [
