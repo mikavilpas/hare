@@ -16,6 +16,11 @@ A Japanese web dictionary that is
 The dictionary is free to use and requires the installation of no extra
 software.
 
+## Screenshots
+
+<img width="10%" src="./pics/screenshots/search.jpg" />
+<img width="10%" src="./pics/screenshots/search-recursive.jpg" />
+
 ## Getting started
 
 The way to use this dictionary is to use it as a _plugin_ for
