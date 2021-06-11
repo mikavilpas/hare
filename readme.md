@@ -34,8 +34,12 @@ its own.
 * Open https://sakura-paris.org/dict/ and go to its settings
 
   The settings can be found under the cog icon.
+  <img style="border: 2px solid lightgray; border-radius: 20px; box-shadow: 5px 5px 5px 0px rgb(0 0 0 / 5%);" 
+       src="./pics/sakura-paris-settings-icon.png" />
 
 * Find the place where it says `カスタマイズ JS: ` and paste the previously copied code there
+  <img style="border: 2px solid lightgray; border-radius: 20px; box-shadow: 5px 5px 5px 0px rgb(0 0 0 / 10%);" 
+       src="./pics/sakura-paris-custom-js-box.png" />
 * Close the settings window
 * Reload the page
 
