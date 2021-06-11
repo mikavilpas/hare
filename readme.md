@@ -18,8 +18,11 @@ software.
 
 ## Screenshots
 
-<img width="10%" src="./pics/screenshots/search.jpg" />
-<img width="10%" src="./pics/screenshots/search-recursive.jpg" />
+<img width="50%" src="./pics/screenshots/search.jpg" /> | <img width="50%" src="./pics/screenshots/search-recursive.jpg" />
+------------ | -------------
+Search | Search for a word in the definition
+
+
 
 ## Getting started
 
