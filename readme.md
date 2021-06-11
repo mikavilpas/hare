@@ -19,8 +19,8 @@ software.
 ## Screenshots
 
 <p align="center" style="margin:0">
-  <img width="50%" src="https://raw.githubusercontent.com/sp3ctum/sakura-paris-customizations/master/pics/screenshots/search.jpg" /> 
-  <img width="50%" src="https://raw.githubusercontent.com/sp3ctum/sakura-paris-customizations/master/pics/screenshots/search-recursive.jpg" />
+  <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/sakura-paris-customizations/master/pics/screenshots/search.jpg" /> 
+  <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/sakura-paris-customizations/master/pics/screenshots/search-recursive.jpg" />
 </p>
 
 
