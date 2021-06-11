@@ -18,10 +18,10 @@ software.
 
 ## Screenshots
 
-<img width="50%" src="./pics/screenshots/search.jpg" /> | <img width="50%" src="./pics/screenshots/search-recursive.jpg" />
------------- | -------------
-Search | Search for a word in the definition
-
+<p align="center" style="margin:0">
+  <img width="50%" src="https://raw.githubusercontent.com/sp3ctum/sakura-paris-customizations/master/pics/screenshots/search.jpg" /> 
+  <img width="50%" src="https://raw.githubusercontent.com/sp3ctum/sakura-paris-customizations/master/pics/screenshots/search-recursive.jpg" />
+</p>
 
 
 ## Getting started
