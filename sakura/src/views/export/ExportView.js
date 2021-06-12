@@ -206,6 +206,15 @@ const ExportView = ({}) => {
               <li>
                 <SearchLink
                   word={selectedWord}
+                  iconUrl={"/dict/icons/google.png"}
+                  url={`https://www.google.co.jp/search?tbm=isch&q=${selectedWord} イラスト`}
+                >
+                  Google イラスト
+                </SearchLink>
+              </li>
+              <li>
+                <SearchLink
+                  word={selectedWord}
                   iconUrl={"/dict/icons/jisho.png"}
                   url={`https://jisho.org/search/${selectedWord}%20%23sentences`}
                 >

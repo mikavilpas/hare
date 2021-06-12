@@ -8,7 +8,11 @@ describe("export view", () => {
     cy.get("select").select("狗");
 
     // export links must be visible
+    cy.contains("Google 画像");
+    cy.contains("Google イラスト");
     cy.contains("Jisho sentences");
+    cy.contains("Jisho");
+    cy.contains("Audio sentences");
   });
 
   it("exports the correct word", () => {
