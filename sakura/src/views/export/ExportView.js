@@ -9,6 +9,7 @@ import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
 import { useRouteMatch } from "react-router-dom";
 import { getWordDefinitions } from "../../api";
+import { frequency } from "../../utils/frequency";
 import * as wordParser from "../../utils/wordParser";
 import { prettyText } from "../dict/utils";
 
@@ -165,11 +166,14 @@ const ExportView = ({}) => {
               value={selectedWord}
               onChange={(e) => setSelectedWord(e.target.value)}
             >
-              {wordOptions.map((w, i) => (
-                <option value={w} key={i}>
-                  {w}
-                </option>
-              ))}
+              {wordOptions.map((w, i) => {
+                const freq = frequency(w)?.rating || 0;
+                return (
+                  <option value={w} key={i}>
+                    {w} {"★".repeat(freq)}
+                  </option>
+                );
+              })}
             </Form.Control>
           </Row>
           <Row className="mt-2">
