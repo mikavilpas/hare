@@ -9,7 +9,8 @@
      alt="man enjoying the sun" />
 </p>
 
-# sakura-paris-customizations
+# [晴れ][hare-translation] Hare
+
 > Let the language come to you. -Steve Kaufmann
 
 A Japanese web dictionary that is
@@ -24,10 +25,10 @@ software.
 ## Screenshots
 
 <p align="center" style="margin:0">
-  <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/sakura-paris-customizations/master/pics/screenshots/search.jpg" /> 
-  <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/sakura-paris-customizations/master/pics/screenshots/search-recursive.jpg" />
-  <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/sakura-paris-customizations/master/pics/screenshots/export.jpg" />
-  <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/sakura-paris-customizations/master/pics/screenshots/furigana.jpg" />
+  <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/hare/master/pics/screenshots/search.jpg" /> 
+  <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/hare/master/pics/screenshots/search-recursive.jpg" />
+  <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/hare/master/pics/screenshots/export.jpg" />
+  <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/hare/master/pics/screenshots/furigana.jpg" />
 </p>
 
 ## Features
@@ -96,7 +97,7 @@ its own.
   _(mobile users may need to click the code once to have a copy button show up)_
 
   ```
-  !function(e){var t={};function r(n){if(t[n])return t[n].exports;var o=t[n]={i:n,l:!1,exports:{}};return e[n].call(o.exports,o,o.exports,r),o.l=!0,o.exports}r.m=e,r.c=t,r.d=function(e,t,n){r.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:n})},r.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.t=function(e,t){if(1&t&&(e=r(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var n=Object.create(null);if(r.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var o in e)r.d(n,o,function(t){return e[t]}.bind(null,o));return n},r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,"a",t),t},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},r.p="",r(r.s=0)}([function(e,t,r){"use strict";r.r(t);var n;(n="".concat("https://sp3ctum.github.io/sakura-paris-customizations","/loader.js"),new Promise((function(e,t){var r=document.createElement("script");r.src=n,r.onload=function(){console.log("Loaded file ".concat(n,'"')),e(r)},r.onerror=function(){return t(new Error("Style load error for ".concat(src)))},document.head.appendChild(r)}))).then((function(){window.load()}))}]);;
+  !function(e){var t={};function r(n){if(t[n])return t[n].exports;var o=t[n]={i:n,l:!1,exports:{}};return e[n].call(o.exports,o,o.exports,r),o.l=!0,o.exports}r.m=e,r.c=t,r.d=function(e,t,n){r.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:n})},r.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.t=function(e,t){if(1&t&&(e=r(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var n=Object.create(null);if(r.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var o in e)r.d(n,o,function(t){return e[t]}.bind(null,o));return n},r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,"a",t),t},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},r.p="",r(r.s=0)}([function(e,t,r){"use strict";r.r(t);var n;(n="".concat("https://sp3ctum.github.io/hare","/loader.js"),new Promise((function(e,t){var r=document.createElement("script");r.src=n,r.onload=function(){console.log("Loaded file ".concat(n,'"')),e(r)},r.onerror=function(){return t(new Error("Style load error for ".concat(src)))},document.head.appendChild(r)}))).then((function(){window.load()}))}]);;
   ```
 
 * Open https://sakura-paris.org/dict/ and go to its settings
@@ -110,3 +111,5 @@ its own.
 * Reload the page
 
 Now the application will load every time you refresh the page.
+
+[hare-translation]: https://www.deepl.com/translator#ja/en/%E3%81%AF%E3%82%8C%E3%80%90%E6%99%B4%E3%82%8C%E3%80%91%E3%80%90%E6%99%B4%E3%80%91%EF%BC%8A%5B2%5D%0A%E3%81%AF%E3%82%8C%E3%80%90%E6%99%B4%E3%82%8C%E3%80%91%E3%80%90%E6%99%B4%E3%80%91%EF%BC%8A%5B2%5D%0A(%E4%B8%80)%E7%A9%BA%E3%81%8C%E6%99%B4%E3%82%8C%E3%81%A6%E3%81%84%E3%82%8B%E3%81%93%E3%81%A8%E3%80%82%0A(%E4%BA%8C)%E7%96%91%E3%81%84%E3%81%8C%E6%99%B4%E3%82%8C%E3%82%8B%E3%81%93%E3%81%A8%E3%80%82%0A%E3%80%8C%E2%80%95%E3%81%AE%E8%BA%AB%E3%81%AB%E3%81%AA%E3%82%8B%E3%80%8D%0A(%E4%B8%89)%E3%81%B5%E3%81%A0%E3%82%93%E3%81%8B%E3%82%89%E5%BE%85%E3%81%A1%E6%9C%9B%E3%82%93%E3%81%A7%E3%81%84%E3%81%9F%E3%80%81%E3%82%81%E3%81%A3%E3%81%9F%E3%81%AB%E3%81%AA%E3%81%84%E6%A9%9F%E4%BC%9A%E3%81%A7%E3%81%82%E3%82%8B%E3%81%93%E3%81%A8%E3%80%82
