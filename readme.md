@@ -6,7 +6,7 @@
 <img src="./pics/nikkouyoku_man.png"
      width="200px"
      height="200px"
-     alt="Let the language come to you. -Steve Kaufmann" />
+     alt="man enjoying the sun" />
 </p>
 
 # sakura-paris-customizations
