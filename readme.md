@@ -22,6 +22,7 @@ software.
   <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/sakura-paris-customizations/master/pics/screenshots/search.jpg" /> 
   <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/sakura-paris-customizations/master/pics/screenshots/search-recursive.jpg" />
   <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/sakura-paris-customizations/master/pics/screenshots/export.jpg" />
+  <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/sakura-paris-customizations/master/pics/screenshots/furigana.jpg" />
 </p>
 
 ## Features
