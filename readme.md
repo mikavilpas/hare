@@ -49,11 +49,11 @@ doesn't cause you a headache.
 **External searches and exporting**
 
 * Search any word using an external site:
-** Google image search
-** Google image search for *illustrations*
-** Jisho.org English definition
-** Jisho.org Example sentences
-** Native audio example sentences from https://sentencesearch.neocities.org
+  * Google image search
+  * Google image search for *illustrations*
+  * Jisho.org English definition
+  * Jisho.org Example sentences
+  * Native audio example sentences from https://sentencesearch.neocities.org
 * **Copy a word and its definition** for pasting into an Anki card or elsewhere.
 
 They say a picture is worth a thousand words, but sometimes an example sentence
