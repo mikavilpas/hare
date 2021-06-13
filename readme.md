@@ -25,7 +25,7 @@ software.
 
 ## Features
 
-**Quality of life**
+🌴 **Quality of life**
 
 * **Easy to get started with**. Requires the installation of no software, no
   permissions, no manual updating or downloading and configuring dictionaries of
@@ -39,14 +39,14 @@ software.
 No complicated, technical or boring stuff. It works great out of the box and
 doesn't cause you a headache.
 
-**Read effectively**
+📖 **Read effectively**
 
 * Display **furigana** in all search results
 * **Shows the most frequently used definitions first** and rarer ones below. No
   more looking at 20 definitions of the same word and wondering which one you
   should learn
 
-**External searches and exporting**
+🔍 **External searches and exporting**
 
 * Search any word using an external site:
   * Google image search
@@ -60,7 +60,7 @@ They say a picture is worth a thousand words, but sometimes an example sentence
 can be worth even more. *These features work great with a clipboard manager that
 can store multiple snippets such as GBoard for Android (by Google)*
 
-**Fast and intuitive**
+🚀 **Fast and intuitive**
 
 * **Less waiting** for a better study flow. Searches all dictionaries at the
   same time so that there is no need to wait when switching dictionaries
