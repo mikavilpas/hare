@@ -37,7 +37,7 @@ software.
   combinations
 
 No complicated, technical or boring stuff. It works great out of the box and
-doesn't cause you a headache.
+doesn't give you a headache.
 
 ### 📖 Read effectively
 
