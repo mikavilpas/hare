@@ -28,4 +28,4 @@ export function loadCss(src) {
   });
 }
 
-export const base = "https://sp3ctum.github.io/sakura-paris-customizations";
+export const base = "https://sp3ctum.github.io/hare";

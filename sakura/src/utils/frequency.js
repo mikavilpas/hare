@@ -19,9 +19,7 @@ export function initFrequencyList() {
   if (frequencies) return null;
 
   // load in browser
-  return fetch(
-    "https://sp3ctum.github.io/sakura-paris-customizations/static/public/frequency.json"
-  )
+  return fetch("https://sp3ctum.github.io/hare/static/public/frequency.json")
     .then((response) => response.json())
     .then((jsonArray) => {
       const freqs = Object.fromEntries(

@@ -42,7 +42,7 @@ function displaySourceFiles({
 // display
 window.onload = async () => {
   // production import
-  const base = "https://sp3ctum.github.io/sakura-paris-customizations";
+  const base = "https://sp3ctum.github.io/hare";
 
   async function productionImport() {
     const installScript = await concatFiles(["installToHostSite.js"]);

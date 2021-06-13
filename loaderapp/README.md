@@ -1,4 +1,4 @@
-# https://sp3ctum.github.io/sakura-paris-customizations/
+# https://sp3ctum.github.io/hare/
 
 ## Available Commands
 

@@ -66,9 +66,7 @@ function addFrequencyInfoToWordTitles() {
 
 async function initScript() {
   // load in browser
-  return fetch(
-    "https://sp3ctum.github.io/sakura-paris-customizations/frequency.json"
-  )
+  return fetch("https://sp3ctum.github.io/hare/frequency.json")
     .then((response) => response.json())
     .then(initFrequencyList)
     .then(() => {
