@@ -32,7 +32,9 @@ describe("dictionary view", () => {
       .should("contain", "#/export/広辞苑/prefix/犬/0");
 
     // indicates the frequency of the word
-    cy.contains("5");
+    cy.contains("5").click();
+    // displays an explanation of what the frequency means
+    cy.contains("extremely common");
 
     // can hide the current definition
     cy.contains("いぬ【犬・狗】").click();

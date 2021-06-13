@@ -6,7 +6,9 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Card from "react-bootstrap/Card";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Spinner from "react-bootstrap/Spinner";
+import Tooltip from "react-bootstrap/Tooltip";
 import {
   generatePath,
   Link,
@@ -17,6 +19,37 @@ import { textAnalysis } from "../../api";
 import { frequency } from "../../utils/frequency";
 import { parse } from "../../utils/wordParser";
 import { bbcode2Html, prettyText, urls } from "./utils";
+
+const Frequency = ({ rating }) => {
+  const explanation = () => {
+    if (rating === 5) return "extremely common";
+    if (rating === 4) return "very common";
+    if (rating === 3) return "common";
+    if (rating === 2) return "somewhat rare";
+    if (rating === 1) return "rare";
+    else return "unknown";
+  };
+
+  if (rating <= 0) return "";
+
+  return (
+    <OverlayTrigger
+      placement="top"
+      overlay={
+        <Tooltip id="button-tooltip">
+          The frequency of the word is {rating}/5 <b>({explanation()})</b>
+        </Tooltip>
+      }
+    >
+      <span
+        onClick={(e) => e.stopPropagation()}
+        className="badge badge-secondary"
+      >
+        {rating}
+      </span>
+    </OverlayTrigger>
+  );
+};
 
 const Definition = ({
   i,
@@ -97,7 +130,6 @@ const Definition = ({
   }, [isOpened, definition]);
 
   const toolbar = () => {
-    const { rdict, rsearchmode, rsearch } = match.params;
     return (
       <ButtonGroup
         size="lg"
@@ -160,9 +192,7 @@ const Definition = ({
             ></span>
             {/* words that are not included in the frequency list do not get
                 displayed at all - this will allow for quick visual scanning */}
-            {currentFrequency > 0 && (
-              <span className="badge badge-secondary">{currentFrequency}</span>
-            )}
+            <Frequency rating={currentFrequency} />
           </span>
           {isOpened && toolbar()}
         </div>
