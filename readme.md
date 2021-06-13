@@ -64,7 +64,7 @@ can store multiple snippets such as GBoard for Android (by Google)*
 
 * **Less waiting** for a better study flow. Searches all dictionaries at the
   same time so that there is no need to wait when switching dictionaries
-* **Click any word in any definition to search for it**. Use a Japanese
+* **Click any word in any definition to search for it recursively**. Use a Japanese
   dictionary to read a Japanese dictionary!
 * **Remembers all search results** that you have done. If you need to re-search
   anything, the result will already be available without a need to wait
