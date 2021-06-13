@@ -57,10 +57,8 @@ doesn't cause you a headache.
 * **Copy a word and its definition** for pasting into an Anki card or elsewhere.
 
 They say a picture is worth a thousand words, but sometimes an example sentence
-can be worth even more.
-
-*These features work great with a clipboard manager that can store multiple
-snippets such as GBoard for Android (by Google)*
+can be worth even more. *These features work great with a clipboard manager that
+can store multiple snippets such as GBoard for Android (by Google)*
 
 **Fast and intuitive**
 
