@@ -10,6 +10,7 @@
 </p>
 
 # sakura-paris-customizations
+> Let the language come to you. -Steve Kaufmann
 
 A Japanese web dictionary that is
 
