@@ -23,6 +23,61 @@ software.
   <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/sakura-paris-customizations/master/pics/screenshots/search-recursive.jpg" />
 </p>
 
+## Features
+
+**Quality of life**
+
+* **Easy to get started with**. Requires the installation of no software, no
+  permissions, no manual updating or downloading and configuring dictionaries of
+  any kind
+* Has a **dark theme** that is great for people with sensitive eyes
+* Includes a selection of the most useful monolingual dictionaries
+* **Works on any device** that has a modern web browser. You decide your own
+  study workflow with your available desktop/laptop/tablet/mobile device
+  combinations
+
+No complicated, technical or boring stuff. It works great out of the box and
+doesn't cause you a headache.
+
+**Read effectively**
+
+* Display **furigana** in all search results
+* **Shows the most frequently used definitions first** and rarer ones below. No
+  more looking at 20 definitions of the same word and wondering which one you
+  should learn
+
+**External searches and exporting**
+
+* Search any word using an external site:
+** Google image search
+** Google image search for *illustrations*
+** Jisho.org English definition
+** Jisho.org Example sentences
+** Native audio example sentences from https://sentencesearch.neocities.org
+* **Copy a word and its definition** for pasting into an Anki card or elsewhere.
+
+They say a picture is worth a thousand words, but sometimes an example sentence
+can be worth even more.
+
+*These features work great with a clipboard manager that can store multiple
+snippets such as GBoard for Android (by Google)*
+
+**Fast and intuitive**
+
+* **Less waiting** for a better study flow. Searches all dictionaries at the
+  same time so that there is no need to wait when switching dictionaries
+* **Click any word in any definition to search for it**. Use a Japanese
+  dictionary to read a Japanese dictionary!
+* **Remembers all search results** that you have done. If you need to re-search
+  anything, the result will already be available without a need to wait
+* **Never get lost due to accidentally clicking away** from your definition. You
+  can always return to where you were using the browser's back and forward
+  buttons. Everything is saved to your browser history and will be available
+  instantly because of caching
+
+Reading Japanese is hard. That's why it's important to have a great study flow.
+You should never have to wait without a good reason. Searching should be easy so
+you actually do it even when you're tired.
 
 ## Getting started
 
