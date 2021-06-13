@@ -1,8 +1,12 @@
 <p align="center">
-<img src="./pics/jisyo_jiten_boy.png" 
-     width="200px" 
-     height="200px" 
+<img src="./pics/jisyo_jiten_boy.png"
+     width="200px"
+     height="200px"
      alt="happy immersion learner reading a book" />
+<img src="./pics/nikkouyoku_man.png"
+     width="200px"
+     height="200px"
+     alt="Let the language come to you. -Steve Kaufmann" />
 </p>
 
 # sakura-paris-customizations
