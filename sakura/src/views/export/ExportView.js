@@ -9,6 +9,7 @@ import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
 import { useRouteMatch } from "react-router-dom";
 import { getWordDefinitions } from "../../api";
+import { pageView } from "../../telemetry";
 import { frequency } from "../../utils/frequency";
 import * as wordParser from "../../utils/wordParser";
 import { prettyText } from "../dict/utils";
@@ -72,6 +73,10 @@ const ExportView = ({}) => {
   const [wordOptions, setWordOptions] = useState([]);
   const [selectedWord, setSelectedWord] = useState();
   const [wordWasCopied, setWordWasCopied] = useState();
+
+  useEffect(() => {
+    pageView("export", `/${dict}`);
+  }, []);
 
   useEffect(() => {
     if (!dict || !search || !openeditem) {

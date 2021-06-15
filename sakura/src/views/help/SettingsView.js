@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
+import { pageView } from "../../telemetry";
 import Navbar from "../navbar/Navbar";
 
 const resetToHostSite = () => {
@@ -16,6 +17,10 @@ const resetToHostSite = () => {
 };
 
 const SettingsView = ({}) => {
+  useEffect(() => {
+    pageView("settings");
+  }, []);
+
   return (
     <Container fluid id="settings" className="mt-2">
       <Navbar />

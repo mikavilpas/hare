@@ -6,6 +6,7 @@ import {
   useParams,
   useRouteMatch,
 } from "react-router-dom";
+import { pageView } from "../../telemetry";
 import Navbar from "../navbar/Navbar";
 import RecursiveLookup from "../recursiveLookup/index";
 import Definitions from "./Definitions";
@@ -23,6 +24,11 @@ function DictView() {
   const match = useRouteMatch();
 
   const { dictname } = useParams();
+
+  useEffect(() => {
+    const dict = match?.params?.dictname;
+    pageView("dict", `#/${dict}`);
+  }, [match?.params?.dictname]);
 
   useEffect(() => {
     if (

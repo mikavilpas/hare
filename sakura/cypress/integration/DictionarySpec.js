@@ -52,9 +52,25 @@ describe("dictionary view", () => {
     cy.get("input[type=search]").should("have.value", "狗");
   });
 
-  it("can render complex definitions", () => {
-    cy.visit(encodeURI("#/dict/大辞林/prefix/雪/0"));
+  it.only("sends a page view to google analytics", () => {
+    cy.visit(encodeURI("#/dict/大辞林/prefix/雪/0"), {
+      onBeforeLoad(win) {
+        cy.spy(win.console, "log").as("consoleLog");
+      },
+    });
     cy.contains("〔古くは「すすく」と清音〕");
+
+    cy.get("@consoleLog").should("be.calledWith", "gtag:", "page_view", {
+      page_title: "dict",
+      page_path: "#/大辞林",
+    });
+
+    // switching to another dict sends another page view
+    cy.contains("新明解").click();
+    cy.get("@consoleLog").should("be.calledWith", "gtag:", "page_view", {
+      page_title: "dict",
+      page_path: "#/新明解",
+    });
   });
 
   it("stores the current dictionary in the url", () => {

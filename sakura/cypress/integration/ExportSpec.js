@@ -1,6 +1,11 @@
 describe("export view", () => {
   it("can display the export view", () => {
-    cy.visit("#/export/大辞林/prefix/犬/0");
+    cy.visit("#/export/大辞林/prefix/犬/0", {
+      onBeforeLoad(win) {
+        cy.spy(win.console, "log").as("consoleLog");
+      },
+    });
+
     cy.contains("いぬ【犬・狗】");
     cy.contains("TXTをコピー");
 
@@ -13,6 +18,11 @@ describe("export view", () => {
     cy.contains("Jisho sentences");
     cy.contains("Jisho");
     cy.contains("Audio sentences");
+
+    cy.get("@consoleLog").should("be.calledWith", "gtag:", "page_view", {
+      page_title: "export",
+      page_path: "/大辞林",
+    });
   });
 
   it("exports the correct word", () => {
