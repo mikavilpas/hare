@@ -112,4 +112,6 @@ its own.
 
 Now the application will load every time you refresh the page.
 
+[![CodeQL](https://github.com/sp3ctum/hare/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/sp3ctum/hare/actions/workflows/codeql-analysis.yml)
+
 [hare-translation]: https://www.deepl.com/translator#ja/en/%E3%81%AF%E3%82%8C%E3%80%90%E6%99%B4%E3%82%8C%E3%80%91%E3%80%90%E6%99%B4%E3%80%91%EF%BC%8A%5B2%5D%0A%E3%81%AF%E3%82%8C%E3%80%90%E6%99%B4%E3%82%8C%E3%80%91%E3%80%90%E6%99%B4%E3%80%91%EF%BC%8A%5B2%5D%0A(%E4%B8%80)%E7%A9%BA%E3%81%8C%E6%99%B4%E3%82%8C%E3%81%A6%E3%81%84%E3%82%8B%E3%81%93%E3%81%A8%E3%80%82%0A(%E4%BA%8C)%E7%96%91%E3%81%84%E3%81%8C%E6%99%B4%E3%82%8C%E3%82%8B%E3%81%93%E3%81%A8%E3%80%82%0A%E3%80%8C%E2%80%95%E3%81%AE%E8%BA%AB%E3%81%AB%E3%81%AA%E3%82%8B%E3%80%8D%0A(%E4%B8%89)%E3%81%B5%E3%81%A0%E3%82%93%E3%81%8B%E3%82%89%E5%BE%85%E3%81%A1%E6%9C%9B%E3%82%93%E3%81%A7%E3%81%84%E3%81%9F%E3%80%81%E3%82%81%E3%81%A3%E3%81%9F%E3%81%AB%E3%81%AA%E3%81%84%E6%A9%9F%E4%BC%9A%E3%81%A7%E3%81%82%E3%82%8B%E3%81%93%E3%81%A8%E3%80%82
