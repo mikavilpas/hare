@@ -1,7 +1,13 @@
 import gtag, { install } from "ga-gtag";
 
+const inProduction = process.env.NODE_ENV === "production";
+
 // can be called multiple times safely
-install("G-N7YRPF86PY", { send_page_view: false });
+export function startGoogleAnalytics() {
+  if (inProduction) {
+    install("G-N7YRPF86PY", { send_page_view: false });
+  }
+}
 
 // https://developers.google.com/gtagjs/reference/event#page_view
 export async function pageView(name, pagePath) {
@@ -11,7 +17,7 @@ export async function pageView(name, pagePath) {
 // internal
 export async function event(name, options) {
   try {
-    if (process.env.NODE_ENV === "production") {
+    if (inProduction) {
       gtag("event", name, options);
     } else {
       console.log("gtag:", name, options);

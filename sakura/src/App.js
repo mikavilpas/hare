@@ -9,6 +9,7 @@ import {
   Switch,
 } from "react-router-dom";
 import "./App.css";
+import { startGoogleAnalytics } from "./telemetry";
 import { initFrequencyList } from "./utils/frequency";
 import DictView from "./views/dict/";
 import ExportView from "./views/export/ExportView";
@@ -21,6 +22,7 @@ function App() {
   const [searchError, setSearchError] = useState();
 
   useEffect(() => {
+    startGoogleAnalytics();
     initFrequencyList();
   }, []);
 
