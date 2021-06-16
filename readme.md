@@ -9,11 +9,11 @@
      alt="man enjoying the sun" />
 </p>
 
-# [晴れ][hare-translation] Hare
+# 晴れ Hare
 
 > Let the language come to you. -Steve Kaufmann
 
-A Japanese web dictionary that is
+Hare ([translation][hare-translation]) is a Japanese web dictionary that is
 
 * Mostly in Japanese (monolingual)
 * Great on mobile devices
