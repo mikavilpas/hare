@@ -13,7 +13,7 @@
 
 > Let the language come to you. -Steve Kaufmann
 
-Hare ([see its definition][hare-translation]) is a Japanese web dictionary that is
+Hare ([see definition][hare-translation]) is a Japanese web dictionary that is
 
 * Mostly in Japanese (monolingual)
 * Great on mobile devices
