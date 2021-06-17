@@ -17,6 +17,7 @@ const SearchBox = ({
   const { searchmode = "", search = "" } = params;
   const [searchInputText, setSearchInputText] = useState(search);
   const history = useHistory();
+  const searchInputRef = useRef();
 
   const tempSearchResult = useRef();
   const singleDictSearchResult = (d, searchQuery, result, error) => {
@@ -51,6 +52,11 @@ const SearchBox = ({
     }
   };
 
+  const clearSearch = () => {
+    setSearchInputText("");
+    searchInputRef?.current?.focus();
+  };
+
   const doSearch = (word) => {
     document.activeElement?.blur();
     setSearchLoading(true);
@@ -79,22 +85,41 @@ const SearchBox = ({
         applySearchToUrl();
       }}
     >
-      <InputGroup>
+      <InputGroup className="no-gutters">
         <Form.Control
-          type="search"
+          size="lg"
           spellCheck={false}
           value={searchInputText}
           onChange={(e) => setSearchInputText(e.target.value)}
+          className="form-control border-0 rounded-0 shadow-none"
+          ref={searchInputRef}
+          aria-label="Search"
         />
         <InputGroup.Append>
-          <Button block onClick={() => applySearchToUrl()}>
+          <Button
+            hidden={searchInputText?.length === 0}
+            block
+            size="lg"
+            variant="light"
+            onClick={() => clearSearch()}
+            className="border-0 rounded-0 bg-white shadow-none"
+            aria-label="Clear the search"
+          >
+            <i className="bi bi-x-square text-muted"></i>
+          </Button>
+        </InputGroup.Append>
+        <InputGroup.Append>
+          <Button
+            block
+            onClick={() => applySearchToUrl()}
+            className="border-0 rounded-right"
+          >
             Search
           </Button>
         </InputGroup.Append>
       </InputGroup>
     </Form>
   );
-  return "hello";
 };
 
 export default SearchBox;

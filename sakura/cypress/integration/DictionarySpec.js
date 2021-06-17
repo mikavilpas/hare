@@ -1,15 +1,24 @@
 describe("dictionary view", () => {
   // for now these use the actual api so there is no mocking!
 
-  it("can display a list of dictionaries", () => {
+  it("displays the search box and a list of dictionaries", () => {
     //
     cy.visit("#/");
+
+    // the search box has no "clear search" button visible if no text is entered
+    cy.get("[aria-label='Clear the search']").should("be.hidden");
+
     cy.contains("広辞苑");
+
+    // can clear the search input
+    cy.get("[aria-label=Search]").type("my query");
+    cy.get("[aria-label='Clear the search']").click();
+    cy.get("[aria-label=Search]").should("have.value", "");
   });
 
   it("can display search results for a word", () => {
     cy.visit("#/");
-    cy.get("input[type=search]").type("犬");
+    cy.get("[aria-label=Search]").type("犬");
     cy.contains("Search").click();
 
     // can display results
@@ -49,10 +58,10 @@ describe("dictionary view", () => {
     // now the word selection list (dropdown) is open. Select the word to search with.
     cy.get("a").contains("狗").click();
     cy.url().should("contain", encodeURI("/#/dict/広辞苑/prefix/狗/0"));
-    cy.get("input[type=search]").should("have.value", "狗");
+    cy.get("[aria-label=Search]").should("have.value", "狗");
   });
 
-  it.only("sends a page view to google analytics", () => {
+  it("sends a page view to google analytics", () => {
     cy.visit(encodeURI("#/dict/大辞林/prefix/雪/0"), {
       onBeforeLoad(win) {
         cy.spy(win.console, "log").as("consoleLog");
@@ -80,7 +89,7 @@ describe("dictionary view", () => {
       cy.contains(dictname).should("have.class", "selected");
     };
     cy.visit("#/dict");
-    cy.get("input[type=search]").type("犬");
+    cy.get("[aria-label=Search]").type("犬");
     cy.contains("Search").click();
 
     // preselects the first dictionary
@@ -101,7 +110,7 @@ describe("dictionary view", () => {
 
   it("can preload search results for all dictionaries", () => {
     cy.visit("");
-    cy.get("input[type=search]").type("人間");
+    cy.get("[aria-label=Search]").type("人間");
     cy.contains("Search").click();
 
     cy.get(".has-search-result").should("exist");
@@ -109,7 +118,7 @@ describe("dictionary view", () => {
 
   it("disables dictionaries with no results", () => {
     cy.visit("");
-    cy.get("input[type=search]").type("人間関係");
+    cy.get("[aria-label=Search]").type("人間関係");
     cy.contains("Search").click();
 
     cy.contains("古語").should("have.class", "disabled");
@@ -138,7 +147,7 @@ describe("dictionary view", () => {
 
   it("can make recursive lookups", () => {
     cy.visit("#/");
-    cy.get("input[type=search]").type("犬");
+    cy.get("[aria-label=Search]").type("犬");
     cy.contains("Search").click();
 
     // click some word that can be looked up recursively
@@ -182,7 +191,7 @@ describe("dictionary view", () => {
     // now the word selection list (dropdown) is open. Select the word to search with.
     cy.get(".modal-content a").contains("山辺の道").click();
     cy.url().should("contain", encodeURI("/#/dict/広辞苑/prefix/山辺の道/0"));
-    cy.get("input[type=search]").should("have.value", "山辺の道");
+    cy.get("[aria-label=Search]").should("have.value", "山辺の道");
   });
 
   it("can show 'no results' when a recursive search provides no results", () => {
@@ -194,7 +203,7 @@ describe("dictionary view", () => {
 
     cy.contains("No results found for 学ぶ");
     cy.contains("searching in all dictionaries").click();
-    cy.get("input[type=search]").should("have.value", "学ぶ");
+    cy.get("[aria-label=Search]").should("have.value", "学ぶ");
   });
 });
 
