@@ -9,10 +9,6 @@
     "openMode": 0
   },
   "video": false,
-  "reporter": "cypress-multi-reporters",
-  "reporterOptions": {
-    "configFile": "reporter-config.json"
-  },
   "viewportHeight": 850,
   "viewportWidth": 400,
   "nodeVersion": "system",
