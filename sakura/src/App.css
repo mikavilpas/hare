@@ -214,3 +214,18 @@ superscript {
 #settings {
   font-size: initial;
 }
+
+/* grammar */
+#grammar-search #results {
+  font-size: 70%;
+}
+
+#grammar-search #results .result-item {
+  background-color: #27292d;
+  color: gray;
+}
+
+#grammar-search #results .result-item:hover {
+  background-color: gray;
+  color: black;
+}

@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { generatePath, useHistory, useParams } from "react-router-dom";
 import { getWordDefinitions } from "../../api";
+import ClearableSearch from "../../utils/ClearableSearch";
 import { urls } from "./utils";
 
 const SearchBox = ({
@@ -52,11 +53,6 @@ const SearchBox = ({
     }
   };
 
-  const clearSearch = () => {
-    setSearchInputText("");
-    searchInputRef?.current?.focus();
-  };
-
   const doSearch = (word) => {
     document.activeElement?.blur();
     setSearchLoading(true);
@@ -86,28 +82,11 @@ const SearchBox = ({
       }}
     >
       <InputGroup className="no-gutters">
-        <Form.Control
-          size="lg"
-          spellCheck={false}
-          value={searchInputText}
-          onChange={(e) => setSearchInputText(e.target.value)}
-          className="form-control border-0 rounded-0 shadow-none"
-          ref={searchInputRef}
-          aria-label="Search"
+        <ClearableSearch
+          searchInputText={searchInputText}
+          setSearchInputText={setSearchInputText}
+          searchInputRef={searchInputRef}
         />
-        <InputGroup.Append>
-          <Button
-            hidden={searchInputText?.length === 0}
-            block
-            size="lg"
-            variant="light"
-            onClick={() => clearSearch()}
-            className="border-0 rounded-0 bg-white shadow-none"
-            aria-label="Clear the search"
-          >
-            <i className="bi bi-x-square text-muted"></i>
-          </Button>
-        </InputGroup.Append>
         <InputGroup.Append>
           <Button
             block

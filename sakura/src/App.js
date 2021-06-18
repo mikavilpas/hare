@@ -13,6 +13,7 @@ import { startGoogleAnalytics } from "./telemetry";
 import { initFrequencyList } from "./utils/frequency";
 import DictView from "./views/dict/";
 import ExportView from "./views/export/ExportView";
+import GrammarView from "./views/grammar/GrammarView";
 import SettingsView from "./views/help/SettingsView";
 import VersionIndicator from "./views/versionIndicator/VersionIndicator";
 
@@ -52,6 +53,9 @@ function App() {
             </Route>
             <Route path={["/export/:dictname/:searchmode/:search/:openeditem"]}>
               <ExportView />
+            </Route>
+            <Route path={["/grammar"]}>
+              <GrammarView />
             </Route>
             <Route path={["/settings"]}>
               <SettingsView />

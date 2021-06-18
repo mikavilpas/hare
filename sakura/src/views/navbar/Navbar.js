@@ -3,7 +3,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { Link } from "react-router-dom";
 
-const CoolNavbar = ({ children }) => {
+const Navbar = ({ children }) => {
   return (
     <div className="mt-3 d-flex">
       <div className="col pl-1">{children}</div>
@@ -16,6 +16,9 @@ const CoolNavbar = ({ children }) => {
         <Dropdown.Item as={Link} to="/">
           Dictionary
         </Dropdown.Item>
+        <Dropdown.Item as={Link} to={"/grammar"}>
+          Grammar
+        </Dropdown.Item>
         <Dropdown.Item as={Link} to={"/settings"}>
           Settings
         </Dropdown.Item>
@@ -24,4 +27,4 @@ const CoolNavbar = ({ children }) => {
   );
 };
 
-export default CoolNavbar;
+export default Navbar;
