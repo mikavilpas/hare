@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Col from "react-bootstrap/Col";
 import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
+import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
 import { useHistory } from "react-router-dom";
 import { useDebounce } from "use-lodash-debounce";
@@ -58,14 +59,21 @@ const GrammarView = ({}) => {
       </Row>
       <Row className="mt-3">
         <Col>
-          <InputGroup>
-            <ClearableSearch
-              placeholder="Type to search grammar points"
-              searchInputText={searchInputText}
-              setSearchInputText={setSearchInputText}
-              searchInputRef={searchInputRef}
-            />
-          </InputGroup>
+          <Form
+            onSubmit={(e) => {
+              e.preventDefault(); // don't reload page
+              searchInputRef?.current?.blur();
+            }}
+          >
+            <InputGroup>
+              <ClearableSearch
+                placeholder="Type to search grammar points"
+                searchInputText={searchInputText}
+                setSearchInputText={setSearchInputText}
+                searchInputRef={searchInputRef}
+              />
+            </InputGroup>
+          </Form>
         </Col>
       </Row>
       {loading && (
