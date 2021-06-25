@@ -8,6 +8,7 @@ const ClearableSearch = ({
   setSearchInputText,
   searchInputRef,
   placeholder = "",
+  autoFocus = false,
 }) => {
   const clearSearch = () => {
     setSearchInputText("");
@@ -25,7 +26,7 @@ const ClearableSearch = ({
         className="form-control border-0 rounded-0 shadow-none"
         ref={searchInputRef}
         aria-label="Search"
-        autoFocus
+        autoFocus={autoFocus}
       />
       <InputGroup.Append>
         <Button

@@ -68,6 +68,7 @@ const GrammarView = ({}) => {
                 searchInputText={searchInputText}
                 setSearchInputText={setSearchInputText}
                 searchInputRef={searchInputRef}
+                autoFocus={true}
               />
             </InputGroup>
           </Form>

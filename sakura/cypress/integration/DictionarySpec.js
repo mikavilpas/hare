@@ -11,6 +11,7 @@ describe("dictionary view", () => {
     cy.contains("広辞苑");
 
     // can clear the search input
+    cy.get("[aria-label=Search]").should("be.focused");
     cy.get("[aria-label=Search]").type("my query");
     cy.get("[aria-label='Clear the search']").click();
     cy.get("[aria-label=Search]").should("have.value", "");
@@ -130,6 +131,7 @@ describe("dictionary view", () => {
     // note: go to the last dictionary to make sure the first dictionary is not
     // visible just because it's the default
     cy.visit(encodeURI(`#/dict/英辞郎/prefix/人間関係/0`));
+    cy.get("[aria-label=Search]").should("not.be.focused");
     cy.contains("英辞郎").should("have.class", "selected");
 
     // a definition from that dict should be visible

@@ -86,6 +86,7 @@ const SearchBox = ({
           searchInputText={searchInputText}
           setSearchInputText={setSearchInputText}
           searchInputRef={searchInputRef}
+          autoFocus={search?.length === 0}
         />
         <InputGroup.Append>
           <Button
