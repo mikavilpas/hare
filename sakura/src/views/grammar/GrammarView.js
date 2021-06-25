@@ -25,10 +25,7 @@ const GrammarView = ({}) => {
     // preload the grammar search index
     setLoading(true);
     return axios
-      .get(
-        // "https://sp3ctum.github.io/hare/static/public/grammar-links.json"
-        "https://raw.githubusercontent.com/sp3ctum/hare/master/sakura/public/grammar-links.json"
-      )
+      .get("https:sp3ctum.github.io/hare/static/public/grammar-links.json")
       .then((response) => {
         const opts = response.data;
         setOptions(opts);
