@@ -6,6 +6,7 @@ describe("grammar view", () => {
       },
     });
 
+    cy.get("[aria-label=Search]").should("be.focused");
     cy.get("[aria-label=Search]").type("という");
 
     // a result must now be visible

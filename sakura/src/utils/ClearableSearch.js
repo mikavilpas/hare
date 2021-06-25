@@ -25,6 +25,7 @@ const ClearableSearch = ({
         className="form-control border-0 rounded-0 shadow-none"
         ref={searchInputRef}
         aria-label="Search"
+        autoFocus
       />
       <InputGroup.Append>
         <Button
