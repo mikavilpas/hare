@@ -1,4 +1,5 @@
 import axios from "axios";
+import { QuickScore } from "quick-score";
 import React, { useEffect, useRef, useState } from "react";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -17,7 +18,7 @@ const GrammarView = ({}) => {
 
   const history = useHistory();
   const searchInputRef = useRef();
-  const [options, setOptions] = useState([]);
+  const [quickScore, setQuickScore] = useState();
   const [loading, setLoading] = useState(false);
   const [matches, setMatches] = useState([]);
 
@@ -27,8 +28,9 @@ const GrammarView = ({}) => {
     return axios
       .get("https://sp3ctum.github.io/hare/static/public/grammar-links.json")
       .then((response) => {
-        const opts = response.data;
-        setOptions(opts || []);
+        const opts = response.data || [];
+        const qs = new QuickScore(opts, ["text"]);
+        setQuickScore(qs);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -39,9 +41,8 @@ const GrammarView = ({}) => {
 
   useEffect(() => {
     if (searchInputText?.length > 0) {
-      const re = new RegExp(searchInputText);
-      const grammarMatches = options.filter((o) => re.test(o.text));
-      setMatches(grammarMatches);
+      const results = quickScore.search(searchInputText);
+      setMatches(results);
     } else {
       setMatches([]);
     }
@@ -87,11 +88,11 @@ const GrammarView = ({}) => {
                 <a
                   className="list-group-item list-group-item-action p-1 pl-2 result-item"
                   target="_blank"
-                  href={m.link}
+                  href={m?.item?.link}
                   rel="noopener noreferrer"
                   key={i}
                 >
-                  {m.text}
+                  {m?.item?.text}
                 </a>
               );
             })}
