@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   generatePath,
   useHistory,
@@ -11,6 +11,7 @@ import Navbar from "../navbar/Navbar";
 import RecursiveLookup from "../recursiveLookup/index";
 import Definitions from "./Definitions";
 import Dictionaries from "./Dictionaries";
+import { registerGestures } from "./gestures";
 import SearchBox from "./SearchBox";
 import { dictInfo, urls } from "./utils";
 
@@ -25,6 +26,8 @@ function DictView() {
 
   const { dictname } = useParams();
 
+  const gestureRef = useRef();
+
   useEffect(() => {
     const dict = match?.params?.dictname;
     pageView("dict", `#/${dict}`);
@@ -38,6 +41,13 @@ function DictView() {
       goToRecursiveLookupPage(match.params.rsearch, match.params.rdict);
     }
   }, [match.params, match.path]);
+
+  useEffect(() => {
+    if (dicts) {
+      const unregister = registerGestures(gestureRef.current);
+      return unregister;
+    }
+  }, [dicts]);
 
   const goToRecursiveLookupPage = (word, dict = "大辞林") => {
     const url = generatePath(urls.recursiveLookup, {
@@ -65,7 +75,7 @@ function DictView() {
     `/export/${p?.dictname}/${p?.searchmode}/${p?.search}/${p?.openeditem}`;
 
   return (
-    <>
+    <div ref={gestureRef}>
       <Navbar>
         <SearchBox
           currentDict={dictname}
@@ -106,7 +116,7 @@ function DictView() {
           history.push(dictUrl);
         }}
       />
-    </>
+    </div>
   );
 }
 

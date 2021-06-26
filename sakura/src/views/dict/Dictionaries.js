@@ -12,7 +12,7 @@ const DictionaryLink = ({ name, ownSearchResult, currentDict, setDict }) => {
   const selected = shortName === currentDict;
   const hasResults = ownSearchResult?.result?.words?.length;
 
-  const classes = [];
+  const classes = ["dict"];
   if (selected) classes.push("selected");
   if (ownSearchResult?.error) classes.push("has-search-error");
 
