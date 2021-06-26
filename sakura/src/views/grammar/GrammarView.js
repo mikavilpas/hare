@@ -28,7 +28,7 @@ const GrammarView = ({}) => {
       .get("https://sp3ctum.github.io/hare/static/public/grammar-links.json")
       .then((response) => {
         const opts = response.data;
-        setOptions(opts);
+        setOptions(opts || []);
       })
       .finally(() => setLoading(false));
   }, []);
