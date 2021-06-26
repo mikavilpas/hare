@@ -39,23 +39,30 @@ const CopyButton = ({ getTextToCopy, buttonText }) => {
   );
 };
 
-const SearchLink = ({ iconUrl, children, url }) => {
+const SearchLink = ({ icon, children, url }) => {
   return (
     <a
-      className="external-site"
+      className="external-site d-flex align-items-center"
       rel="noopener noreferrer"
       target="_blank"
       href={url}
     >
-      <img
-        src={iconUrl}
-        style={{ height: "16px", width: "16px" }}
-        className="inline icon"
-      ></img>
+      {icon}
       &nbsp;
       {children}
     </a>
   );
+};
+
+const SearchLinkWithIcon = ({ iconUrl, children, url }) => {
+  const icon = (
+    <img
+      src={iconUrl}
+      style={{ height: "16px", width: "16px" }}
+      className="inline icon"
+    ></img>
+  );
+  return <SearchLink icon={icon} children={children} url={url} />;
 };
 
 const ExportView = ({}) => {
@@ -204,48 +211,62 @@ const ExportView = ({}) => {
           <Row>
             <ul className="external-sites list-unstyled mt-2">
               <li>
-                <SearchLink
+                <SearchLinkWithIcon
                   word={selectedWord}
                   iconUrl={"/dict/icons/google.png"}
                   url={`https://www.google.co.jp/search?tbm=isch&q=${selectedWord}`}
                 >
                   Google 画像
-                </SearchLink>
+                </SearchLinkWithIcon>
               </li>
               <li>
-                <SearchLink
+                <SearchLinkWithIcon
                   word={selectedWord}
                   iconUrl={"/dict/icons/google.png"}
                   url={`https://www.google.co.jp/search?tbm=isch&q=${selectedWord} イラスト`}
                 >
                   Google イラスト
-                </SearchLink>
+                </SearchLinkWithIcon>
               </li>
               <li>
-                <SearchLink
+                <SearchLinkWithIcon
                   word={selectedWord}
                   iconUrl={"/dict/icons/jisho.png"}
                   url={`https://jisho.org/search/${selectedWord}%20%23sentences`}
                 >
                   Jisho sentences
-                </SearchLink>
+                </SearchLinkWithIcon>
               </li>
               <li>
-                <SearchLink
+                <SearchLinkWithIcon
                   word={selectedWord}
                   iconUrl={"/dict/icons/jisho.png"}
                   url={`https://jisho.org/search/${selectedWord}`}
                 >
                   Jisho
-                </SearchLink>
+                </SearchLinkWithIcon>
               </li>
               <li>
-                <SearchLink
+                <SearchLinkWithIcon
                   word={selectedWord}
                   iconUrl={"https://sentencesearch.neocities.org/favicon.png"}
                   url={`https://sentencesearch.neocities.org/#${selectedWord}`}
                 >
                   Audio sentences
+                </SearchLinkWithIcon>
+              </li>
+              <li>
+                <SearchLink
+                  word={selectedWord}
+                  icon={
+                    <i
+                      style={{ fontSize: "medium" }}
+                      className="bi bi-book"
+                    ></i>
+                  }
+                  url={`http://yourei.jp/${selectedWord}`}
+                >
+                  Yourei sentences
                 </SearchLink>
               </li>
             </ul>

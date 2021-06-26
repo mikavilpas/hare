@@ -18,6 +18,7 @@ describe("export view", () => {
     cy.contains("Jisho sentences");
     cy.contains("Jisho");
     cy.contains("Audio sentences");
+    cy.contains("Yourei sentences");
 
     cy.get("@consoleLog").should("be.calledWith", "gtag:", "page_view", {
       page_title: "export",
