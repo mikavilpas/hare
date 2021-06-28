@@ -1,4 +1,3 @@
-import { initial, last } from "lodash";
 import * as p from "parjs";
 import {
   backtrack,
@@ -12,6 +11,7 @@ import {
   stringify,
   then,
 } from "parjs/combinators";
+import { joinSuccessiveStringTokens } from "./parseUtils";
 
 export function tokenize(inputText) {
   try {
@@ -22,21 +22,6 @@ export function tokenize(inputText) {
     throw error;
   }
 }
-
-// helper
-const joinSuccessiveStringTokens = (tokens) => {
-  // join successive string tokens ("a","b" = "ab")
-  return tokens.reduce((result, token) => {
-    const previousToken = last(result);
-    if (typeof token === "string" && typeof previousToken === "string") {
-      const beforePrevious = initial(result);
-      const newToken = previousToken + token;
-      return [...beforePrevious, newToken];
-    } else {
-      return [...result, token];
-    }
-  }, []);
-};
 
 //
 // tag parsers
