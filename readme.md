@@ -17,7 +17,7 @@ Hare ([see definition][hare-translation]) is a Japanese web dictionary that is
 
 * Mostly in Japanese (monolingual)
 * Great on mobile devices
-* Geared towards immersion learners using Anki
+* Geared towards immersion learners using [Anki](https://apps.ankiweb.net/)
 
 The dictionary is free to use and requires the installation of no extra
 software.
