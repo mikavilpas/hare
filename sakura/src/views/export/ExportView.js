@@ -269,6 +269,20 @@ const ExportView = ({}) => {
                   Yourei sentences
                 </SearchLink>
               </li>
+              <li>
+                <SearchLink
+                  word={selectedWord}
+                  icon={
+                    <i
+                      style={{ fontSize: "medium", color: "#7952b3" }}
+                      className="bi bi-square-fill"
+                    ></i>
+                  }
+                  url={`https://immersionkit.com/dictionary?keyword=${selectedWord}`}
+                >
+                  Immersion Kit
+                </SearchLink>
+              </li>
             </ul>
           </Row>
         </>
