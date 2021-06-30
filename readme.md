@@ -29,6 +29,7 @@ software.
   <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/hare/master/pics/screenshots/search-recursive.jpg" />
   <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/hare/master/pics/screenshots/export.jpg" />
   <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/hare/master/pics/screenshots/furigana.jpg" />
+  <img width="250px" src="https://raw.githubusercontent.com/sp3ctum/hare/master/pics/screenshots/grammar-search.jpg" />
 </p>
 
 ## Features
@@ -63,6 +64,9 @@ doesn't give you a headache.
   * Jisho.org Example sentences
   * Native audio example sentences from https://sentencesearch.neocities.org
 * **Copy a word and its definition** for pasting into an Anki card or elsewhere.
+* **Grammar search** using the combined definitions from 5 grammar books that
+  are available at
+  https://itazuraneko.neocities.org/grammar/masterreference.html
 
 They say a picture is worth a thousand words, but sometimes an example sentence
 can be worth even more. *These features work great with a clipboard manager that
