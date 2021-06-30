@@ -1,5 +1,10 @@
 import config from "../../config";
-import { tokenize } from "../../utils/bbcode";
+import { tokenize as tokenizeBbcode } from "../../utils/bbcode";
+import {
+  qclose,
+  qopen,
+  tokenize as format,
+} from "../../utils/formatting/formatting";
 
 // Dictionaries to display and preload results for. These are either the id or
 // alias properties from the config.dictinfo
@@ -65,7 +70,7 @@ export function bbcode2Html(bbcodeText, options) {
   };
 
   try {
-    const parseResult = tokenize(bbcodeText);
+    const parseResult = tokenizeBbcode(bbcodeText);
     return parseResult.value.map((t) => convertTokensToHtml(t)).join("");
   } catch (e) {
     // fallback in case the format changes - the user must see something
@@ -84,7 +89,29 @@ export function prettifyLines(text) {
     });
 }
 
+function highlightQuotes(text) {
+  const convertTokensToHtml = (t) => {
+    if (typeof t === "string") {
+      return t;
+    } else if (t.type === "quote") {
+      return `<span class="quote">${qopen + t.content + qclose}</span>`;
+    } else {
+      console.warn("Unexpected token", t);
+      return t;
+    }
+  };
+
+  try {
+    const parseResult = format(text);
+    return parseResult.value.map((t) => convertTokensToHtml(t)).join("");
+  } catch (e) {
+    console.warn("Unable to highlight quotes", e);
+    console.log(text);
+    return text;
+  }
+}
+
 export function prettyText(text, options) {
-  const lines = prettifyLines(bbcode2Html(text, options));
+  const lines = prettifyLines(highlightQuotes(bbcode2Html(text, options)));
   return lines.join("");
 }
