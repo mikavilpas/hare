@@ -40,6 +40,14 @@ function prepareHostSite() {
             const app = document.createElement("div");
             app.id = "sakura-customizations";
             document.body.appendChild(app);
+
+            // fix zooming issues on android firefox
+            const viewport = document.createElement("meta");
+            viewport.name = "viewport";
+            viewport.content =
+              "width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no";
+            document.head.appendChild(viewport);
+
             resolve();
           } else {
             // running in dev
