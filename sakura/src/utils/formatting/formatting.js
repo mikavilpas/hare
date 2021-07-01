@@ -7,18 +7,31 @@ export function tokenize(text) {
   return tokens;
 }
 
-export const qopen = "「";
-export const qclose = "」";
-const quoteChars = qopen + qclose;
-
-const highlightQuotes = () => {
-  const char = p.noCharOf(quoteChars);
-  const quote = char.pipe(
+const quoted = (start, end) => {
+  return p.noCharOf(start + end).pipe(
     many(),
     stringify(),
-    between(qopen, qclose),
+    between(start, end),
+    map((text) => {
+      // put the quotes back in so the formatting is preserved
+      return start + text + end;
+    })
+  );
+};
+
+// Parses some kind of meta information token about the definition word, such as
+// "（「洞」 とも書く）". Can be ignored so that no other quote formatting is
+// applied in these tokens.
+const literalQuote = quoted("（", "）").pipe(or(quoted("〔", "〕")));
+
+const highlightQuotes = () => {
+  const quote = quoted("「", "」").pipe(
     map((text) => ({ type: "quote", content: text }))
   );
 
-  return char.pipe(or(quote), many(), map(joinSuccessiveStringTokens));
+  return literalQuote.pipe(
+    or(quote, p.anyChar()),
+    many(),
+    map(joinSuccessiveStringTokens)
+  );
 };

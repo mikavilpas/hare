@@ -7,7 +7,7 @@ describe("quote parsing", () => {
     assertParses("「あなた―に話す」", [
       {
         type: "quote",
-        content: "あなた―に話す",
+        content: "「あなた―に話す」",
       },
     ]);
   });
@@ -16,11 +16,11 @@ describe("quote parsing", () => {
     assertParses("「あなた―に話す」「二人―で話したい」", [
       {
         type: "quote",
-        content: "あなた―に話す",
+        content: "「あなた―に話す」",
       },
       {
         type: "quote",
-        content: "二人―で話したい",
+        content: "「二人―で話したい」",
       },
     ]);
   });
@@ -37,23 +37,42 @@ describe("quote parsing", () => {
         "（１）それに限定する意を表す。",
         {
           type: "quote",
-          content: "あなた―に話す",
+          content: "「あなた―に話す」",
         },
         {
           type: "quote",
-          content: "二人―で話したい",
+          content: "「二人―で話したい」",
         },
         {
           type: "quote",
-          content: "ちょっと庭へ出る―だ",
+          content: "「ちょっと庭へ出る―だ」",
         },
         {
           type: "quote",
-          content: "形式―整ってもだめだ",
+          content: "「形式―整ってもだめだ」",
         },
         " ",
       ]
     );
+  });
+
+  it("ignores '（）' blocks", () => {
+    assertParses(
+      "うつ-ろ [0] 【空ろ・虚ろ】 （名・形動）[文]ナリ （１）（「洞」 とも書く）中がからで何もない・こと（さま）。がらんどう。うろ。 「根もとの方が―になっている」",
+      [
+        "うつ-ろ [0] 【空ろ・虚ろ】 （名・形動）[文]ナリ （１）（「洞」 とも書く）中がからで何もない・こと（さま）。がらんどう。うろ。 ",
+        {
+          type: "quote",
+          content: "「根もとの方が―になっている」",
+        },
+      ]
+    );
+  });
+
+  it("ignores '〔〕' blocks", () => {
+    assertParses("―な／―に 〔「ろ」は接辞。空洞の意〕 ", [
+      "―な／―に 〔「ろ」は接辞。空洞の意〕 ",
+    ]);
   });
 });
 
