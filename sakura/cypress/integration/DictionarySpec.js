@@ -56,7 +56,10 @@ describe("dictionary view", () => {
     // can do a new search
     cy.contains("いぬ【犬・狗】").click();
     cy.get("button").contains("検索").click();
-    // now the word selection list (dropdown) is open. Select the word to search with.
+    // now the word selection list (dropdown) is open.
+    // frequencies of the options must be displayed.
+    cy.contains("犬 ★★★★★");
+    // Select a word to search with.
     cy.get("a").contains("狗").click();
     cy.url().should("contain", encodeURI("/#/dict/広辞苑/prefix/狗/0"));
     cy.get("[aria-label=Search]").should("have.value", "狗");

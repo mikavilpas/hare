@@ -147,9 +147,11 @@ const Definition = ({
               search: w,
               openeditem: "0",
             });
+
+            const freq = frequency(w)?.rating || 0;
             return (
               <Dropdown.Item as={Link} to={href} key={i}>
-                {w}
+                {w} {"★".repeat(freq)}
               </Dropdown.Item>
             );
           })}
