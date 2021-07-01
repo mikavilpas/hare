@@ -74,6 +74,11 @@ describe("quote parsing", () => {
       "―な／―に 〔「ろ」は接辞。空洞の意〕 ",
     ]);
   });
+
+  it("ignores '()' blocks", () => {
+    const text = "③〔建〕(「端」 とも書く) ";
+    assertParses(text, [text]);
+  });
 });
 
 function assertParses(input, result) {

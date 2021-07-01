@@ -22,7 +22,13 @@ const quoted = (start, end) => {
 // Parses some kind of meta information token about the definition word, such as
 // "（「洞」 とも書く）". Can be ignored so that no other quote formatting is
 // applied in these tokens.
-const literalQuote = quoted("（", "）").pipe(or(quoted("〔", "〕")));
+const literalQuote = quoted("（", "）").pipe(
+  or(
+    //
+    quoted("〔", "〕"),
+    quoted("(", ")")
+  )
+);
 
 const highlightQuotes = () => {
   const quote = quoted("「", "」").pipe(
