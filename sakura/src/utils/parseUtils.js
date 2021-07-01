@@ -14,3 +14,13 @@ export const joinSuccessiveStringTokens = (tokens) => {
     }
   }, []);
 };
+
+// for tests, TODO move to a test file
+// should get optimized out of the prod build anyway
+export function assertParses(parseResult, expected) {
+  if (parseResult.kind !== "OK") {
+    console.log(parseResult.trace);
+  }
+
+  expect(parseResult).to.deep.eql({ kind: "OK", value: expected });
+}
