@@ -18,7 +18,7 @@ import {
 import { textAnalysis } from "../../api";
 import { frequency } from "../../utils/frequency";
 import { parse } from "../../utils/wordParser";
-import { bbcode2Html, prettyText, urls } from "./utils";
+import { bbcode2Html, prettyText, urls, postProcessDefinition } from "./utils";
 
 const Frequency = ({ rating }) => {
   const explanation = () => {
@@ -111,15 +111,10 @@ const Definition = ({
   }, [definitionWords]);
 
   const getTextAnalysis = () => {
-    if (isOpened && definition?.text) {
+    if (isOpened && definitionHtml) {
       // successive api calls get cached
-      textAnalysis(definition.text).then(([html, error]) => {
-        if (html) {
-          const formatted = prettyText(html || "", {
-            dict: match.params.dictname,
-          });
-          setAnalysisResult(formatted);
-        }
+      textAnalysis(definitionHtml).then(([html, error]) => {
+        setAnalysisResult(html);
         setAnalysisError(error);
       });
     }

@@ -38,16 +38,6 @@ body {
   cursor: default;
 }
 
-span[data-word] {
-  color: lightgray;
-}
-
-span[data-word] > ruby {
-  /* words that can be recursively looked up */
-  border-bottom-color: darkgray;
-  border-bottom-style: outset;
-}
-
 span[data-word] :hover {
   color: cyan;
 }
