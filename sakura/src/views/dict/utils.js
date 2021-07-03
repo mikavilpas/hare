@@ -91,7 +91,7 @@ function highlightQuotes(text) {
     if (typeof t === "string") {
       return t;
     } else if (t.type === "quote") {
-      return `<span class="quote">${t.content}</span>`;
+      return `<span class="quote border border-dark rounded">${t.content}</span>`;
     } else {
       console.warn("Unexpected token", t);
       return t;
@@ -113,6 +113,8 @@ function formatDaijisen(text) {
   const convertTokensToHtml = (t) => {
     if (typeof t === "string") {
       return t;
+    } else if (t.type === "linebreak") {
+      return "<br />";
     } else {
       const content = t.content.map(convertTokensToHtml).join("");
       let level = 0;
@@ -154,10 +156,10 @@ export function prettyText(text, options) {
   // pre process definitions into html for supported dictionaries
   if (options.dict === "大辞泉") {
     text = formatDaijisen(text);
-
     const html = bbcode2Html(text, options);
-    // console.log(html);
-    return highlightQuotes(html);
+    const withQuotes = highlightQuotes(html);
+
+    return withQuotes;
   } else {
     const html = bbcode2Html(text, options);
     // console.log(html);

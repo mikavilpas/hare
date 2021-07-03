@@ -214,11 +214,10 @@ superscript {
   margin-bottom: 0;
 }
 
-.definition-row .quote {
-  display: block;
+.quote {
   font-size: 80%;
-  margin-top: 0.2em;
-  margin-left: 0.8em;
+  color: #868686;
+  margin-left: 10px;
 }
 
 #export .external-sites {
