@@ -24,3 +24,7 @@ export function assertParses(parseResult, expected) {
 
   expect(parseResult).to.deep.eql({ kind: "OK", value: expected });
 }
+
+export function assertFailsParsing(parseResult) {
+  expect(parseResult.isOk).to.eql(false);
+}

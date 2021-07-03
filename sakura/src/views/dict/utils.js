@@ -1,6 +1,7 @@
 import config from "../../config";
 import { tokenize as tokenizeBbcode } from "../../utils/bbcode";
 import { tokenize as format } from "../../utils/formatting/formatting";
+import { tokenize as daijisen } from "../../utils/formatting/daijisen";
 
 // Dictionaries to display and preload results for. These are either the id or
 // alias properties from the config.dictinfo
@@ -79,7 +80,7 @@ export function prettifyLines(text) {
   // must receive text in a non-bbcode format!
   return text
     ?.split(/\n/)
-    .filter((line) => line) // remove empty lines
+    .filter((line) => line.trim() !== "") // remove empty lines
     .map((line, i) => {
       return `<p class="definition-row"> ${line} </p> `;
     });
@@ -107,7 +108,60 @@ function highlightQuotes(text) {
   }
 }
 
+// 大辞泉
+function formatDaijisen(text) {
+  const convertTokensToHtml = (t) => {
+    if (typeof t === "string") {
+      return t;
+    } else {
+      const content = t.content.map(convertTokensToHtml).join("");
+      let level = 0;
+      switch (t.type) {
+        case "firstLevelDefinition":
+          level = 1;
+          break;
+        case "secondLevelDefinition":
+          level = 2;
+          break;
+        case "thirdLevelDefinition":
+          level = 3;
+          break;
+        default:
+          console.warn("Unexpected token", t);
+          return t;
+      }
+      return `<div class="definition-section level-${level}">
+                <span class="heading">${t.heading}</span>
+                <div class="content">${content}</div>
+              </div>`;
+    }
+  };
+
+  try {
+    const parseResult = daijisen(text);
+    const result = parseResult.value
+      .map((t) => convertTokensToHtml(t))
+      .join("");
+    return result;
+  } catch (e) {
+    console.warn("Unable to format daijisen text", e);
+    console.log(text);
+    return text;
+  }
+}
+
 export function prettyText(text, options) {
-  const lines = prettifyLines(highlightQuotes(bbcode2Html(text, options)));
-  return lines.join("");
+  // pre process definitions into html for supported dictionaries
+  if (options.dict === "大辞泉") {
+    text = formatDaijisen(text);
+
+    const html = bbcode2Html(text, options);
+    // console.log(html);
+    return highlightQuotes(html);
+  } else {
+    const html = bbcode2Html(text, options);
+    // console.log(html);
+    const lines = prettifyLines(highlightQuotes(html));
+    return lines.join("");
+  }
 }

@@ -142,6 +142,17 @@ body {
   height: fit-content;
 }
 
+/* definition post processing */
+.definition-section {
+  display: flex;
+  flex-direction: row;
+  padding-right: 10px;
+}
+
+.definition-section .heading {
+  margin-right: 10px;
+}
+
 sup superscript {
   top: -0.5em;
 }

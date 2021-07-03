@@ -65,13 +65,13 @@ const Definition = ({
   // always open the first card by default
   const [analysisResult, setAnalysisResult] = useState();
   const [analysisError, setAnalysisError] = useState();
-  const [definitionWords, setDefinitionWords] = useState([]);
   const [definitionHtml, setDefinitionHtml] = useState(
     prettyText(definition?.text || "", {
       dict: match.params.dictname,
     })
   );
 
+  const [definitionWords, setDefinitionWords] = useState([]);
   const [currentFrequency, setCurrentFrequency] = useState(0);
   const [currentOrderNumber, setCurrentOrderNumber] = useState();
   const [furiganaEnabled, setFuriganaEnabled] = useState(false);
