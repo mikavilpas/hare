@@ -1,7 +1,7 @@
 /* eslint-disable jest/valid-expect */
 
-import { tokenize } from "./formatting";
 import { assertParses } from "../parseUtils";
+import { tokenize } from "./formatting";
 
 describe("quote parsing", () => {
   it("can parse a quote", () => {

@@ -18,7 +18,7 @@ import {
 import { textAnalysis } from "../../api";
 import { frequency } from "../../utils/frequency";
 import { parse } from "../../utils/wordParser";
-import { bbcode2Html, prettyText, urls, postProcessDefinition } from "./utils";
+import { bbcode2Html, prettyText, urls } from "./utils";
 
 const Frequency = ({ rating }) => {
   const explanation = () => {
@@ -65,6 +65,7 @@ const Definition = ({
   // always open the first card by default
   const [analysisResult, setAnalysisResult] = useState();
   const [analysisError, setAnalysisError] = useState();
+  const [definitionText, setDefinitionText] = useState();
   const [definitionHtml, setDefinitionHtml] = useState();
 
   const [definitionWords, setDefinitionWords] = useState([]);
@@ -106,11 +107,21 @@ const Definition = ({
     setCurrentFrequency(highestFrequency);
   }, [definitionWords]);
 
+  const prettyTextOptions = {
+    dict: match.params.rdict || match.params.dictname,
+  };
+
   const getTextAnalysis = () => {
-    if (isOpened && definitionHtml) {
+    if (isOpened && definitionText) {
       // successive api calls get cached
-      textAnalysis(definitionHtml).then(([html, error]) => {
-        setAnalysisResult(html);
+      textAnalysis(definitionText).then(([html, error]) => {
+        // now convert the image and other complex tags into html elements from
+        // bbcode
+        const formatted = bbcode2Html(html, {
+          ...prettyTextOptions,
+          renderComplexTags: true,
+        });
+        setAnalysisResult(formatted);
         setAnalysisError(error);
       });
     }
@@ -123,11 +134,14 @@ const Definition = ({
     // show this in the meantime
     if (isOpened && !definitionHtml) {
       const html = prettyText(definition?.text || "", {
-        dict: match.params.dictname,
+        ...prettyTextOptions,
+        renderComplexTags: true,
       });
+      const text = prettyText(definition?.text || "", prettyTextOptions);
       setDefinitionHtml(html);
+      setDefinitionText(text);
     }
-  }, [isOpened, definition]);
+  }, [isOpened, definition, definitionHtml, definitionText]);
 
   const toolbar = () => {
     return (
@@ -192,8 +206,9 @@ const Definition = ({
                 __html: bbcode2Html(definition?.heading),
               }}
             ></span>
-            {/* words that are not included in the frequency list do not get
-                displayed at all - this will allow for quick visual scanning */}
+            {/* words that are not included in the frequency list do not get a
+               frequency indicator displayed at all - this will allow for quick
+               visual scanning */}
             <Frequency rating={currentFrequency} />
           </span>
           {isOpened && toolbar()}

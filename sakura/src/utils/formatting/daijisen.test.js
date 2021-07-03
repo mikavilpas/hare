@@ -1,7 +1,7 @@
 /* eslint-disable jest/valid-expect */
 
-import { tokenize, definitionChar } from "./daijisen";
-import { assertParses, assertFailsParsing } from "../parseUtils";
+import { assertFailsParsing, assertParses } from "../parseUtils";
+import { definitionChar, tokenize } from "./daijisen";
 
 describe("top level definition parsing", () => {
   it("definition with some text after it", () => {
@@ -178,4 +178,14 @@ describe("third level definition parsing", () => {
   });
 });
 
-// TODO this should not think (1) is a 2nd level heading "(2) 《(一) (1) に似ているところから》 ㋐ 人や物の出入りするところ。「通用―」「改札―」「粟田（あわた）―」"
+it("should ignore meta quotes", () => {
+  const text = "(2) 《(一) (1) に似ているところから》 ";
+  assertParses(tokenize(text), [
+    {
+      type: "secondLevelDefinition",
+      number: 2,
+      content: [" 《(一) (1) に似ているところから》 "],
+      heading: "(2)",
+    },
+  ]);
+});

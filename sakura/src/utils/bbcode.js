@@ -142,7 +142,12 @@ const image = () => {
     map((things) => {
       const [_start, properties, _startEnd, alt] = things;
       // content does not allow any tags whatsoever
-      return { type: "image", content: [alt], ...properties };
+
+      const propertiesString = Object.entries(properties)
+        .map(([k, v]) => `${k}=${v}`)
+        .join(",");
+      const asText = `[image ${propertiesString}]${alt}[/image]`;
+      return { type: "image", content: [alt], asText: asText, ...properties };
     })
   );
 };

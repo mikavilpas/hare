@@ -1,17 +1,16 @@
 import * as p from "parjs";
 import {
   between,
-  mapConst,
-  not,
-  then,
   many,
   map,
-  qthen,
+  mapConst,
+  not,
   or,
-  later,
-  stringify,
+  qthen,
+  then,
 } from "parjs/combinators";
 import { joinSuccessiveStringTokens } from "../parseUtils";
+import { literalQuote } from "./formatting";
 
 export function tokenize(text) {
   const tokens = daijisenDefinition.parse(text);
@@ -47,7 +46,7 @@ const level3Heading = p.anyCharOf(
 export const definitionChar = level1Heading.pipe(
   or(level2Heading, level3Heading),
   not(),
-  qthen(linebreak.pipe(or(p.anyChar())))
+  qthen(linebreak.pipe(or(literalQuote, p.anyChar())))
 );
 
 const level3 = level3Heading.pipe(

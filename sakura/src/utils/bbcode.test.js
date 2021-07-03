@@ -125,6 +125,8 @@ describe("tokenizing", () => {
           page: "83438",
           offset: "928",
           content: ["筆順"],
+          asText:
+            "[image format=jpg,inline=0,page=83438,offset=928]筆順[/image]",
         },
         "stuff",
       ],

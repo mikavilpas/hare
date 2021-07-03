@@ -1,7 +1,7 @@
 import config from "../../config";
 import { tokenize as tokenizeBbcode } from "../../utils/bbcode";
-import { tokenize as format } from "../../utils/formatting/formatting";
 import { tokenize as daijisen } from "../../utils/formatting/daijisen";
+import { tokenize as format } from "../../utils/formatting/formatting";
 
 // Dictionaries to display and preload results for. These are either the id or
 // alias properties from the config.dictinfo
@@ -59,8 +59,15 @@ export function bbcode2Html(bbcodeText, options) {
     // TODO render <a>
     if (t.type === "reference") return content;
     if (t.type === "image") {
-      const src = `/dict/?api=1&binary=${t.format}&dict=${options.dict}&offset=${t.offset}&page=${t.page}`;
-      return `<img title=${t.content} src=${src} />`;
+      if (options.renderComplexTags) {
+        // hyperlinks with % symbols get mangled by the text analysis phase, breaking the html
+        const src = `/dict/?api=1&binary=${t.format}&dict=${options.dict}&offset=${t.offset}&page=${t.page}`;
+        return `<img title="${t.content}" src="${src}" />`;
+      } else {
+        // return the tag unchanged so it can be converted to html after the
+        // text analysis is complete
+        return t.asText;
+      }
     }
 
     return t?.content || t; // unknown tags or no tags at all
