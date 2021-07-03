@@ -65,11 +65,7 @@ const Definition = ({
   // always open the first card by default
   const [analysisResult, setAnalysisResult] = useState();
   const [analysisError, setAnalysisError] = useState();
-  const [definitionHtml, setDefinitionHtml] = useState(
-    prettyText(definition?.text || "", {
-      dict: match.params.dictname,
-    })
-  );
+  const [definitionHtml, setDefinitionHtml] = useState();
 
   const [definitionWords, setDefinitionWords] = useState([]);
   const [currentFrequency, setCurrentFrequency] = useState(0);
@@ -121,7 +117,16 @@ const Definition = ({
   };
 
   useEffect(() => {
+    // takes some time
     getTextAnalysis();
+
+    // show this in the meantime
+    if (isOpened && !definitionHtml) {
+      const html = prettyText(definition?.text || "", {
+        dict: match.params.dictname,
+      });
+      setDefinitionHtml(html);
+    }
   }, [isOpened, definition]);
 
   const toolbar = () => {
@@ -214,7 +219,8 @@ const Definition = ({
               }
             }}
             dangerouslySetInnerHTML={{
-              __html: analysisResult || definitionHtml,
+              __html:
+                analysisResult || definitionHtml || definition?.text || "",
             }}
           ></div>
         </Card.Body>
