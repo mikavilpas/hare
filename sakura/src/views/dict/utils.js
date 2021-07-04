@@ -1,5 +1,6 @@
 import config from "../../config";
 import { tokenize as tokenizeBbcode } from "../../utils/bbcode";
+import { tokenize as daijirin } from "../../utils/formatting/daijirin";
 import { tokenize as daijisen } from "../../utils/formatting/daijisen";
 import { tokenize as format } from "../../utils/formatting/formatting";
 
@@ -115,8 +116,7 @@ function highlightQuotes(text) {
   }
 }
 
-// 大辞泉
-function formatDaijisen(text) {
+function formatDefinition(text, formatFunction) {
   const convertTokensToHtml = (t) => {
     if (typeof t === "string") {
       return t;
@@ -147,13 +147,13 @@ function formatDaijisen(text) {
   };
 
   try {
-    const parseResult = daijisen(text);
+    const parseResult = formatFunction(text);
     const result = parseResult.value
       .map((t) => convertTokensToHtml(t))
       .join("");
     return result;
   } catch (e) {
-    console.warn("Unable to format daijisen text", e);
+    console.warn("Unable to format dictionary definition text", e);
     console.log(text);
     return text;
   }
@@ -162,7 +162,13 @@ function formatDaijisen(text) {
 export function prettyText(text, options) {
   // pre process definitions into html for supported dictionaries
   if (options.dict === "大辞泉") {
-    text = formatDaijisen(text);
+    text = formatDefinition(text, daijisen);
+    const html = bbcode2Html(text, options);
+    const withQuotes = highlightQuotes(html);
+
+    return withQuotes;
+  } else if (options.dict === "大辞林") {
+    text = formatDefinition(text, daijirin);
     const html = bbcode2Html(text, options);
     const withQuotes = highlightQuotes(html);
 
