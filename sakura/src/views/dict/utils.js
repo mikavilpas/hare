@@ -3,6 +3,7 @@ import { tokenize as tokenizeBbcode } from "../../utils/bbcode";
 import { tokenize as daijirin } from "../../utils/formatting/daijirin";
 import { tokenize as daijisen } from "../../utils/formatting/daijisen";
 import { tokenize as format } from "../../utils/formatting/formatting";
+import { tokenize as koujien } from "../../utils/formatting/koujien";
 
 // Dictionaries to display and preload results for. These are either the id or
 // alias properties from the config.dictinfo
@@ -160,19 +161,20 @@ function formatDefinition(text, formatFunction) {
 }
 
 export function prettyText(text, options) {
+  const preProcess = (formatFunction) => {
+    text = formatDefinition(text, formatFunction);
+    const html = bbcode2Html(text, options);
+    const withQuotes = highlightQuotes(html);
+
+    return withQuotes;
+  };
   // pre process definitions into html for supported dictionaries
   if (options.dict === "大辞泉") {
-    text = formatDefinition(text, daijisen);
-    const html = bbcode2Html(text, options);
-    const withQuotes = highlightQuotes(html);
-
-    return withQuotes;
+    return preProcess(daijisen);
   } else if (options.dict === "大辞林") {
-    text = formatDefinition(text, daijirin);
-    const html = bbcode2Html(text, options);
-    const withQuotes = highlightQuotes(html);
-
-    return withQuotes;
+    return preProcess(daijirin);
+  } else if (options.dict === "広辞苑") {
+    return preProcess(koujien);
   } else {
     const html = bbcode2Html(text, options);
     // console.log(html);
