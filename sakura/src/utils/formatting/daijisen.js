@@ -1,42 +1,14 @@
 import * as p from "parjs";
-import {
-  between,
-  many,
-  map,
-  mapConst,
-  not,
-  or,
-  qthen,
-  then,
-} from "parjs/combinators";
+import { between, many, map, not, or, qthen, then } from "parjs/combinators";
 import { joinSuccessiveStringTokens } from "../parseUtils";
 import { literalQuote } from "./formatting";
+import { linebreak, tokenFactory } from "./tokens";
 
 export function tokenize(text) {
   const tokens = daijisenDefinition.parse(text);
   return tokens;
 }
 
-const tokenFactory = {
-  firstLevelDefinition: (content, heading) => ({
-    type: "firstLevelDefinition",
-    content: content,
-    heading: heading,
-  }),
-  secondLevelDefinition: (i, content, heading) => ({
-    type: "secondLevelDefinition",
-    number: i,
-    content: content,
-    heading: heading,
-  }),
-  thirdLevelDefinition: (content, heading) => ({
-    type: "thirdLevelDefinition",
-    content: content,
-    heading: heading,
-  }),
-};
-
-const linebreak = p.newline().pipe(mapConst({ type: "linebreak" }));
 const level1Heading = p.anyStringOf("[一]", "[二]");
 const level2Heading = p.int().pipe(between("(", ")"));
 const level3Heading = p.anyCharOf(
