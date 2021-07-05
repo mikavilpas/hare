@@ -24,6 +24,22 @@ describe("heading or regular quote", () => {
 });
 
 describe("top level definition parsing", () => {
+  it("can parse top level definition symbols", () => {
+    const text = `■一■ （副）スル □二□ （名） `;
+    assertParses(tokenize(text), [
+      {
+        type: "firstLevelDefinition",
+        content: [" （副）スル "],
+        heading: "(一)",
+      },
+      {
+        type: "firstLevelDefinition",
+        content: [" （名） "],
+        heading: "(二)",
+      },
+    ]);
+  });
+
   it("definition with some text after it", () => {
     const text =
       "（１）ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」";

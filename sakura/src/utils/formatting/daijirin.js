@@ -54,7 +54,10 @@ const kanjiNumber = p
   .anyCharOf("一二三四五六七八九十")
   .pipe(called("kanjiNumber"));
 
-const level1Heading = kanjiNumber.pipe(between("□"), called("level1Heading"));
+const level1Heading = kanjiNumber.pipe(
+  between(p.anyCharOf("■□")),
+  called("level1Heading")
+);
 const level2Heading = fullWidthNumber().pipe(
   between("（", "）"),
   called("level2Heading")
