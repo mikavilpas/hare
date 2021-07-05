@@ -1,7 +1,7 @@
 /* eslint-disable jest/valid-expect */
 
-import { assertParses } from "../parseUtils";
-import { tokenize } from "./daijirin";
+import { assertFailsParsing, assertParses } from "../parseUtils";
+import { definitionChar, level3, tokenize } from "./daijirin";
 
 describe("heading or regular quote", () => {
   it("can parse a part of speech", () => {
@@ -225,4 +225,169 @@ describe("content with no structure", () => {
   });
 });
 
-// TODO second and third level definitions http://localhost:4000/#/dict/%E5%A4%A7%E8%BE%9E%E6%9E%97/prefix/%E4%BB%B2%E9%96%93/0/recursive/%E5%A4%A7%E8%BE%9E%E6%9E%97/prefix/%E8%BF%91%E4%B8%96/0
+describe("second level definitions", () => {
+  it("can parse a second level definition", () => {
+    const text = `（１）ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」`;
+    assertParses(tokenize(text), [
+      {
+        type: "secondLevelDefinition",
+        number: 1,
+        content: [
+          "ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」",
+        ],
+        heading: "（1）",
+      },
+    ]);
+  });
+
+  it("can parse two 2nds", () => {
+    const text = `（１）あ（２）同じ `;
+    assertParses(tokenize(text), [
+      {
+        type: "secondLevelDefinition",
+        number: 1,
+        content: ["あ"],
+        heading: "（1）",
+      },
+      {
+        type: "secondLevelDefinition",
+        number: 2,
+        content: ["同じ "],
+        heading: "（2）",
+      },
+    ]);
+  });
+
+  it("can parse level 2 followed by level 3", () => {
+    const text = `（２）歴史の時代区分の一。中世と近代の間の時期。（ア）日本史では，後期封建制の時期の安土桃山・江戸時代をいう。`;
+    assertParses(tokenize(text), [
+      {
+        type: "secondLevelDefinition",
+        number: 2,
+        content: [
+          "歴史の時代区分の一。中世と近代の間の時期。",
+          {
+            type: "thirdLevelDefinition",
+            content: [
+              "日本史では，後期封建制の時期の安土桃山・江戸時代をいう。",
+            ],
+            heading: "（ア）",
+          },
+        ],
+        heading: "（2）",
+      },
+    ]);
+  });
+});
+
+describe("definition token (char)", () => {
+  it("fails when parsing definition headings", () => {
+    // these failures determine that a definition should be parsed instead
+    assertFailsParsing(definitionChar.parse("（ア）"));
+    assertFailsParsing(definitionChar.parse("（２）"));
+    assertFailsParsing(definitionChar.parse("□一□"));
+  });
+});
+
+describe("third level definitions", () => {
+  it("can parse a third level definition", () => {
+    const text = `（ア）日本史では，後期封建制の時期の安土桃山・江戸時代をいう。`;
+    assertParses(level3.parse(text), {
+      type: "thirdLevelDefinition",
+      content: ["日本史では，後期封建制の時期の安土桃山・江戸時代をいう。"],
+      heading: "（ア）",
+    });
+  });
+
+  it("can parse three levels of definitions", () => {
+    const text = `[keyword]きん-せい[/keyword] [1] 【近世】
+□一□（自動詞）
+（１）あ
+（ア）日本（イ）西
+□二□（他動詞）
+（１）文章を書く。「稿を―・するは，大抵夜間/即興詩人（鴎外）」
+（２）歴史（ア）日本
+`;
+    assertParses(tokenize(text), [
+      "[keyword]きん-せい[/keyword] [1] 【近世】",
+      {
+        type: "linebreak",
+      },
+      {
+        type: "firstLevelDefinition",
+        content: [
+          "（自動詞）",
+          {
+            type: "linebreak",
+          },
+          {
+            type: "secondLevelDefinition",
+            number: 1,
+            content: [
+              "あ",
+              {
+                type: "linebreak",
+              },
+              {
+                type: "thirdLevelDefinition",
+                content: ["日本"],
+                heading: "（ア）",
+              },
+              {
+                type: "thirdLevelDefinition",
+                content: [
+                  "西",
+                  {
+                    type: "linebreak",
+                  },
+                ],
+                heading: "（イ）",
+              },
+            ],
+            heading: "（1）",
+          },
+        ],
+        heading: "(一)",
+      },
+      {
+        type: "firstLevelDefinition",
+        content: [
+          "（他動詞）",
+          {
+            type: "linebreak",
+          },
+          {
+            type: "secondLevelDefinition",
+            number: 1,
+            content: [
+              "文章を書く。「稿を―・するは，大抵夜間/即興詩人（鴎外）」",
+              {
+                type: "linebreak",
+              },
+            ],
+            heading: "（1）",
+          },
+          {
+            type: "secondLevelDefinition",
+            number: 2,
+            content: [
+              "歴史",
+              {
+                type: "thirdLevelDefinition",
+                content: [
+                  "日本",
+                  {
+                    type: "linebreak",
+                  },
+                ],
+                heading: "（ア）",
+              },
+            ],
+            heading: "（2）",
+          },
+        ],
+        heading: "(二)",
+      },
+    ]);
+  });
+});

@@ -1,5 +1,5 @@
 import { initial, last } from "lodash";
-import { ParjserBase, defineCombinator } from "parjs/internal";
+import { defineCombinator, ParjserBase } from "parjs/internal";
 
 // helper
 export const joinSuccessiveStringTokens = (tokens) => {
@@ -33,7 +33,7 @@ export function assertFailsParsing(parseResult) {
 export function called(expecting) {
   return defineCombinator((source) => {
     return new (class Called extends ParjserBase {
-      type = "token";
+      type = expecting;
       expecting = expecting;
 
       _apply(ps) {

@@ -8,10 +8,11 @@ import {
   not,
   or,
   qthen,
+  recover,
   stringify,
   then,
 } from "parjs/combinators";
-import { joinSuccessiveStringTokens } from "../parseUtils";
+import { called, joinSuccessiveStringTokens } from "../parseUtils";
 import { literalQuote } from "./formatting";
 import { linebreak, tokenFactory } from "./tokens";
 
@@ -36,52 +37,99 @@ const fullWidthNumber = () => {
     or(num1, num2, num3, num4, num5, num6, num7, num8, num9),
     many(),
     stringify(),
-    map(parseInt)
+    map(parseInt),
+    called("fullWidthNumber")
   );
 };
 
-const katakanaToken = p.anyCharOf(
-  "アイウエオカガキギクグケゲコゴサザシジスズセゼソゾ" +
-    "タダチヂツヅテデトドナニヌネノハバパヒビピフブプ" +
-    "ヘベペホボポマミムメモヤユヨラリルレロワヰヱヲンヴヷヸヹヺ"
+const katakanaToken = p
+  .anyCharOf(
+    "アイウエオカガキギクグケゲコゴサザシジスズセゼソゾ" +
+      "タダチヂツヅテデトドナニヌネノハバパヒビピフブプ" +
+      "ヘベペホボポマミムメモヤユヨラリルレロワヰヱヲンヴヷヸヹヺ"
+  )
+  .pipe(called("katakanaToken"));
+
+const kanjiNumber = p
+  .anyCharOf("一二三四五六七八九十")
+  .pipe(called("kanjiNumber"));
+
+const level1Heading = kanjiNumber.pipe(between("□"), called("level1Heading"));
+const level2Heading = fullWidthNumber().pipe(
+  between("（", "）"),
+  called("level2Heading")
+);
+const level3Heading = katakanaToken.pipe(
+  between("（", "）"),
+  called("level3Heading")
 );
 
-const kanjiNumber = p.anyCharOf("一二三四五六七八九十");
-
-const level1Heading = kanjiNumber.pipe(between("□"));
-const level2Heading = fullWidthNumber().pipe(between("（", "）"));
-
-const definitionChar = level1Heading.pipe(
-  or(level2Heading),
+export const definitionChar = level1Heading.pipe(
   not(),
-  qthen(linebreak.pipe(or(literalQuote, p.anyChar())))
+  then(level2Heading.pipe(not()), level3Heading.pipe(not())),
+  qthen(linebreak.pipe(or(literalQuote, p.anyChar()))),
+  called("definitionChar")
 );
 
-const level2 = later();
-const level1 = level1Heading.pipe(
+export const level2 = later();
+export const level3 = later();
+export const level1 = level1Heading.pipe(
   then(
-    definitionChar.pipe(or(level2), many(), map(joinSuccessiveStringTokens))
+    definitionChar.pipe(
+      or(level2),
+      many(),
+      map(joinSuccessiveStringTokens),
+      called("level1 content")
+    )
   ),
   map((tokens) => {
     const [index, content] = tokens;
     const heading = `(${index})`;
     return tokenFactory.firstLevelDefinition(content, heading);
-  })
+  }),
+  called("level1")
 );
 
 level2.init(
   level2Heading.pipe(
-    then(definitionChar.pipe(many(), map(joinSuccessiveStringTokens))),
+    then(
+      definitionChar.pipe(
+        or(level3.pipe(recover(() => ({ kind: "Soft" })))),
+        many(),
+        map(joinSuccessiveStringTokens),
+        called("level2 content")
+      )
+    ),
     map((tokens) => {
       const [index, content] = tokens;
       const heading = `（${index}）`;
       return tokenFactory.secondLevelDefinition(index, content, heading);
-    })
+    }),
+    called("level2")
+  )
+);
+
+level3.init(
+  level3Heading.pipe(
+    then(
+      definitionChar.pipe(
+        many(),
+        map(joinSuccessiveStringTokens),
+        called("level3 content")
+      )
+    ),
+    map((tokens) => {
+      const [index, content] = tokens;
+      const heading = `（${index}）`;
+      return tokenFactory.thirdLevelDefinition(content, heading);
+    }),
+    called("level3")
   )
 );
 
 const definition = definitionChar.pipe(
-  or(level1, level2),
+  or(level1, level2, p.anyChar()),
   many(),
-  map(joinSuccessiveStringTokens)
+  map(joinSuccessiveStringTokens),
+  called("definition")
 );
