@@ -55,8 +55,8 @@ const level1 = level1Heading.pipe(
   })
 );
 
-const definition = level1.pipe(
-  or(linebreak, p.anyChar()),
+const definition = definitionChar.pipe(
+  or(level1, linebreak, p.anyChar()),
   many(),
   map(joinSuccessiveStringTokens)
 );
