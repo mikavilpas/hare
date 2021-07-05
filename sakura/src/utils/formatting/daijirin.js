@@ -1,6 +1,7 @@
 import * as p from "parjs";
 import {
   between,
+  later,
   many,
   map,
   mapConst,
@@ -39,24 +40,48 @@ const fullWidthNumber = () => {
   );
 };
 
-const level1Heading = fullWidthNumber().pipe(between("（", "）"));
+const katakanaToken = p.anyCharOf(
+  "アイウエオカガキギクグケゲコゴサザシジスズセゼソゾ" +
+    "タダチヂツヅテデトドナニヌネノハバパヒビピフブプ" +
+    "ヘベペホボポマミムメモヤユヨラリルレロワヰヱヲンヴヷヸヹヺ"
+);
+
+const kanjiNumber = p.anyCharOf("一二三四五六七八九十");
+
+const level1Heading = kanjiNumber.pipe(between("□"));
+const level2Heading = fullWidthNumber().pipe(between("（", "）"));
 
 const definitionChar = level1Heading.pipe(
+  or(level2Heading),
   not(),
   qthen(linebreak.pipe(or(literalQuote, p.anyChar())))
 );
 
+const level2 = later();
 const level1 = level1Heading.pipe(
-  then(definitionChar.pipe(many(), map(joinSuccessiveStringTokens))),
+  then(
+    definitionChar.pipe(or(level2), many(), map(joinSuccessiveStringTokens))
+  ),
   map((tokens) => {
     const [index, content] = tokens;
-    const heading = `（${index}）`;
+    const heading = `(${index})`;
     return tokenFactory.firstLevelDefinition(content, heading);
   })
 );
 
+level2.init(
+  level2Heading.pipe(
+    then(definitionChar.pipe(many(), map(joinSuccessiveStringTokens))),
+    map((tokens) => {
+      const [index, content] = tokens;
+      const heading = `（${index}）`;
+      return tokenFactory.secondLevelDefinition(index, content, heading);
+    })
+  )
+);
+
 const definition = definitionChar.pipe(
-  or(level1, linebreak, p.anyChar()),
+  or(level1, level2),
   many(),
   map(joinSuccessiveStringTokens)
 );

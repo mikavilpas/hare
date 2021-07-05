@@ -14,9 +14,10 @@ describe("heading or regular quote", () => {
     const text = `（１）`;
     assertParses(tokenize(text), [
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
         content: [],
         heading: "（1）",
+        number: 1,
       },
     ]);
   });
@@ -28,11 +29,12 @@ describe("top level definition parsing", () => {
       "（１）ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」";
     assertParses(tokenize(text), [
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
         content: [
           "ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」",
         ],
         heading: "（1）",
+        number: 1,
       },
     ]);
   });
@@ -49,7 +51,7 @@ describe("top level definition parsing", () => {
         type: "linebreak",
       },
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
         content: [
           "ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」",
           {
@@ -57,9 +59,10 @@ describe("top level definition parsing", () => {
           },
         ],
         heading: "（1）",
+        number: 1,
       },
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
         content: [
           "同じ種類に属するもの。同類。「鯨は哺乳類の―であって，魚の―ではない」",
           {
@@ -67,9 +70,10 @@ describe("top level definition parsing", () => {
           },
         ],
         heading: "（2）",
+        number: 2,
       },
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
         content: [
           "近世，商工業者が結成した同業組合。",
           {
@@ -77,6 +81,88 @@ describe("top level definition parsing", () => {
           },
         ],
         heading: "（3）",
+        number: 3,
+      },
+    ]);
+  });
+
+  it("two levels of definitions", () => {
+    const text = `[keyword]ぞく・する[/keyword] [3] 【属する】 （動サ変）[文]サ変 ぞく・す
+□一□（自動詞）
+（１）ある集団に加わっている。「野球部に―・している」
+（２）ある種類・範囲・分類の中にある。「哺乳類に―・する動物」
+□二□（他動詞）
+（１）文章を書く。「稿を―・するは，大抵夜間/即興詩人（鴎外）」
+（２）依頼する。たのむ。嘱(シヨク)する。「閻王此偈を誦じをはて，すなはち彼文を尊恵に―・す/平家 6」
+`;
+    assertParses(tokenize(text), [
+      "[keyword]ぞく・する[/keyword] [3] 【属する】 （動サ変）[文]サ変 ぞく・す",
+      {
+        type: "linebreak",
+      },
+      {
+        type: "firstLevelDefinition",
+        content: [
+          "（自動詞）",
+          {
+            type: "linebreak",
+          },
+          {
+            type: "secondLevelDefinition",
+            number: 1,
+            content: [
+              "ある集団に加わっている。「野球部に―・している」",
+              {
+                type: "linebreak",
+              },
+            ],
+            heading: "（1）",
+          },
+          {
+            type: "secondLevelDefinition",
+            number: 2,
+            content: [
+              "ある種類・範囲・分類の中にある。「哺乳類に―・する動物」",
+              {
+                type: "linebreak",
+              },
+            ],
+            heading: "（2）",
+          },
+        ],
+        heading: "(一)",
+      },
+      {
+        type: "firstLevelDefinition",
+        content: [
+          "（他動詞）",
+          {
+            type: "linebreak",
+          },
+          {
+            type: "secondLevelDefinition",
+            number: 1,
+            content: [
+              "文章を書く。「稿を―・するは，大抵夜間/即興詩人（鴎外）」",
+              {
+                type: "linebreak",
+              },
+            ],
+            heading: "（1）",
+          },
+          {
+            type: "secondLevelDefinition",
+            number: 2,
+            content: [
+              "依頼する。たのむ。嘱(シヨク)する。「閻王此偈を誦じをはて，すなはち彼文を尊恵に―・す/平家 6」",
+              {
+                type: "linebreak",
+              },
+            ],
+            heading: "（2）",
+          },
+        ],
+        heading: "(二)",
       },
     ]);
   });
@@ -86,32 +172,36 @@ describe("top level definition parsing", () => {
     assertParses(tokenize(text), [
       "し-まつ [1] 【始末】 （名）スル ",
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
         content: [
           "（物事の）しめくくりを付けること。片付けること。処理。「―を付ける」「このごたごたをどう―するつもりだ」 ",
         ],
         heading: "（1）",
+        number: 1,
       },
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
         content: [
           "無駄遣いしないこと。倹約すること。「なんでも―して使う人」「藤屋の市兵衛が申事を尤と思はば，―をすべし/浮世草子・一代男 7」 ",
         ],
         heading: "（2）",
+        number: 2,
       },
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
         content: [
           "結果。主として悪い状態についていう。「さんざん迷惑をかけたあげく，あの―だ」 ",
         ],
         heading: "（3）",
+        number: 3,
       },
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
         content: [
           "物事の事情。事の次第。「私が此書(ホン)を読む様になりました―は/不如帰（蘆花）」",
         ],
         heading: "（4）",
+        number: 4,
       },
     ]);
   });
@@ -134,3 +224,5 @@ describe("content with no structure", () => {
     ]);
   });
 });
+
+// TODO second and third level definitions http://localhost:4000/#/dict/%E5%A4%A7%E8%BE%9E%E6%9E%97/prefix/%E4%BB%B2%E9%96%93/0/recursive/%E5%A4%A7%E8%BE%9E%E6%9E%97/prefix/%E8%BF%91%E4%B8%96/0
