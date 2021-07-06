@@ -25,6 +25,7 @@ const quoted = (start, end) => {
 export const literalQuote = quoted("（", "）").pipe(
   or(
     //
+    quoted("[", "]"),
     quoted("〔", "〕"),
     quoted("(", ")"),
     quoted("《", "》")

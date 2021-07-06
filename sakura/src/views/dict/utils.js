@@ -4,6 +4,7 @@ import { tokenize as daijirin } from "../../utils/formatting/daijirin";
 import { tokenize as daijisen } from "../../utils/formatting/daijisen";
 import { tokenize as format } from "../../utils/formatting/formatting";
 import { tokenize as koujien } from "../../utils/formatting/koujien";
+import { tokenize as shinmeikai } from "../../utils/formatting/shinmeikai";
 
 // Dictionaries to display and preload results for. These are either the id or
 // alias properties from the config.dictinfo
@@ -147,8 +148,9 @@ function formatDefinition(text, formatFunction) {
     }
   };
 
+  let parseResult; // helps debugging
   try {
-    const parseResult = formatFunction(text);
+    parseResult = formatFunction(text);
     const result = parseResult.value
       .map((t) => convertTokensToHtml(t))
       .join("");
@@ -175,6 +177,8 @@ export function prettyText(text, options) {
     return preProcess(daijirin);
   } else if (options.dict === "広辞苑") {
     return preProcess(koujien);
+  } else if (options.dict === "新明解") {
+    return preProcess(shinmeikai);
   } else {
     const html = bbcode2Html(text, options);
     // console.log(html);
