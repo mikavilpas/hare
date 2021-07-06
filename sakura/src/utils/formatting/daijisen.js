@@ -1,6 +1,6 @@
 import * as p from "parjs";
 import { between, many, map, not, or, qthen, then } from "parjs/combinators";
-import { joinSuccessiveStringTokens } from "../parseUtils";
+import { called, joinSuccessiveStringTokens } from "../parseUtils";
 import { literalQuote } from "./formatting";
 import { linebreak, tokenFactory } from "./tokens";
 
@@ -9,16 +9,21 @@ export function tokenize(text) {
   return tokens;
 }
 
-const level1Heading = p.anyStringOf("[一]", "[二]");
-const level2Heading = p.int().pipe(between("(", ")"));
-const level3Heading = p.anyCharOf(
-  "㋐㋑㋒㋓㋔㋕㋖㋗㋘㋙㋚㋛㋜㋝㋞㋟㋠㋡㋢㋣㋤㋥㋦㋧㋨㋩㋪㋫㋬㋭㋮㋯㋰㋱㋲㋳㋴㋵㋶㋷㋸㋹㋺㋻㋼㋽㋾"
-);
+const level1Heading = p
+  .anyStringOf("[一]", "[二]")
+  .pipe(called("level1Heading"));
+const level2Heading = p.int().pipe(between("(", ")"), called("level2Heading"));
+const level3Heading = p
+  .anyCharOf(
+    "㋐㋑㋒㋓㋔㋕㋖㋗㋘㋙㋚㋛㋜㋝㋞㋟㋠㋡㋢㋣㋤㋥㋦㋧㋨㋩㋪㋫㋬㋭㋮㋯㋰㋱㋲㋳㋴㋵㋶㋷㋸㋹㋺㋻㋼㋽㋾"
+  )
+  .pipe(called("level3Heading"));
 
 export const definitionChar = level1Heading.pipe(
   or(level2Heading, level3Heading),
   not(),
-  qthen(linebreak.pipe(or(literalQuote, p.anyChar())))
+  qthen(linebreak.pipe(or(literalQuote, p.anyChar()))),
+  called("definitionChar")
 );
 
 const level3 = level3Heading.pipe(
@@ -26,9 +31,11 @@ const level3 = level3Heading.pipe(
     definitionChar.pipe(
       //
       many(),
-      map(joinSuccessiveStringTokens)
+      map(joinSuccessiveStringTokens),
+      called("level3 content")
     )
   ),
+  called("level3"),
   map((tokens) => {
     const [heading, content] = tokens;
     return tokenFactory.thirdLevelDefinition(content, heading);
@@ -40,9 +47,11 @@ const level2 = level2Heading.pipe(
     level3.pipe(
       or(definitionChar), //
       many(),
-      map(joinSuccessiveStringTokens)
+      map(joinSuccessiveStringTokens),
+      called("level2 content")
     )
   ),
+  called("level2"),
   map((tokens) => {
     const [i, content] = tokens;
     const heading = `(${i})`;
@@ -53,13 +62,15 @@ const level2 = level2Heading.pipe(
 const level1 = level1Heading.pipe(
   then(
     //
-    level2.pipe(
+    definitionChar.pipe(
       //
-      or(definitionChar),
+      or(level2),
       many(),
-      map(joinSuccessiveStringTokens)
+      map(joinSuccessiveStringTokens),
+      called("level1 content")
     )
   ),
+  called("level1"),
   map((tokens) => {
     const [heading, contents] = tokens;
     return tokenFactory.firstLevelDefinition(contents, heading);
@@ -81,5 +92,6 @@ const daijisenDefinition = level1.pipe(
     p.anyChar()
   ),
   many(),
-  map(joinSuccessiveStringTokens)
+  map(joinSuccessiveStringTokens),
+  called("definition")
 );

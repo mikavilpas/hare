@@ -176,6 +176,19 @@ describe("third level definition parsing", () => {
       },
     ]);
   });
+
+  it("can parse wannabe accent information", () => {
+    // https://sakura-paris.org/dict/#/export/大辞泉/prefix/一段/0
+    const text = `(2)文章(一)はイチダン、(二)はイチダン。`;
+    assertParses(tokenize(text), [
+      {
+        type: "secondLevelDefinition",
+        number: 2,
+        content: ["文章(一)はイチダン、(二)はイチダン。"],
+        heading: "(2)",
+      },
+    ]);
+  });
 });
 
 it("should ignore meta quotes", () => {
