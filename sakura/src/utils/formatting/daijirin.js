@@ -50,7 +50,7 @@ const katakanaToken = p
   )
   .pipe(called("katakanaToken"));
 
-const kanjiNumber = p
+export const kanjiNumber = p
   .anyCharOf("一二三四五六七八九十")
   .pipe(called("kanjiNumber"));
 

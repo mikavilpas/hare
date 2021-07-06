@@ -17,7 +17,8 @@ describe("top level definition parsing", () => {
         type: "linebreak",
       },
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
+        number: 1,
         content: [
           "ともに事をする人。同じ仕事をする人。また、その集り。同類。伴侶。たぐい。",
           {
@@ -27,7 +28,8 @@ describe("top level definition parsing", () => {
         heading: "(1)",
       },
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
+        number: 2,
         content: [
           "近世における商工業者の独占的な同業組合。株仲間。",
           {
@@ -43,6 +45,75 @@ describe("top level definition parsing", () => {
           },
         ],
         heading: "(2)",
+      },
+    ]);
+  });
+});
+
+describe("second level parsing", () => {
+  it("can parse two levels", () => {
+    const text = `[keyword]いち‐だん[/keyword]【[keyword]一段[/keyword]】
+[一]〔名〕
+①階段などの一きざみ。転じて、事件の一くぎり、地位・技能の一段階など。「―の御上達」
+②文章・語り物などの一くぎり。
+[二]〔副〕
+(「と」を伴っても用いる)一際[subscript]ひときわ[/subscript]。一層。狂言、烏帽子折「―ういやつぢや」。「―と腕があがる」
+[reference]⇒いちだん‐かつよう【一段活用】[/reference page=1167,offset=712]
+`;
+    assertParses(tokenize(text), [
+      "[keyword]いち‐だん[/keyword]【[keyword]一段[/keyword]】",
+      {
+        type: "linebreak",
+      },
+      {
+        type: "firstLevelDefinition",
+        content: [
+          "〔名〕",
+          {
+            type: "linebreak",
+          },
+          {
+            type: "secondLevelDefinition",
+            number: 1,
+            content: [
+              "階段などの一きざみ。転じて、事件の一くぎり、地位・技能の一段階など。「―の御上達」",
+              {
+                type: "linebreak",
+              },
+            ],
+            heading: "(1)",
+          },
+          {
+            type: "secondLevelDefinition",
+            number: 2,
+            content: [
+              "文章・語り物などの一くぎり。",
+              {
+                type: "linebreak",
+              },
+            ],
+            heading: "(2)",
+          },
+        ],
+        heading: "(一)",
+      },
+      {
+        type: "firstLevelDefinition",
+        content: [
+          "〔副〕",
+          {
+            type: "linebreak",
+          },
+          "(「と」を伴っても用いる)一際[subscript]ひときわ[/subscript]。一層。狂言、烏帽子折「―ういやつぢや」。「―と腕があがる」",
+          {
+            type: "linebreak",
+          },
+          "[reference]⇒いちだん‐かつよう【一段活用】[/reference page=1167,offset=712]",
+          {
+            type: "linebreak",
+          },
+        ],
+        heading: "(二)",
       },
     ]);
   });

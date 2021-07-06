@@ -1,6 +1,7 @@
 import * as p from "parjs";
-import { many, map, not, or, qthen, then } from "parjs/combinators";
-import { joinSuccessiveStringTokens } from "../parseUtils";
+import { between, many, map, not, or, qthen, then } from "parjs/combinators";
+import { called, joinSuccessiveStringTokens } from "../parseUtils";
+import { kanjiNumber } from "./daijirin";
 import { literalQuote } from "./formatting";
 import { linebreak, tokenFactory } from "./tokens";
 
@@ -21,29 +22,62 @@ const whiteCircledNumber = () => {
 
   return p.anyCharOf(numbers).pipe(
     map((parsedChar) => {
-      return conversions[parsedChar];
-    })
+      return { number: conversions[parsedChar], char: parsedChar };
+    }),
+    called("whiteCircledNumber")
   );
 };
 
-const level1Heading = whiteCircledNumber();
+const level1Heading = kanjiNumber.pipe(
+  between("[", "]"),
+  called("level1Heading")
+);
+const level2Heading = whiteCircledNumber().pipe(called("level2Heading"));
 
 const definitionChar = level1Heading.pipe(
+  or(level2Heading),
   not(),
-  qthen(linebreak.pipe(or(literalQuote, p.anyChar())))
+  qthen(linebreak.pipe(or(literalQuote, p.anyChar()))),
+  called("definitionChar")
+);
+
+const level2 = level2Heading.pipe(
+  then(
+    definitionChar.pipe(
+      many(),
+      map(joinSuccessiveStringTokens),
+      called("level2 content")
+    )
+  ),
+  map((tokens) => {
+    const [headingInfo, content] = tokens;
+    const { char, number } = headingInfo;
+    const heading = `(${number})`;
+    return tokenFactory.secondLevelDefinition(number, content, heading);
+  }),
+  called("level2")
 );
 
 const level1 = level1Heading.pipe(
-  then(definitionChar.pipe(many(), map(joinSuccessiveStringTokens))),
+  then(
+    definitionChar.pipe(
+      or(level2),
+      many(),
+      map(joinSuccessiveStringTokens),
+      called("level1 content")
+    )
+  ),
   map((tokens) => {
-    const [index, content] = tokens;
-    const heading = `(${index})`;
+    const [headingKanjiNumber, content] = tokens;
+    const heading = `(${headingKanjiNumber})`;
     return tokenFactory.firstLevelDefinition(content, heading);
-  })
+  }),
+  called("level1")
 );
 
-const definition = level1.pipe(
-  or(linebreak, p.anyChar()),
+const definition = definitionChar.pipe(
+  or(level1, level2, p.anyChar()),
   many(),
-  map(joinSuccessiveStringTokens)
+  map(joinSuccessiveStringTokens),
+  called("definition")
 );
