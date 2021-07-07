@@ -28,7 +28,8 @@ export const literalQuote = quoted("（", "）").pipe(
     quoted("[", "]"),
     quoted("〔", "〕"),
     quoted("(", ")"),
-    quoted("《", "》")
+    quoted("《", "》"),
+    quoted("{", "}")
   )
 );
 

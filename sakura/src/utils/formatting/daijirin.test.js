@@ -21,6 +21,11 @@ describe("heading or regular quote", () => {
       },
     ]);
   });
+
+  it("can parse a definition reference as a quote (ignored)", () => {
+    const text = `「打ち消し{（２）}」に同じ。`;
+    assertParses(tokenize(text), [text]);
+  });
 });
 
 describe("top level definition parsing", () => {
