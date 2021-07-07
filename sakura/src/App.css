@@ -67,6 +67,11 @@ body {
   font-size: 1.5em;
 }
 
+mark {
+  background-color: transparent;
+  color: lightgray;
+}
+
 .definition-listing div.card-body {
   background-color: #414141;
   padding: 0.2rem;
