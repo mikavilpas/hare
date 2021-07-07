@@ -16,7 +16,7 @@ import {
   useRouteMatch,
 } from "react-router-dom";
 import { textAnalysis } from "../../api";
-import { frequency } from "../../utils/frequency";
+import { frequency, highestFrequency } from "../../utils/frequency";
 import { parse } from "../../utils/wordParser";
 import { bbcode2Html, prettyText, urls } from "./utils";
 
@@ -43,6 +43,7 @@ const Frequency = ({ rating }) => {
     >
       <span
         onClick={(e) => e.stopPropagation()}
+        aria-label="frequency ranking"
         className="badge badge-secondary"
       >
         {rating}
@@ -89,22 +90,16 @@ const Definition = ({
   }, [definition.heading]);
 
   useEffect(() => {
-    const frequencies = definitionWords.map(frequency);
+    const frequency = highestFrequency(definitionWords);
 
-    const highestFrequency = frequencies
-      .filter((f) => f) // might not have been loaded yet - just ignore
-      .map((f) => f.rating)
-      .sort()
-      .reverse()?.[0];
-
-    if (highestFrequency === 5) setCurrentOrderNumber(1);
-    else if (highestFrequency === 4) setCurrentOrderNumber(2);
-    else if (highestFrequency === 3) setCurrentOrderNumber(3);
-    else if (highestFrequency === 2) setCurrentOrderNumber(4);
-    else if (highestFrequency === 1) setCurrentOrderNumber(5);
+    if (frequency === 5) setCurrentOrderNumber(1);
+    else if (frequency === 4) setCurrentOrderNumber(2);
+    else if (frequency === 3) setCurrentOrderNumber(3);
+    else if (frequency === 2) setCurrentOrderNumber(4);
+    else if (frequency === 1) setCurrentOrderNumber(5);
     else setCurrentOrderNumber(6); // don't change the ordering
 
-    setCurrentFrequency(highestFrequency);
+    setCurrentFrequency(frequency);
   }, [definitionWords]);
 
   const prettyTextOptions = {

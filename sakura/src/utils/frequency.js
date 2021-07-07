@@ -32,3 +32,17 @@ export function initFrequencyList() {
       console.log("Loaded frequency list.");
     });
 }
+
+export function highestFrequency(definitionWords) {
+  const frequencies = definitionWords.flatMap((w) => [
+    frequency(w),
+    frequency(w + "する"),
+  ]);
+
+  const freq = frequencies
+    .filter((f) => f) // might not have been loaded yet - just ignore
+    .map((f) => f.rating)
+    .sort()
+    .reverse()?.[0];
+  return freq;
+}
