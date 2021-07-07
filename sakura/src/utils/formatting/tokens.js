@@ -77,6 +77,10 @@ export const blackCircledNumber = p
   .anyCharOf("⓿❶❷❸❹❺❻❼❽❾❿⓫⓬⓭⓮⓯⓰⓱⓲⓳⓴")
   .pipe(called("blackCircledNumber"));
 
+export const blackCircledNumberSansSerif = p
+  .anyCharOf("🄌➊➋➌➍➎➏➐➑➒➓")
+  .pipe(called("blackCircledNumberSansSerif"));
+
 export const circledKatakanaToken = p
   .anyCharOf(
     "㋐㋑㋒㋓㋔㋕㋖㋗㋘㋙㋚㋛㋜㋝㋞㋟㋠㋡㋢㋣㋤㋥㋦㋧㋨㋩㋪㋫㋬㋭㋮㋯㋰㋱㋲㋳㋴㋵㋶㋷㋸㋹㋺㋻㋼㋽㋾"

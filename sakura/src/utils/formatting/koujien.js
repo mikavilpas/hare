@@ -3,6 +3,7 @@ import { between, many, map, not, or, qthen, then } from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
 import { literalQuote } from "./formatting";
 import {
+  blackCircledNumberSansSerif,
   kanjiNumber,
   linebreak,
   tokenFactory,
@@ -17,6 +18,7 @@ export function tokenize(text) {
 
 const level1Heading = kanjiNumber.pipe(
   between("[", "]"),
+  or(blackCircledNumberSansSerif),
   called("level1Heading")
 );
 const level2Heading = whiteCircledNumber().pipe(called("level2Heading"));

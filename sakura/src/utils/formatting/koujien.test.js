@@ -48,6 +48,19 @@ describe("top level definition parsing", () => {
       },
     ]);
   });
+
+  it("can parse one when marked with a circled number", () => {
+    const text = `➋事物を曲がった物・とがった物・張った物・仕組んだ物などでとらえる。 `;
+    assertParses(tokenize(text), [
+      {
+        type: "firstLevelDefinition",
+        content: [
+          "事物を曲がった物・とがった物・張った物・仕組んだ物などでとらえる。 ",
+        ],
+        heading: "(➋)",
+      },
+    ]);
+  });
 });
 
 describe("second level parsing", () => {
