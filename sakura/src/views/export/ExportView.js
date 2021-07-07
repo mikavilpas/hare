@@ -209,81 +209,87 @@ const ExportView = ({}) => {
             </Col>
           </Row>
           <Row>
-            <ul className="external-sites list-unstyled mt-2">
-              <li>
-                <SearchLinkWithIcon
-                  word={selectedWord}
-                  iconUrl={"/dict/icons/google.png"}
-                  url={`https://www.google.co.jp/search?tbm=isch&q=${selectedWord}`}
-                >
-                  Google 画像
-                </SearchLinkWithIcon>
-              </li>
-              <li>
-                <SearchLinkWithIcon
-                  word={selectedWord}
-                  iconUrl={"/dict/icons/google.png"}
-                  url={`https://www.google.co.jp/search?tbm=isch&q=${selectedWord} イラスト`}
-                >
-                  Google イラスト
-                </SearchLinkWithIcon>
-              </li>
-              <li>
-                <SearchLinkWithIcon
-                  word={selectedWord}
-                  iconUrl={"/dict/icons/jisho.png"}
-                  url={`https://jisho.org/search/${selectedWord}%20%23sentences`}
-                >
-                  Jisho sentences
-                </SearchLinkWithIcon>
-              </li>
-              <li>
-                <SearchLinkWithIcon
-                  word={selectedWord}
-                  iconUrl={"/dict/icons/jisho.png"}
-                  url={`https://jisho.org/search/${selectedWord}`}
-                >
-                  Jisho
-                </SearchLinkWithIcon>
-              </li>
-              <li>
-                <SearchLinkWithIcon
-                  word={selectedWord}
-                  iconUrl={"https://sentencesearch.neocities.org/favicon.png"}
-                  url={`https://sentencesearch.neocities.org/#${selectedWord}`}
-                >
-                  Audio sentences
-                </SearchLinkWithIcon>
-              </li>
-              <li>
-                <SearchLink
-                  word={selectedWord}
-                  icon={
-                    <i
-                      style={{ fontSize: "medium" }}
-                      className="bi bi-book"
-                    ></i>
-                  }
-                  url={`http://yourei.jp/${selectedWord}`}
-                >
-                  Yourei sentences
-                </SearchLink>
-              </li>
-              <li>
-                <SearchLink
-                  word={selectedWord}
-                  icon={
-                    <i
-                      style={{ fontSize: "medium", color: "#7952b3" }}
-                      className="bi bi-square-fill"
-                    ></i>
-                  }
-                  url={`https://immersionkit.com/dictionary?keyword=${selectedWord}`}
-                >
-                  Immersion Kit
-                </SearchLink>
-              </li>
-            </ul>
+            <Col>
+              <ul className="external-sites list-unstyled mt-2">
+                <li>
+                  <SearchLinkWithIcon
+                    word={selectedWord}
+                    iconUrl={"/dict/icons/google.png"}
+                    url={`https://www.google.co.jp/search?tbm=isch&q=${selectedWord}`}
+                  >
+                    Google 画像
+                  </SearchLinkWithIcon>
+                </li>
+                <li>
+                  <SearchLinkWithIcon
+                    word={selectedWord}
+                    iconUrl={"/dict/icons/google.png"}
+                    url={`https://www.google.co.jp/search?tbm=isch&q=${selectedWord} イラスト`}
+                  >
+                    Google イラスト
+                  </SearchLinkWithIcon>
+                </li>
+                <li>
+                  <SearchLinkWithIcon
+                    word={selectedWord}
+                    iconUrl={"/dict/icons/jisho.png"}
+                    url={`https://jisho.org/search/${selectedWord}`}
+                  >
+                    Jisho
+                  </SearchLinkWithIcon>
+                </li>
+              </ul>
+            </Col>
+            <Col>
+              <ul className="external-sites list-unstyled mt-2">
+                <li>
+                  <SearchLinkWithIcon
+                    word={selectedWord}
+                    iconUrl={"/dict/icons/jisho.png"}
+                    url={`https://jisho.org/search/${selectedWord}%20%23sentences`}
+                  >
+                    Jisho sentences
+                  </SearchLinkWithIcon>
+                </li>
+                <li>
+                  <SearchLinkWithIcon
+                    word={selectedWord}
+                    iconUrl={"https://sentencesearch.neocities.org/favicon.png"}
+                    url={`https://sentencesearch.neocities.org/#${selectedWord}`}
+                  >
+                    Audio sentences
+                  </SearchLinkWithIcon>
+                </li>
+                <li>
+                  <SearchLink
+                    word={selectedWord}
+                    icon={
+                      <i
+                        style={{ fontSize: "medium" }}
+                        className="bi bi-book"
+                      ></i>
+                    }
+                    url={`http://yourei.jp/${selectedWord}`}
+                  >
+                    Yourei sentences
+                  </SearchLink>
+                </li>
+                <li>
+                  <SearchLink
+                    word={selectedWord}
+                    icon={
+                      <i
+                        style={{ fontSize: "medium", color: "#7952b3" }}
+                        className="bi bi-square-fill"
+                      ></i>
+                    }
+                    url={`https://immersionkit.com/dictionary?keyword=${selectedWord}`}
+                  >
+                    Immersion Kit
+                  </SearchLink>
+                </li>
+              </ul>
+            </Col>
           </Row>
         </>
       )}
