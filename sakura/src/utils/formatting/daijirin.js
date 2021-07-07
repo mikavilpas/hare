@@ -54,8 +54,11 @@ export const kanjiNumber = p
   .anyCharOf("一二三四五六七八九十")
   .pipe(called("kanjiNumber"));
 
+export const blackCircledNumber = p.anyCharOf("⓿❶❷❸❹❺❻❼❽❾❿⓫⓬⓭⓮⓯⓰⓱⓲⓳⓴");
+
 const level1Heading = kanjiNumber.pipe(
   between(p.anyCharOf("■□")),
+  or(blackCircledNumber),
   called("level1Heading")
 );
 const level2Heading = fullWidthNumber().pipe(

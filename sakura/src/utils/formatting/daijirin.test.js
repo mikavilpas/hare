@@ -40,6 +40,23 @@ describe("top level definition parsing", () => {
     ]);
   });
 
+  it("can parse alternate top level definition symbols", () => {
+    // not sure why there are two options...
+    const text = `❶ （副）スル ❷ （名） `;
+    assertParses(tokenize(text), [
+      {
+        type: "firstLevelDefinition",
+        content: [" （副）スル "],
+        heading: "(❶)",
+      },
+      {
+        type: "firstLevelDefinition",
+        content: [" （名） "],
+        heading: "(❷)",
+      },
+    ]);
+  });
+
   it("definition with some text after it", () => {
     const text =
       "（１）ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」";
