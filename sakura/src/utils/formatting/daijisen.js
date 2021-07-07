@@ -2,7 +2,7 @@ import * as p from "parjs";
 import { between, many, map, not, or, qthen, then } from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
 import { literalQuote } from "./formatting";
-import { linebreak, tokenFactory } from "./tokens";
+import { circledKatakanaToken, linebreak, tokenFactory } from "./tokens";
 
 export function tokenize(text) {
   const tokens = daijisenDefinition.parse(text);
@@ -13,11 +13,7 @@ const level1Heading = p
   .anyStringOf("[一]", "[二]")
   .pipe(called("level1Heading"));
 const level2Heading = p.int().pipe(between("(", ")"), called("level2Heading"));
-const level3Heading = p
-  .anyCharOf(
-    "㋐㋑㋒㋓㋔㋕㋖㋗㋘㋙㋚㋛㋜㋝㋞㋟㋠㋡㋢㋣㋤㋥㋦㋧㋨㋩㋪㋫㋬㋭㋮㋯㋰㋱㋲㋳㋴㋵㋶㋷㋸㋹㋺㋻㋼㋽㋾"
-  )
-  .pipe(called("level3Heading"));
+const level3Heading = circledKatakanaToken.pipe(called("level3Heading"));
 
 export const definitionChar = level1Heading.pipe(
   or(level2Heading, level3Heading),

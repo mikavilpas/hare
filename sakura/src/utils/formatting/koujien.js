@@ -1,32 +1,19 @@
 import * as p from "parjs";
 import { between, many, map, not, or, qthen, then } from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
-import { kanjiNumber } from "./daijirin";
 import { literalQuote } from "./formatting";
-import { linebreak, tokenFactory } from "./tokens";
+import {
+  kanjiNumber,
+  linebreak,
+  tokenFactory,
+  whiteCircledNumber,
+} from "./tokens";
 
 // 広辞苑
 export function tokenize(text) {
   const tokens = definition.parse(text);
   return tokens;
 }
-
-const numbers =
-  "⓪①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳㉑㉒㉓㉔㉕㉖㉗㉘㉙㉚㉛㉜㉝㉞㉟㊱㊲㊳㊴㊵㊶㊷㊸㊹㊺㊻㊼㊽㊾㊿";
-
-const whiteCircledNumber = () => {
-  const conversions = numbers.split("").reduce((result, char, i) => {
-    result[char] = i;
-    return result;
-  }, {});
-
-  return p.anyCharOf(numbers).pipe(
-    map((parsedChar) => {
-      return { number: conversions[parsedChar], char: parsedChar };
-    }),
-    called("whiteCircledNumber")
-  );
-};
 
 const level1Heading = kanjiNumber.pipe(
   between("[", "]"),

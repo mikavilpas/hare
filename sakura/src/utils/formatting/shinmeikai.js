@@ -12,9 +12,8 @@ import {
   then,
 } from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
-import { kanjiNumber } from "./daijirin";
 import { literalQuote } from "./formatting";
-import { linebreak, tokenFactory } from "./tokens";
+import { kanjiNumber, linebreak, tokenFactory } from "./tokens";
 
 export function tokenize(text) {
   const tokens = definition.parse(text);
