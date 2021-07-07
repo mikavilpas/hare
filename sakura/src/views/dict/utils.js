@@ -4,6 +4,7 @@ import { tokenize as daijirin } from "../../utils/formatting/daijirin";
 import { tokenize as daijisen } from "../../utils/formatting/daijisen";
 import { tokenize as format } from "../../utils/formatting/formatting";
 import { tokenize as koujien } from "../../utils/formatting/koujien";
+import { tokenize as shinjirin } from "../../utils/formatting/shinjirin";
 import { tokenize as shinmeikai } from "../../utils/formatting/shinmeikai";
 
 // Dictionaries to display and preload results for. These are either the id or
@@ -179,6 +180,8 @@ export function prettyText(text, options) {
     return preProcess(koujien);
   } else if (options.dict === "新明解") {
     return preProcess(shinmeikai);
+  } else if (options.dict === "新辞林") {
+    return preProcess(shinjirin);
   } else {
     const html = bbcode2Html(text, options);
     // console.log(html);

@@ -86,3 +86,5 @@ export const circledKatakanaToken = p
     "㋐㋑㋒㋓㋔㋕㋖㋗㋘㋙㋚㋛㋜㋝㋞㋟㋠㋡㋢㋣㋤㋥㋦㋧㋨㋩㋪㋫㋬㋭㋮㋯㋰㋱㋲㋳㋴㋵㋶㋷㋸㋹㋺㋻㋼㋽㋾"
   )
   .pipe(called("circledKatakanaToken"));
+
+export const ideographicSpace = p.string("　");

@@ -1,6 +1,14 @@
 import * as p from "parjs";
-import { between, many, map, or, stringify } from "parjs/combinators";
-import { joinSuccessiveStringTokens } from "../parseUtils";
+import {
+  between,
+  later,
+  many,
+  map,
+  or,
+  recover,
+  stringify,
+} from "parjs/combinators";
+import { called, joinSuccessiveStringTokens } from "../parseUtils";
 
 export function tokenize(text) {
   const tokens = highlightQuotes().parse(text);
@@ -8,15 +16,31 @@ export function tokenize(text) {
 }
 
 const quoted = (start, end) => {
-  return p.noCharOf(start + end).pipe(
-    many(),
-    stringify(),
-    between(start, end),
-    map((text) => {
-      // put the quotes back in so the formatting is preserved
-      return start + text + end;
-    })
+  const plainText = p
+    .noCharOf(end)
+    .pipe(
+      many(),
+      stringify(),
+      called(`any plain text except the quote chars ${start} ${end}`)
+    );
+
+  // a quote is defined as (text) or (another quote)
+  const quote = later();
+  quote.init(
+    quote.pipe(called("inner quote")).pipe(
+      //
+      or(plainText),
+      between(start, end),
+
+      called(`quote ${start} ${end}`),
+      map((text) => {
+        // put the quotes back in so the formatting is preserved
+        return start + text + end;
+      })
+    )
   );
+
+  return quote;
 };
 
 // Parses some kind of meta information token about the definition word, such as
@@ -30,7 +54,8 @@ export const literalQuote = quoted("（", "）").pipe(
     quoted("(", ")"),
     quoted("《", "》"),
     quoted("{", "}")
-  )
+  ),
+  called("literalQuote")
 );
 
 const highlightQuotes = () => {
@@ -44,3 +69,5 @@ const highlightQuotes = () => {
     map(joinSuccessiveStringTokens)
   );
 };
+
+export const attempt = () => recover(() => ({ kind: "Soft" }));

@@ -8,19 +8,16 @@ import {
   not,
   or,
   qthen,
-  recover,
   then,
 } from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
-import { literalQuote } from "./formatting";
+import { attempt, literalQuote } from "./formatting";
 import { kanjiNumber, linebreak, tokenFactory } from "./tokens";
 
 export function tokenize(text) {
   const tokens = definition.parse(text);
   return tokens;
 }
-
-const attempt = () => recover(() => ({ kind: "Soft" }));
 
 // can only occur at the start of a newline
 const level1Heading = linebreak.pipe(
