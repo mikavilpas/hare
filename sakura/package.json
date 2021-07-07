@@ -1,6 +1,6 @@
 {
   "name": "hare",
-  "version": "0.35.1",
+  "version": "0.35.2",
   "private": true,
   "dependencies": {
     "@jsier/retrier": "^1.2.4",
