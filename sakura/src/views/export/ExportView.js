@@ -1,5 +1,4 @@
 import copy from "copy-to-clipboard";
-import Navbar from "../navbar/Navbar";
 import React, { useEffect, useRef, useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
@@ -14,6 +13,7 @@ import { pageView } from "../../telemetry";
 import { frequency } from "../../utils/frequency";
 import * as wordParser from "../../utils/wordParser";
 import { prettyText } from "../dict/utils";
+import Navbar from "../navbar/Navbar";
 
 const CopyButton = ({ getTextToCopy, buttonText }) => {
   const [wordWasCopied, setWordWasCopied] = useState(false);
