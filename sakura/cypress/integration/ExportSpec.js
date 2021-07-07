@@ -25,6 +25,8 @@ describe("export view", () => {
       page_title: "export",
       page_path: "/大辞林",
     });
+
+    cy.get("#nav-menu").should("be.visible");
   });
 
   it("exports the correct word", () => {

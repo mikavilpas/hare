@@ -1,4 +1,5 @@
 import copy from "copy-to-clipboard";
+import Navbar from "../navbar/Navbar";
 import React, { useEffect, useRef, useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
@@ -148,9 +149,11 @@ const ExportView = ({}) => {
   const bodyHtml = prettyText(searchResult.text, { dict: dict });
 
   return (
-    <Container id="export" className="mt-2">
-      <h3>辞典内容を共有する</h3>
-      <Row id="definition-preview" className="d-flex flex-column h-50">
+    <Container fluid id="export" className="mt-2">
+      <Navbar>
+        <h3>辞典内容を共有する</h3>
+      </Navbar>
+      <Row id="definition-preview" className="d-flex flex-column h-50 mt-3">
         <div className="card">
           <div className="card-body" ref={definitionRef}>
             <h3
