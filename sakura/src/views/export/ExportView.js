@@ -43,14 +43,16 @@ const CopyButton = ({ getTextToCopy, buttonText }) => {
 const SearchLink = ({ icon, children, url }) => {
   return (
     <a
-      className="external-site d-flex align-items-center"
+      className="external-site d-flex align-items-center mb-2"
       rel="noopener noreferrer"
       target="_blank"
       href={url}
     >
       {icon}
       &nbsp;
-      {children}
+      <span style={{ wordBreak: "keep-all" }} className="ml-2 ">
+        {children}
+      </span>
     </a>
   );
 };
@@ -246,6 +248,20 @@ const ExportView = ({}) => {
             <Col>
               <ul className="external-sites list-unstyled mt-2">
                 <li>
+                  <SearchLink
+                    word={selectedWord}
+                    icon={
+                      <i
+                        style={{ fontSize: "medium" }}
+                        className="bi bi-book"
+                      ></i>
+                    }
+                    url={`http://yourei.jp/${selectedWord}`}
+                  >
+                    Yourei sentences
+                  </SearchLink>
+                </li>
+                <li>
                   <SearchLinkWithIcon
                     word={selectedWord}
                     iconUrl={"/dict/icons/jisho.png"}
@@ -262,20 +278,6 @@ const ExportView = ({}) => {
                   >
                     Audio sentences
                   </SearchLinkWithIcon>
-                </li>
-                <li>
-                  <SearchLink
-                    word={selectedWord}
-                    icon={
-                      <i
-                        style={{ fontSize: "medium" }}
-                        className="bi bi-book"
-                      ></i>
-                    }
-                    url={`http://yourei.jp/${selectedWord}`}
-                  >
-                    Yourei sentences
-                  </SearchLink>
                 </li>
                 <li>
                   <SearchLink

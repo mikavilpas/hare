@@ -223,6 +223,10 @@ superscript {
   color: lightgray;
 }
 
+#export .external-sites .external-site {
+  line-height: 1.1em;
+}
+
 #settings {
   font-size: initial;
 }
