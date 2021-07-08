@@ -15,6 +15,12 @@ describe("can parse headings", () => {
     });
   });
 
+  it("case with a = in the kana", () => {
+    expect(wordParser.parse("そう=さ【捜査】サウ‥")).to.deep.include({
+      value: { kanjiOptions: ["捜査"], kana: "そうさ" },
+    });
+  });
+
   it("case with kanji having a symbol in between", () => {
     expect(wordParser.parse("いぬ‐くぼう【犬△公方】‐クバウ")).to.deep.include({
       value: { kanjiOptions: ["犬公方"], kana: "いぬくぼう" },

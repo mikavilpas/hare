@@ -23,7 +23,8 @@ export function parse(inputText) {
   }
 }
 
-const normalize = (str) => str.replaceAll(/[‐・-]/g, "").replaceAll("●", "");
+const normalize = (str) =>
+  str.replaceAll(/[‐・-]/g, "").replaceAll("●", "").replaceAll("=", "");
 const wordChar = p.noCharOf("【】〖〗{}（）〔〕");
 const kanjiChar = p.noCharOf("・【】〖〗{}（）〔〕()");
 
