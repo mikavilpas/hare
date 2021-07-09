@@ -125,6 +125,11 @@ function formatDefinition(text, formatFunction) {
       return t;
     } else if (t.type === "linebreak") {
       return "<br />";
+    } else if (t.type === "exampleSentenceGroup") {
+      const sentences = t.content
+        .map((t) => `<div className="sentence">${t}</div>`)
+        .join("");
+      return `<div class="example-sentence-group rounded">${sentences}</div>`;
     } else {
       const content = t.content.map(convertTokensToHtml).join("");
       let level = 0;

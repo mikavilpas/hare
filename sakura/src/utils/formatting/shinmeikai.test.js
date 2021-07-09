@@ -2,7 +2,7 @@
 
 import { many } from "parjs/combinators";
 import { assertParses } from "../parseUtils";
-import { definitionChar, tokenize } from "./shinmeikai";
+import { definitionChar, exampleSentenceBlock, tokenize } from "./shinmeikai";
 
 describe("definition content", () => {
   it("stops reading when it encounters a level1 heading", () => {
@@ -212,5 +212,71 @@ describe("full definitions", () => {
         heading: "[二]",
       },
     ]);
+  });
+
+  it("can change an example sentence block into many example sentences", () => {
+    const text = `[keyword]いきおい【勢い】【勢】イキホヒ{{zb560}}[3][/keyword]
+[一](一)進行が速まり運動が強まるにつれて、自然に加わる抵抗を排除する力。〔限度を越すと自力では抑えきれない〕
+「緒戦の勝利に―を得る／―を△増す（盛り返す・失う）／―に押される／―に乗る／放水の―が弱る／―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した／走った―〔＝はずみ〕で植木鉢を割った／―よく〔＝強い勢いで〕…する」
+`;
+    assertParses(tokenize(text), [
+      "[keyword]いきおい【勢い】【勢】イキホヒ{{zb560}}[3][/keyword]",
+      {
+        type: "linebreak",
+      },
+      {
+        type: "firstLevelDefinition",
+        content: [
+          {
+            type: "secondLevelDefinition",
+            number: 0,
+            content: [
+              "進行が速まり運動が強まるにつれて、自然に加わる抵抗を排除する力。〔限度を越すと自力では抑えきれない〕",
+              {
+                type: "linebreak",
+              },
+              {
+                type: "exampleSentenceGroup",
+                content: [
+                  "「緒戦の勝利に―を得る 」",
+                  "「―を△増す（盛り返す・失う） 」",
+                  "「―に押される 」",
+                  "「―に乗る 」",
+                  "「放水の―が弱る 」",
+                  "「―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した 」",
+                  "「走った―〔＝はずみ〕で植木鉢を割った 」",
+                  "「―よく〔＝強い勢いで〕…する 」",
+                ],
+              },
+              {
+                type: "linebreak",
+              },
+            ],
+            heading: "[一]",
+          },
+        ],
+        heading: "[一]",
+      },
+    ]);
+  });
+});
+
+describe("example sentence blocks", () => {
+  it("can parse a block", () => {
+    // const text = `「緒戦の勝利に―を得る／―を△増す（盛り返す・失う）／―に押される／―に乗る／放水の―が弱る／―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した／走った―〔＝はずみ〕で植木鉢を割った／―よく〔＝強い勢いで〕…する」`;
+    const text = `「緒戦の勝利に―を得る／―を△増す（盛り返す・失う）／―に押される／―に乗る／放水の―が弱る／―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した／走った―〔＝はずみ〕で植木鉢を割った／―よく〔＝強い勢いで〕…する」`;
+    assertParses(exampleSentenceBlock.parse(text), {
+      type: "exampleSentenceGroup",
+      content: [
+        "「緒戦の勝利に―を得る 」",
+        "「―を△増す（盛り返す・失う） 」",
+        "「―に押される 」",
+        "「―に乗る 」",
+        "「放水の―が弱る 」",
+        "「―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した 」",
+        "「走った―〔＝はずみ〕で植木鉢を割った 」",
+        "「―よく〔＝強い勢いで〕…する 」",
+      ],
+    });
   });
 });

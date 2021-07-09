@@ -19,6 +19,10 @@ export const tokenFactory = {
     content: content,
     heading: heading,
   }),
+  exampleSentenceGroup: (sentences) => ({
+    type: "exampleSentenceGroup",
+    content: sentences,
+  }),
 };
 
 export const linebreak = p.newline().pipe(mapConst({ type: "linebreak" }));

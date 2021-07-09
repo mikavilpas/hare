@@ -4,10 +4,13 @@ import {
   flatten,
   later,
   many,
+  manySepBy,
   map,
+  must,
   not,
   or,
   qthen,
+  stringify,
   then,
 } from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
@@ -29,12 +32,32 @@ const level2Heading = kanjiNumber
   .pipe(between("(", ")"))
   .pipe(called("level2Heading"));
 
-export const definitionChar = level1Heading.pipe(
-  attempt(),
-  or(level2Heading.pipe(attempt())),
-  not(),
-  qthen(linebreak.pipe(or(literalQuote.pipe(attempt()), p.anyChar()))),
-  called("definitionChar")
+export const definitionChar = later();
+
+export const exampleSentenceBlock = p.noCharOf("／」").pipe(
+  many(),
+  stringify(),
+  manySepBy("／"),
+  must((tokens) => {
+    return Array.isArray(tokens) && tokens.length > 1;
+  }),
+  between("「", "」"),
+  map((tokens) => {
+    // "split" into many quotes instead of one huge example sentence block
+    const sentences = tokens.map((t) => `「${t} 」`);
+    return tokenFactory.exampleSentenceGroup(sentences);
+  }),
+  called("exampleSentenceBlock")
+);
+
+definitionChar.init(
+  level1Heading.pipe(
+    attempt(),
+    or(level2Heading.pipe(attempt()), exampleSentenceBlock.pipe(attempt())),
+    not(),
+    qthen(linebreak.pipe(or(literalQuote.pipe(attempt()), p.anyChar()))),
+    called("definitionChar")
+  )
 );
 
 const level2 = later();
@@ -42,7 +65,7 @@ export const level1 = level1Heading.pipe(
   then(
     definitionChar.pipe(
       attempt(),
-      or(level2.pipe(attempt())),
+      or(exampleSentenceBlock, level2.pipe(attempt())),
       many(),
       flatten(),
       map(joinSuccessiveStringTokens),
@@ -62,6 +85,7 @@ level2.init(
   level2Heading.pipe(
     then(
       definitionChar.pipe(
+        or(exampleSentenceBlock),
         many(),
         map(joinSuccessiveStringTokens),
         called("level2 content")
@@ -81,6 +105,7 @@ const definition = definitionChar.pipe(
   or(
     level1.pipe(attempt(), called("top-level level1 definition")),
     level2.pipe(attempt(), called("top-level level2 definition")),
+    exampleSentenceBlock.pipe(called("top-level example sentence block")),
     p.anyChar().pipe(called("unknown token, always included"))
   ),
   many(),
