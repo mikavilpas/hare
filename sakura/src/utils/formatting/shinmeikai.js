@@ -25,10 +25,9 @@ const level1Heading = linebreak.pipe(
   called("level1Heading")
 );
 
-const level2Heading = linebreak.pipe(
-  then(kanjiNumber.pipe(between("(", ")"))),
-  called("level2Heading")
-);
+const level2Heading = kanjiNumber
+  .pipe(between("(", ")"))
+  .pipe(called("level2Heading"));
 
 export const definitionChar = level1Heading.pipe(
   attempt(),
@@ -69,14 +68,10 @@ level2.init(
       )
     ),
     map((tokens) => {
-      const [headingObject, content] = tokens;
-      const [newline, headingNumber] = headingObject;
+      const [headingNumber, content] = tokens;
       const heading = `[${headingNumber}]`;
       const index = 0;
-      return [
-        newline,
-        tokenFactory.secondLevelDefinition(index, content, heading),
-      ];
+      return tokenFactory.secondLevelDefinition(index, content, heading);
     }),
     called("level2")
   )

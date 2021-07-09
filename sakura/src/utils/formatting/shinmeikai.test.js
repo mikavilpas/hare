@@ -16,13 +16,12 @@ describe("definition content", () => {
   });
 
   it("stops reading when it encounters a level2 heading", () => {
-    const text = `bla
-(一)more`;
+    const text = `bla (一)more`;
 
     const parser = definitionChar.pipe(many());
     const failure = parser.parse(text);
     expect(failure?.trace.kind).to.eql("Soft");
-    expect(failure?.trace.position).to.eql(3);
+    expect(failure?.trace.position).to.eql(4);
   });
 });
 
@@ -88,14 +87,10 @@ blabla[一][2]:[2]（他下一）`;
 });
 
 describe("second level definition", () => {
-  it("can parse when it's at the start of a line", () => {
-    const text = `かける【掛ける】{{zb560}}
-(一)〈どこ・なにニなにヲ―〉 △何かで支え（一部分を固定するようにして）、高所から落ちないようにする。`;
+  it("can parse it", () => {
+    const text = `かける【掛ける】{{zb560}} (一)〈どこ・なにニなにヲ―〉 △何かで支え（一部分を固定するようにして）、高所から落ちないようにする。`;
     assertParses(tokenize(text), [
-      "かける【掛ける】{{zb560}}",
-      {
-        type: "linebreak",
-      },
+      "かける【掛ける】{{zb560}} ",
       {
         type: "secondLevelDefinition",
         number: 0,
@@ -104,18 +99,6 @@ describe("second level definition", () => {
         ],
         heading: "[一]",
       },
-    ]);
-  });
-
-  it("parses as text when it's after the start of a line", () => {
-    const text = `かける【掛ける】{{zb560}}
-blabla[一][2]:[2]（他下一）`;
-    assertParses(tokenize(text), [
-      "かける【掛ける】{{zb560}}",
-      {
-        type: "linebreak",
-      },
-      "blabla[一][2]:[2]（他下一）",
     ]);
   });
 });
@@ -150,11 +133,13 @@ describe("full definitions", () => {
           {
             type: "secondLevelDefinition",
             number: 0,
-            content: ["〈どこ・なにニなにヲ―〉"],
+            content: [
+              "〈どこ・なにニなにヲ―〉",
+              {
+                type: "linebreak",
+              },
+            ],
             heading: "[一]",
-          },
-          {
-            type: "linebreak",
           },
           {
             type: "secondLevelDefinition",
@@ -164,12 +149,19 @@ describe("full definitions", () => {
               {
                 type: "linebreak",
               },
-              "{{zb468}}割る(五)",
+              "{{zb468}}割る",
             ],
             heading: "[二]",
           },
           {
-            type: "linebreak",
+            type: "secondLevelDefinition",
+            number: 0,
+            content: [
+              {
+                type: "linebreak",
+              },
+            ],
+            heading: "[五]",
           },
           {
             type: "secondLevelDefinition",
@@ -193,11 +185,13 @@ describe("full definitions", () => {
           {
             type: "secondLevelDefinition",
             number: 0,
-            content: ["その動作を始め、進行している状態にある。"],
+            content: [
+              "その動作を始め、進行している状態にある。",
+              {
+                type: "linebreak",
+              },
+            ],
             heading: "[一]",
-          },
-          {
-            type: "linebreak",
           },
           {
             type: "secondLevelDefinition",
