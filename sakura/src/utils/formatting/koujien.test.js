@@ -155,3 +155,28 @@ describe("content with no structure", () => {
     //
   });
 });
+
+describe("third level parsing", () => {
+  it("can parse a third level definition", () => {
+    const text = `③㋐上水 ㋑特に `;
+    assertParses(tokenize(text), [
+      {
+        type: "secondLevelDefinition",
+        number: 3,
+        content: [
+          {
+            type: "thirdLevelDefinition",
+            content: ["上水 "],
+            heading: "㋐",
+          },
+          {
+            type: "thirdLevelDefinition",
+            content: ["特に "],
+            heading: "㋑",
+          },
+        ],
+        heading: "(3)",
+      },
+    ]);
+  });
+});
