@@ -125,9 +125,13 @@ function formatDefinition(text, formatFunction) {
       return t;
     } else if (t.type === "linebreak") {
       return "<br />";
+    } else if (t.type === "synonymSection") {
+      // these are regular definitions for now
+      const synonymDefinitions = t.content.map(convertTokensToHtml).join("");
+      return `<div class="synonym-section mt-3">${synonymDefinitions}</div>`;
     } else if (t.type === "exampleSentenceGroup") {
       const sentences = t.content
-        .map((t) => `<div className="sentence">${t}</div>`)
+        .map((t) => `<div class="sentence">${t}</div>`)
         .join("");
       return `<div class="example-sentence-group rounded">${sentences}</div>`;
     } else {

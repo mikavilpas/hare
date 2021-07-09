@@ -23,6 +23,7 @@ export const tokenFactory = {
     type: "exampleSentenceGroup",
     content: sentences,
   }),
+  synonymSection: (content) => ({ type: "synonymSection", content: content }),
 };
 
 export const linebreak = p.newline().pipe(mapConst({ type: "linebreak" }));

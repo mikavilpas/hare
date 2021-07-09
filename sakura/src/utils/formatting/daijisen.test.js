@@ -1,7 +1,7 @@
 /* eslint-disable jest/valid-expect */
 
 import { assertFailsParsing, assertParses } from "../parseUtils";
-import { definitionChar, tokenize } from "./daijisen";
+import { definitionChar, synonymSection, tokenize } from "./daijisen";
 
 describe("top level definition parsing", () => {
   it("definition with some text after it", () => {
@@ -201,4 +201,122 @@ it("should ignore meta quotes", () => {
       heading: "(2)",
     },
   ]);
+});
+
+describe("synonym section", () => {
+  it("can parse a synonym section", () => {
+    const text = `［類語］[subscript]（(1)）[/subscript]（「―と」「―たる」の形で）隆隆[subscript]（りゆうりゆう）[/subscript]・鬱然[subscript]（うつぜん）[/subscript]・澎湃[subscript]（ほうはい）[/subscript]・勃勃[subscript]（ぼつぼつ）[/subscript]・油然[subscript]（ゆうぜん）[/subscript]・湧然[subscript]（ゆうぜん）[/subscript]・沸沸[subscript]（ふつふつ）[/subscript]／[subscript]（(2)）[/subscript]旺盛[subscript]（おうせい）[/subscript]・軒昂[subscript]（けんこう）[/subscript]／[subscript]（(3)）[/subscript]盛大・隆盛・殷盛[subscript]（いんせい）[/subscript]・殷賑[subscript]（いんしん）[/subscript]・全盛／[subscript]（(4)）[/subscript]大いに・頻[subscript]（しき）[/subscript]りに・繁[subscript]（しげ）[/subscript]く・頻繁[subscript]（ひんぱん）[/subscript]に・引っ切りなしに・絶えず
+`;
+
+    assertParses(synonymSection().parse(text), {
+      type: "synonymSection",
+      content: [
+        "［類語］",
+        {
+          type: "firstLevelDefinition",
+          content: [
+            "（「―と」「―たる」の形で）隆隆[subscript]（りゆうりゆう）[/subscript]",
+            "鬱然[subscript]（うつぜん）[/subscript]",
+            "澎湃[subscript]（ほうはい）[/subscript]",
+            "勃勃[subscript]（ぼつぼつ）[/subscript]",
+            "油然[subscript]（ゆうぜん）[/subscript]",
+            "湧然[subscript]（ゆうぜん）[/subscript]",
+            "沸沸[subscript]（ふつふつ）[/subscript]",
+          ],
+          heading: "(1)",
+        },
+        {
+          type: "firstLevelDefinition",
+          content: [
+            "旺盛[subscript]（おうせい）[/subscript]",
+            "軒昂[subscript]（けんこう）[/subscript]",
+          ],
+          heading: "(2)",
+        },
+        {
+          type: "firstLevelDefinition",
+          content: [
+            "盛大",
+            "隆盛",
+            "殷盛[subscript]（いんせい）[/subscript]",
+            "殷賑[subscript]（いんしん）[/subscript]",
+            "全盛",
+          ],
+          heading: "(3)",
+        },
+        {
+          type: "firstLevelDefinition",
+          content: [
+            "大いに",
+            "頻[subscript]（しき）[/subscript]りに",
+            "繁[subscript]（しげ）[/subscript]く",
+            "頻繁[subscript]（ひんぱん）[/subscript]に",
+            "引っ切りなしに",
+            "絶えず\n",
+          ],
+          heading: "(4)",
+        },
+      ],
+    });
+  });
+
+  it("can parse one at the end of a definition", () => {
+    const text = `
+(4)
+積極的に繰り返し行われるさま。熱心。「学者の間で―な議論が交わされた」
+［類語］[subscript]（(1)）[/subscript]（「―と」「―たる」の形で）隆隆[subscript]（りゆうりゆう）[/subscript]・鬱然[subscript]（うつぜん）[/subscript]
+`;
+    assertParses(tokenize(text), [
+      {
+        type: "linebreak",
+      },
+      {
+        type: "secondLevelDefinition",
+        number: 4,
+        content: [
+          {
+            type: "linebreak",
+          },
+          "積極的に繰り返し行われるさま。熱心。「学者の間で―な議論が交わされた」",
+          {
+            type: "linebreak",
+          },
+        ],
+        heading: "(4)",
+      },
+      {
+        type: "synonymSection",
+        content: [
+          "［類語］",
+          {
+            type: "firstLevelDefinition",
+            content: [
+              "（「―と」「―たる」の形で）隆隆[subscript]（りゆうりゆう）[/subscript]",
+              "鬱然[subscript]（うつぜん）[/subscript]\n",
+            ],
+            heading: "(1)",
+          },
+        ],
+      },
+    ]);
+  });
+
+  it("can parse a synonym section with bbcode tags", () => {
+    const text = `［類語］[subscript]（(1)）[/subscript]（「―と」「―たる」の形で）隆隆[subscript]（りゆうりゆう）[/subscript]`;
+    assertParses(tokenize(text), [
+      {
+        type: "synonymSection",
+        content: [
+          "［類語］",
+          {
+            type: "firstLevelDefinition",
+            content: [
+              "（「―と」「―たる」の形で）隆隆[subscript]（りゆうりゆう）[/subscript]",
+            ],
+            heading: "(1)",
+          },
+        ],
+      },
+    ]);
+  });
 });

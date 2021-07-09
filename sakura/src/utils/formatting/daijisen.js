@@ -1,5 +1,16 @@
 import * as p from "parjs";
-import { between, many, map, not, or, qthen, then } from "parjs/combinators";
+import {
+  between,
+  flatten,
+  many,
+  manySepBy,
+  map,
+  not,
+  or,
+  qthen,
+  stringify,
+  then,
+} from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
 import { literalQuote } from "./formatting";
 import { circledKatakanaToken, linebreak, tokenFactory } from "./tokens";
@@ -14,9 +25,39 @@ const level1Heading = p
   .pipe(called("level1Heading"));
 const level2Heading = p.int().pipe(between("(", ")"), called("level2Heading"));
 const level3Heading = circledKatakanaToken.pipe(called("level3Heading"));
+const synonymSectionHeading = p.string("［類語］");
+
+export const synonymSection = () => {
+  const synonym = p
+    .noCharOf("・／")
+    .pipe(many(), stringify(), called("a single synonym"));
+
+  const section = p.string("[subscript]（(").pipe(
+    then(
+      p.int(),
+      p.string(")）[/subscript]"),
+      synonym.pipe(manySepBy("・"), called("synonym options"))
+    ),
+    map((tokens) => {
+      const [qstart, n, qend, contents] = tokens;
+      const heading = `(${n})`;
+      return tokenFactory.firstLevelDefinition(contents, heading);
+    }),
+    called("synonym section")
+  );
+
+  return synonymSectionHeading.pipe(
+    then(section.pipe(manySepBy("／"), called("synonym groups"))),
+    flatten(),
+    map((tokens) => {
+      return tokenFactory.synonymSection(tokens);
+    }),
+    called("synonymSection")
+  );
+};
 
 export const definitionChar = level1Heading.pipe(
-  or(level2Heading, level3Heading),
+  or(level2Heading, level3Heading, synonymSectionHeading),
   not(),
   qthen(linebreak.pipe(or(literalQuote, p.anyChar()))),
   called("definitionChar")
@@ -85,6 +126,7 @@ const daijisenDefinition = level1.pipe(
   or(
     level2, // if this doesn't work then fall back to "whatever content is okay"
     linebreak,
+    synonymSection(),
     p.anyChar()
   ),
   many(),
