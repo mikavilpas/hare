@@ -280,3 +280,29 @@ describe("example sentence blocks", () => {
     });
   });
 });
+
+describe("third level definitions", () => {
+  it("can parse 3rd level", () => {
+    const text = `(二)〔俗〕〈なに・だれト―〉(Ａ)交尾する。 (Ｂ)性的な関係を持つ。`;
+    assertParses(tokenize(text), [
+      {
+        type: "secondLevelDefinition",
+        number: 0,
+        content: [
+          "〔俗〕〈なに・だれト―〉",
+          {
+            type: "thirdLevelDefinition",
+            content: ["交尾する。 "],
+            heading: "(Ａ)",
+          },
+          {
+            type: "thirdLevelDefinition",
+            content: ["性的な関係を持つ。"],
+            heading: "(Ｂ)",
+          },
+        ],
+        heading: "[二]",
+      },
+    ]);
+  });
+});

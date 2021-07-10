@@ -15,7 +15,12 @@ import {
 } from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
 import { attempt, literalQuote } from "./formatting";
-import { kanjiNumber, linebreak, tokenFactory } from "./tokens";
+import {
+  fullWidthCapitalLetter,
+  kanjiNumber,
+  linebreak,
+  tokenFactory,
+} from "./tokens";
 
 export function tokenize(text) {
   const tokens = definition.parse(text);
@@ -31,6 +36,11 @@ const level1Heading = linebreak.pipe(
 const level2Heading = kanjiNumber
   .pipe(between("(", ")"))
   .pipe(called("level2Heading"));
+
+const level3Heading = fullWidthCapitalLetter.pipe(
+  between("(", ")"),
+  called("level3Heading")
+);
 
 export const definitionChar = later();
 
@@ -53,7 +63,11 @@ export const exampleSentenceBlock = p.noCharOf("／」").pipe(
 definitionChar.init(
   level1Heading.pipe(
     attempt(),
-    or(level2Heading.pipe(attempt()), exampleSentenceBlock.pipe(attempt())),
+    or(
+      level2Heading.pipe(attempt()),
+      level3Heading.pipe(attempt()),
+      exampleSentenceBlock.pipe(attempt())
+    ),
     not(),
     qthen(linebreak.pipe(or(literalQuote.pipe(attempt()), p.anyChar()))),
     called("definitionChar")
@@ -61,6 +75,7 @@ definitionChar.init(
 );
 
 const level2 = later();
+const level3 = later();
 export const level1 = level1Heading.pipe(
   then(
     definitionChar.pipe(
@@ -85,7 +100,7 @@ level2.init(
   level2Heading.pipe(
     then(
       definitionChar.pipe(
-        or(exampleSentenceBlock),
+        or(exampleSentenceBlock, level3.pipe(attempt())),
         many(),
         map(joinSuccessiveStringTokens),
         called("level2 content")
@@ -101,10 +116,30 @@ level2.init(
   )
 );
 
+level3.init(
+  level3Heading.pipe(
+    then(
+      definitionChar.pipe(
+        or(exampleSentenceBlock),
+        many(),
+        map(joinSuccessiveStringTokens),
+        called("level3 content")
+      )
+    ),
+    map((tokens) => {
+      const [headingSymbol, content] = tokens;
+      const heading = `(${headingSymbol})`;
+      return tokenFactory.thirdLevelDefinition(content, heading);
+    }),
+    called("level3")
+  )
+);
+
 const definition = definitionChar.pipe(
   or(
     level1.pipe(attempt(), called("top-level level1 definition")),
     level2.pipe(attempt(), called("top-level level2 definition")),
+    level3.pipe(attempt(), called("top-level level3 definition")),
     exampleSentenceBlock.pipe(called("top-level example sentence block")),
     p.anyChar().pipe(called("unknown token, always included"))
   ),

@@ -93,3 +93,7 @@ export const circledKatakanaToken = p
   .pipe(called("circledKatakanaToken"));
 
 export const ideographicSpace = p.string("　");
+
+export const fullWidthCapitalLetter = p.anyCharOf(
+  "ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ"
+);
