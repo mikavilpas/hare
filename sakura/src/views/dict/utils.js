@@ -147,6 +147,9 @@ function formatDefinition(text, formatFunction) {
         case "thirdLevelDefinition":
           level = 3;
           break;
+        case "fourthLevelDefinition":
+          level = 4;
+          break;
         default:
           console.warn("Unexpected token", t);
           return t;

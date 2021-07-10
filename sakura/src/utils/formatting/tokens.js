@@ -19,6 +19,11 @@ export const tokenFactory = {
     content: content,
     heading: heading,
   }),
+  fourthLevelDefinition: (content, heading) => ({
+    type: "fourthLevelDefinition",
+    content: content,
+    heading: heading,
+  }),
   exampleSentenceGroup: (sentences) => ({
     type: "exampleSentenceGroup",
     content: sentences,

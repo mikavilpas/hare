@@ -1,7 +1,7 @@
 /* eslint-disable jest/valid-expect */
 
 import { assertFailsParsing, assertParses } from "../parseUtils";
-import { definitionChar, level3, tokenize } from "./daijirin";
+import { definitionChar, level4, tokenize } from "./daijirin";
 
 describe("heading or regular quote", () => {
   it("can parse a part of speech", () => {
@@ -14,10 +14,9 @@ describe("heading or regular quote", () => {
     const text = `（１）`;
     assertParses(tokenize(text), [
       {
-        type: "secondLevelDefinition",
+        type: "thirdLevelDefinition",
         content: [],
-        heading: "（1）",
-        number: 1,
+        heading: "(1)",
       },
     ]);
   });
@@ -29,18 +28,70 @@ describe("heading or regular quote", () => {
 });
 
 describe("top level definition parsing", () => {
+  it("can parse 1st and second levels", () => {
+    // https://sakura-paris.org/dict/大辞林/prefix/もの
+    const text = `
+■一■ [2][0] （名）
+〔形である〕
+□一□
+（１）物体。
+`;
+    assertParses(tokenize(text), [
+      {
+        type: "linebreak",
+      },
+      {
+        type: "firstLevelDefinition",
+        content: [
+          " [2][0] （名）",
+          {
+            type: "linebreak",
+          },
+          "〔形である〕",
+          {
+            type: "linebreak",
+          },
+          {
+            type: "secondLevelDefinition",
+            number: "一",
+            content: [
+              {
+                type: "linebreak",
+              },
+              {
+                type: "thirdLevelDefinition",
+                content: [
+                  "物体。",
+                  {
+                    type: "linebreak",
+                  },
+                ],
+                heading: "(1)",
+              },
+            ],
+            heading: "(一)",
+          },
+        ],
+        heading: "(一)",
+      },
+    ]);
+  });
+
   it("can parse top level definition symbols", () => {
     const text = `■一■ （副）スル □二□ （名） `;
     assertParses(tokenize(text), [
       {
         type: "firstLevelDefinition",
-        content: [" （副）スル "],
+        content: [
+          " （副）スル ",
+          {
+            type: "secondLevelDefinition",
+            number: "二",
+            content: [" （名） "],
+            heading: "(二)",
+          },
+        ],
         heading: "(一)",
-      },
-      {
-        type: "firstLevelDefinition",
-        content: [" （名） "],
-        heading: "(二)",
       },
     ]);
   });
@@ -50,12 +101,14 @@ describe("top level definition parsing", () => {
     const text = `❶ （副）スル ❷ （名） `;
     assertParses(tokenize(text), [
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
+        number: "❶",
         content: [" （副）スル "],
         heading: "(❶)",
       },
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
+        number: "❷",
         content: [" （名） "],
         heading: "(❷)",
       },
@@ -67,12 +120,11 @@ describe("top level definition parsing", () => {
       "（１）ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」";
     assertParses(tokenize(text), [
       {
-        type: "secondLevelDefinition",
+        type: "thirdLevelDefinition",
         content: [
           "ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」",
         ],
-        heading: "（1）",
-        number: 1,
+        heading: "(1)",
       },
     ]);
   });
@@ -89,37 +141,34 @@ describe("top level definition parsing", () => {
         type: "linebreak",
       },
       {
-        type: "secondLevelDefinition",
+        type: "thirdLevelDefinition",
         content: [
           "ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」",
           {
             type: "linebreak",
           },
         ],
-        heading: "（1）",
-        number: 1,
+        heading: "(1)",
       },
       {
-        type: "secondLevelDefinition",
+        type: "thirdLevelDefinition",
         content: [
           "同じ種類に属するもの。同類。「鯨は哺乳類の―であって，魚の―ではない」",
           {
             type: "linebreak",
           },
         ],
-        heading: "（2）",
-        number: 2,
+        heading: "(2)",
       },
       {
-        type: "secondLevelDefinition",
+        type: "thirdLevelDefinition",
         content: [
           "近世，商工業者が結成した同業組合。",
           {
             type: "linebreak",
           },
         ],
-        heading: "（3）",
-        number: 3,
+        heading: "(3)",
       },
     ]);
   });
@@ -139,65 +188,63 @@ describe("top level definition parsing", () => {
         type: "linebreak",
       },
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
+        number: "一",
         content: [
           "（自動詞）",
           {
             type: "linebreak",
           },
           {
-            type: "secondLevelDefinition",
-            number: 1,
+            type: "thirdLevelDefinition",
             content: [
               "ある集団に加わっている。「野球部に―・している」",
               {
                 type: "linebreak",
               },
             ],
-            heading: "（1）",
+            heading: "(1)",
           },
           {
-            type: "secondLevelDefinition",
-            number: 2,
+            type: "thirdLevelDefinition",
             content: [
               "ある種類・範囲・分類の中にある。「哺乳類に―・する動物」",
               {
                 type: "linebreak",
               },
             ],
-            heading: "（2）",
+            heading: "(2)",
           },
         ],
         heading: "(一)",
       },
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
+        number: "二",
         content: [
           "（他動詞）",
           {
             type: "linebreak",
           },
           {
-            type: "secondLevelDefinition",
-            number: 1,
+            type: "thirdLevelDefinition",
             content: [
               "文章を書く。「稿を―・するは，大抵夜間/即興詩人（鴎外）」",
               {
                 type: "linebreak",
               },
             ],
-            heading: "（1）",
+            heading: "(1)",
           },
           {
-            type: "secondLevelDefinition",
-            number: 2,
+            type: "thirdLevelDefinition",
             content: [
               "依頼する。たのむ。嘱(シヨク)する。「閻王此偈を誦じをはて，すなはち彼文を尊恵に―・す/平家 6」",
               {
                 type: "linebreak",
               },
             ],
-            heading: "（2）",
+            heading: "(2)",
           },
         ],
         heading: "(二)",
@@ -210,36 +257,32 @@ describe("top level definition parsing", () => {
     assertParses(tokenize(text), [
       "し-まつ [1] 【始末】 （名）スル ",
       {
-        type: "secondLevelDefinition",
+        type: "thirdLevelDefinition",
         content: [
           "（物事の）しめくくりを付けること。片付けること。処理。「―を付ける」「このごたごたをどう―するつもりだ」 ",
         ],
-        heading: "（1）",
-        number: 1,
+        heading: "(1)",
       },
       {
-        type: "secondLevelDefinition",
+        type: "thirdLevelDefinition",
         content: [
           "無駄遣いしないこと。倹約すること。「なんでも―して使う人」「藤屋の市兵衛が申事を尤と思はば，―をすべし/浮世草子・一代男 7」 ",
         ],
-        heading: "（2）",
-        number: 2,
+        heading: "(2)",
       },
       {
-        type: "secondLevelDefinition",
+        type: "thirdLevelDefinition",
         content: [
           "結果。主として悪い状態についていう。「さんざん迷惑をかけたあげく，あの―だ」 ",
         ],
-        heading: "（3）",
-        number: 3,
+        heading: "(3)",
       },
       {
-        type: "secondLevelDefinition",
+        type: "thirdLevelDefinition",
         content: [
           "物事の事情。事の次第。「私が此書(ホン)を読む様になりました―は/不如帰（蘆花）」",
         ],
-        heading: "（4）",
-        number: 4,
+        heading: "(4)",
       },
     ]);
   });
@@ -263,56 +306,52 @@ describe("content with no structure", () => {
   });
 });
 
-describe("second level definitions", () => {
-  it("can parse a second level definition", () => {
+describe("third level definitions", () => {
+  it("can parse a third level definition", () => {
     const text = `（１）ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」`;
     assertParses(tokenize(text), [
       {
-        type: "secondLevelDefinition",
-        number: 1,
+        type: "thirdLevelDefinition",
         content: [
           "ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」",
         ],
-        heading: "（1）",
+        heading: "(1)",
       },
     ]);
   });
 
-  it("can parse two 2nds", () => {
+  it("can parse two 3rds", () => {
     const text = `（１）あ（２）同じ `;
     assertParses(tokenize(text), [
       {
-        type: "secondLevelDefinition",
-        number: 1,
+        type: "thirdLevelDefinition",
         content: ["あ"],
-        heading: "（1）",
+        heading: "(1)",
       },
       {
-        type: "secondLevelDefinition",
-        number: 2,
+        type: "thirdLevelDefinition",
         content: ["同じ "],
-        heading: "（2）",
+        heading: "(2)",
       },
     ]);
   });
 
-  it("can parse level 2 followed by level 3", () => {
+  it("can parse level 3 followed by level 4", () => {
     const text = `（２）歴史の時代区分の一。中世と近代の間の時期。（ア）日本史では，後期封建制の時期の安土桃山・江戸時代をいう。`;
     assertParses(tokenize(text), [
       {
-        type: "secondLevelDefinition",
-        number: 2,
+        type: "thirdLevelDefinition",
         content: [
           "歴史の時代区分の一。中世と近代の間の時期。",
           {
-            type: "thirdLevelDefinition",
+            type: "fourthLevelDefinition",
             content: [
               "日本史では，後期封建制の時期の安土桃山・江戸時代をいう。",
             ],
-            heading: "（ア）",
+            heading: "(ア)",
           },
         ],
-        heading: "（2）",
+        heading: "(2)",
       },
     ]);
   });
@@ -327,13 +366,13 @@ describe("definition token (char)", () => {
   });
 });
 
-describe("third level definitions", () => {
+describe("fourth level definitions", () => {
   it("can parse a third level definition", () => {
     const text = `（ア）日本史では，後期封建制の時期の安土桃山・江戸時代をいう。`;
-    assertParses(level3.parse(text), {
-      type: "thirdLevelDefinition",
+    assertParses(level4.parse(text), {
+      type: "fourthLevelDefinition",
       content: ["日本史では，後期封建制の時期の安土桃山・江戸時代をいう。"],
-      heading: "（ア）",
+      heading: "(ア)",
     });
   });
 
@@ -352,76 +391,75 @@ describe("third level definitions", () => {
         type: "linebreak",
       },
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
+        number: "一",
         content: [
           "（自動詞）",
           {
             type: "linebreak",
           },
           {
-            type: "secondLevelDefinition",
-            number: 1,
+            type: "thirdLevelDefinition",
             content: [
               "あ",
               {
                 type: "linebreak",
               },
               {
-                type: "thirdLevelDefinition",
+                type: "fourthLevelDefinition",
                 content: ["日本"],
-                heading: "（ア）",
+                heading: "(ア)",
               },
               {
-                type: "thirdLevelDefinition",
+                type: "fourthLevelDefinition",
                 content: [
                   "西",
                   {
                     type: "linebreak",
                   },
                 ],
-                heading: "（イ）",
+                heading: "(イ)",
               },
             ],
-            heading: "（1）",
+            heading: "(1)",
           },
         ],
         heading: "(一)",
       },
       {
-        type: "firstLevelDefinition",
+        type: "secondLevelDefinition",
+        number: "二",
         content: [
           "（他動詞）",
           {
             type: "linebreak",
           },
           {
-            type: "secondLevelDefinition",
-            number: 1,
+            type: "thirdLevelDefinition",
             content: [
               "文章を書く。「稿を―・するは，大抵夜間/即興詩人（鴎外）」",
               {
                 type: "linebreak",
               },
             ],
-            heading: "（1）",
+            heading: "(1)",
           },
           {
-            type: "secondLevelDefinition",
-            number: 2,
+            type: "thirdLevelDefinition",
             content: [
               "歴史",
               {
-                type: "thirdLevelDefinition",
+                type: "fourthLevelDefinition",
                 content: [
                   "日本",
                   {
                     type: "linebreak",
                   },
                 ],
-                heading: "（ア）",
+                heading: "(ア)",
               },
             ],
-            heading: "（2）",
+            heading: "(2)",
           },
         ],
         heading: "(二)",
