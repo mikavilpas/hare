@@ -320,3 +320,50 @@ describe("synonym section", () => {
     ]);
   });
 });
+
+describe("clitic section", () => {
+  it("can tokenize one", () => {
+    const text = `(1)物
+［下接語］足音・雨[subscript]（あま）[/subscript]音・風[subscript]（かざ）[/subscript]音・楫[subscript]（かじ）[/subscript]音・川音・靴音・瀬音・槌[subscript]（つち）[/subscript]音・筒音・爪[subscript]（つま）[/subscript]音・弦[subscript]（つる）[/subscript]音・波音・刃音・羽[subscript]（は）[/subscript]音・葉音・歯音・撥[subscript]（ばち）[/subscript]音・水音・物音・矢音
+`;
+    assertParses(tokenize(text), [
+      {
+        type: "secondLevelDefinition",
+        number: 1,
+        content: [
+          "物",
+          {
+            type: "linebreak",
+          },
+        ],
+        heading: "(1)",
+      },
+      {
+        type: "cliticSection",
+        heading: "［下接語］",
+        content: [
+          "足音",
+          "雨[subscript]（あま）[/subscript]音",
+          "風[subscript]（かざ）[/subscript]音",
+          "楫[subscript]（かじ）[/subscript]音",
+          "川音",
+          "靴音",
+          "瀬音",
+          "槌[subscript]（つち）[/subscript]音",
+          "筒音",
+          "爪[subscript]（つま）[/subscript]音",
+          "弦[subscript]（つる）[/subscript]音",
+          "波音",
+          "刃音",
+          "羽[subscript]（は）[/subscript]音",
+          "葉音",
+          "歯音",
+          "撥[subscript]（ばち）[/subscript]音",
+          "水音",
+          "物音",
+          "矢音\n",
+        ],
+      },
+    ]);
+  });
+});

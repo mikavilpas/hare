@@ -26,6 +26,7 @@ const level1Heading = p
 const level2Heading = p.int().pipe(between("(", ")"), called("level2Heading"));
 const level3Heading = circledKatakanaToken.pipe(called("level3Heading"));
 const synonymSectionHeading = p.string("［類語］");
+const cliticSectionHeading = p.string("［下接語］");
 
 export const synonymSection = () => {
   const synonym = p
@@ -56,8 +57,25 @@ export const synonymSection = () => {
   );
 };
 
+// https://en.wikipedia.org/wiki/Clitic?oldid=492213497
+export const cliticSection = cliticSectionHeading.pipe(
+  then(
+    p.noCharOf("・").pipe(
+      //
+      many(),
+      stringify(),
+      manySepBy("・")
+    )
+  ),
+  flatten(),
+  map((tokens) => {
+    const [heading, ...rest] = tokens;
+    return tokenFactory.cliticSection(heading, rest);
+  })
+);
+
 export const definitionChar = level1Heading.pipe(
-  or(level2Heading, level3Heading, synonymSectionHeading),
+  or(level2Heading, level3Heading, synonymSectionHeading, cliticSectionHeading),
   not(),
   qthen(linebreak.pipe(or(literalQuote, p.anyChar()))),
   called("definitionChar")
@@ -123,12 +141,7 @@ const level1 = level1Heading.pipe(
 // this distinction is not very useful for formatting but it's good to
 // understand the (supposed) reasoning behind it
 const daijisenDefinition = level1.pipe(
-  or(
-    level2, // if this doesn't work then fall back to "whatever content is okay"
-    linebreak,
-    synonymSection(),
-    p.anyChar()
-  ),
+  or(level2, linebreak, synonymSection(), cliticSection, p.anyChar()),
   many(),
   map(joinSuccessiveStringTokens),
   called("definition")

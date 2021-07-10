@@ -29,6 +29,11 @@ export const tokenFactory = {
     content: sentences,
   }),
   synonymSection: (content) => ({ type: "synonymSection", content: content }),
+  cliticSection: (heading, content) => ({
+    type: "cliticSection",
+    heading: heading,
+    content: content,
+  }),
 };
 
 export const linebreak = p.newline().pipe(mapConst({ type: "linebreak" }));

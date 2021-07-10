@@ -129,6 +129,14 @@ function formatDefinition(text, formatFunction) {
       // these are regular definitions for now
       const synonymDefinitions = t.content.map(convertTokensToHtml).join("");
       return `<div class="synonym-section mt-3">${synonymDefinitions}</div>`;
+    } else if (t.type === "cliticSection") {
+      const content = t.content
+        .map(
+          (t) =>
+            `<span class="quote word border border-dark rounded mr-4">${t}</span>`
+        )
+        .join("");
+      return `<div class="synonym-section mt-3"><span class="heading">${t.heading}</span> <div class="content">${content}</div></div>`;
     } else if (t.type === "exampleSentenceGroup") {
       const sentences = t.content
         .map((t) => `<div class="sentence">${t}</div>`)

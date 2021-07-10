@@ -138,14 +138,20 @@ mark {
 }
 
 /* definition post processing */
-.definition-section {
+.definition-section,
+.synonym-section {
   display: flex;
   flex-direction: row;
   padding-right: 10px;
 }
 
-.definition-section .heading {
+.synonym-section .word {
+  white-space: nowrap;
+}
+
+.heading {
   margin-right: 10px;
+  min-width: fit-content;
 }
 
 sup superscript {
