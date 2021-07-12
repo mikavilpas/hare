@@ -5,6 +5,7 @@ import {
   many,
   manySepBy,
   map,
+  maybe,
   not,
   or,
   qthen,
@@ -12,8 +13,13 @@ import {
   then,
 } from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
-import { literalQuote } from "./formatting";
-import { circledKatakanaToken, linebreak, tokenFactory } from "./tokens";
+import { attempt, literalQuote, quoted } from "./formatting";
+import {
+  circledKatakanaToken,
+  kanjiNumber,
+  linebreak,
+  tokenFactory,
+} from "./tokens";
 
 export function tokenize(text) {
   const tokens = daijisenDefinition.parse(text);
@@ -33,22 +39,41 @@ export const synonymSection = () => {
     .noCharOf("・／")
     .pipe(many(), stringify(), called("a single synonym"));
 
-  const section = p.string("[subscript]（(").pipe(
-    then(
-      p.int(),
-      p.string(")）[/subscript]"),
-      synonym.pipe(manySepBy("・"), called("synonym options"))
-    ),
-    map((tokens) => {
-      const [qstart, n, qend, contents] = tokens;
-      const heading = `(${n})`;
-      return tokenFactory.firstLevelDefinition(contents, heading);
-    }),
-    called("synonym section")
-  );
+  const section = () => {
+    const referenceHeading = kanjiNumber.pipe(
+      between("(", ")"),
+      map((n) => {
+        return `(${n})`;
+      }),
+      called("referenceHeading")
+    );
+
+    const sectionOptionHeading = quoted("{", "}")
+      .pipe(maybe(""), then(p.string("[subscript]（(")))
+      .pipe(
+        then(p.int(), p.string(")）[/subscript]")),
+        map((tokens) => {
+          const [qstart, n, qend, contents] = tokens;
+          const heading = `(${n})`;
+          return heading;
+        }),
+        called("sectionOptionHeading")
+      );
+
+    return referenceHeading.pipe(
+      attempt(),
+      or(sectionOptionHeading),
+      then(synonym.pipe(manySepBy("・"), called("synonym options"))),
+      map((tokens) => {
+        const [heading, contents] = tokens;
+        return tokenFactory.firstLevelDefinition(contents, heading);
+      }),
+      called("synonym section")
+    );
+  };
 
   return synonymSectionHeading.pipe(
-    then(section.pipe(manySepBy("／"), called("synonym groups"))),
+    then(section().pipe(manySepBy("／"), called("synonym groups"))),
     flatten(),
     map((tokens) => {
       return tokenFactory.synonymSection(tokens);
@@ -141,7 +166,13 @@ const level1 = level1Heading.pipe(
 // this distinction is not very useful for formatting but it's good to
 // understand the (supposed) reasoning behind it
 const daijisenDefinition = level1.pipe(
-  or(level2, linebreak, synonymSection(), cliticSection, p.anyChar()),
+  or(
+    synonymSection(),
+    level2.pipe(attempt()),
+    linebreak,
+    cliticSection,
+    p.anyChar()
+  ),
   many(),
   map(joinSuccessiveStringTokens),
   called("definition")

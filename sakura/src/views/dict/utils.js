@@ -128,7 +128,7 @@ function formatDefinition(text, formatFunction) {
     } else if (t.type === "synonymSection") {
       // these are regular definitions for now
       const synonymDefinitions = t.content.map(convertTokensToHtml).join("");
-      return `<div class="synonym-section mt-3">${synonymDefinitions}</div>`;
+      return `<div class="synonym-section mt-3"><div class="content">${synonymDefinitions}</div></div>`;
     } else if (t.type === "cliticSection") {
       const content = t.content
         .map(

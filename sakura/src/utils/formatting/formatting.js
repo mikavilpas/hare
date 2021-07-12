@@ -15,7 +15,7 @@ export function tokenize(text) {
   return tokens;
 }
 
-const quoted = (start, end) => {
+export const quoted = (start, end) => {
   const plainText = p
     .noCharOf(end)
     .pipe(

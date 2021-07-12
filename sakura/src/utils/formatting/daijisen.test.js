@@ -319,6 +319,40 @@ describe("synonym section", () => {
       },
     ]);
   });
+
+  it("can parse a reference heading", () => {
+    const text = `［類語］(二)満足・十全・十二分／{{zc370}}[subscript]（(1)）[/subscript]存分に・思うさま・良く・みっちり・みっしり・篤[subscript]（とく）[/subscript]と・万万[subscript]（ばんばん）[/subscript]／[subscript]（(2)）[/subscript]たっぷり・優[subscript]（ゆう）[/subscript]に
+`;
+    assertParses(synonymSection().parse(text), {
+      type: "synonymSection",
+      content: [
+        "［類語］",
+        {
+          type: "firstLevelDefinition",
+          content: ["満足", "十全", "十二分"],
+          heading: "(二)",
+        },
+        {
+          type: "firstLevelDefinition",
+          content: [
+            "存分に",
+            "思うさま",
+            "良く",
+            "みっちり",
+            "みっしり",
+            "篤[subscript]（とく）[/subscript]と",
+            "万万[subscript]（ばんばん）[/subscript]",
+          ],
+          heading: "(1)",
+        },
+        {
+          type: "firstLevelDefinition",
+          content: ["たっぷり", "優[subscript]（ゆう）[/subscript]に\n"],
+          heading: "(2)",
+        },
+      ],
+    });
+  });
 });
 
 describe("clitic section", () => {

@@ -145,6 +145,10 @@ mark {
   padding-right: 10px;
 }
 
+.synonym-section .content {
+  flex-direction: column;
+}
+
 .synonym-section .word {
   white-space: nowrap;
 }
