@@ -116,6 +116,8 @@ const ExportView = ({}) => {
               parseResult.value.kana,
               searchResultItem.heading,
             ];
+
+            options.sort((a, b) => frequency(b)?.rating - frequency(a)?.rating);
             setWordOptions(options);
             setSelectedWord(options?.[0]);
           } catch (e) {

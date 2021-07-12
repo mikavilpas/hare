@@ -82,6 +82,7 @@ const Definition = ({
         wordAnalysis.value.kana,
         ...wordAnalysis.value.kanjiOptions,
       ].filter((w) => w);
+      words.sort((a, b) => frequency(b)?.rating - frequency(a)?.rating);
       setDefinitionWords(words);
     } catch (e) {
       console.warn("Unable to parse definition words", e);
