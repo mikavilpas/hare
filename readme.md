@@ -62,6 +62,7 @@ doesn't give you a headache.
   * Google image search for *illustrations*
   * Jisho.org English definition
   * Jisho.org Example sentences
+  * Youglish - pronounciations in YouTube videos
   * Native audio example sentences from https://sentencesearch.neocities.org
 * **Copy a word and its definition** for pasting into an Anki card or elsewhere.
 * **Grammar search** using the combined definitions from 5 grammar books that

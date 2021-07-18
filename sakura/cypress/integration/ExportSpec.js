@@ -17,6 +17,7 @@ describe("export view", () => {
     cy.contains("Google イラスト");
     cy.contains("Jisho sentences");
     cy.contains("Jisho");
+    cy.contains("Youglish");
     cy.contains("Audio sentences");
     cy.contains("Yourei sentences");
     cy.contains("Immersion Kit");

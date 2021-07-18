@@ -245,6 +245,15 @@ const ExportView = ({}) => {
                     Jisho
                   </SearchLinkWithIcon>
                 </li>
+                <li>
+                  <SearchLinkWithIcon
+                    word={selectedWord}
+                    iconUrl={"https://youglish.com/images/brandyg.png"}
+                    url={`https://youglish.com/pronounce/${selectedWord}/japanese?`}
+                  >
+                    Youglish
+                  </SearchLinkWithIcon>
+                </li>
               </ul>
             </Col>
             <Col>
