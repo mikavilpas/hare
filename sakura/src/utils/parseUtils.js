@@ -1,5 +1,7 @@
 import { initial, last } from "lodash";
 import { defineCombinator, ParjserBase } from "parjs/internal";
+import { mount } from "@cypress/react";
+import ReactJson from "react-json-view";
 
 // helper
 export const joinSuccessiveStringTokens = (tokens) => {
@@ -19,11 +21,13 @@ export const joinSuccessiveStringTokens = (tokens) => {
 // for tests, TODO move to a test file
 // should get optimized out of the prod build anyway
 export function assertParses(parseResult, expected) {
-  if (parseResult.kind !== "OK") {
-    console.log(parseResult.trace);
-  }
+  mount(<ReactJson src={parseResult} theme="monokai" />).then(() => {
+    if (parseResult.kind !== "OK") {
+      console.log(parseResult.trace);
+    }
 
-  expect(parseResult).to.deep.eql({ kind: "OK", value: expected });
+    expect(parseResult).to.deep.eql({ kind: "OK", value: expected });
+  });
 }
 
 export function assertFailsParsing(parseResult) {
