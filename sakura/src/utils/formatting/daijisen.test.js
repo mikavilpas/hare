@@ -34,16 +34,28 @@ describe("top level definition parsing", () => {
     assertParses(tokenize(text), [
       {
         type: "firstLevelDefinition",
-        heading: "[一]",
         content: [
           "［名］",
           {
             type: "secondLevelDefinition",
             number: 1,
-            content: ["細長い物の一本。一条。「―の髪の毛」「―伝わる涙」"],
+            content: [
+              "細長い物の一本。一条。",
+              {
+                content: ["「―の髪の毛」"],
+                innerQuote: "―の髪の毛",
+                type: "exampleSentence",
+              },
+              {
+                content: ["「―伝わる涙」"],
+                innerQuote: "―伝わる涙",
+                type: "exampleSentence",
+              },
+            ],
             heading: "(1)",
           },
         ],
+        heading: "[一]",
       },
     ]);
   });
@@ -54,24 +66,42 @@ describe("top level definition parsing", () => {
     assertParses(tokenize(text), [
       {
         type: "firstLevelDefinition",
-        heading: "[一]",
         content: [
           "［名］",
           {
             type: "secondLevelDefinition",
             number: 1,
-            content: ["細長い物の一本。一条。「―の髪の毛」「―伝わる涙」"],
+            content: [
+              "細長い物の一本。一条。",
+              {
+                content: ["「―の髪の毛」"],
+                innerQuote: "―の髪の毛",
+                type: "exampleSentence",
+              },
+              {
+                content: ["「―伝わる涙」"],
+                innerQuote: "―伝わる涙",
+                type: "exampleSentence",
+              },
+            ],
             heading: "(1)",
           },
           {
             type: "secondLevelDefinition",
             number: 2,
             content: [
-              "一門。一族。「多くはただこの九条殿の御―なり」〈大鏡・師輔〉",
+              "一門。一族。",
+              {
+                content: ["「多くはただこの九条殿の御―なり」"],
+                innerQuote: "多くはただこの九条殿の御―なり",
+                type: "exampleSentence",
+              },
+              "〈大鏡・師輔〉",
             ],
             heading: "(2)",
           },
         ],
+        heading: "[一]",
       },
     ]);
   });
@@ -82,15 +112,21 @@ describe("top level definition parsing", () => {
     assertParses(tokenize(text), [
       {
         type: "firstLevelDefinition",
-        heading: "[二]",
         content: [
           "［形動］[文]［ナリ］",
           {
             type: "secondLevelDefinition",
             number: 1,
             content: [
-              "ただ一つのことに心を傾けるさま。「芸―に生きる」",
-              { type: "linebreak" },
+              "ただ一つのことに心を傾けるさま。",
+              {
+                content: ["「芸―に生きる」"],
+                innerQuote: "芸―に生きる",
+                type: "exampleSentence",
+              },
+              {
+                type: "linebreak",
+              },
             ],
             heading: "(1)",
           },
@@ -98,11 +134,20 @@ describe("top level definition parsing", () => {
             type: "secondLevelDefinition",
             number: 2,
             content: [
-              "普通の程度であるさま。ひとかた。並大抵。「鵜舟さす夜河のた縄うちはへて―ならずものぞ悲しき」〈新千載・雑上〉",
+              "普通の程度であるさま。ひとかた。並大抵。",
+              {
+                content: [
+                  "「鵜舟さす夜河のた縄うちはへて―ならずものぞ悲しき」",
+                ],
+                innerQuote: "鵜舟さす夜河のた縄うちはへて―ならずものぞ悲しき",
+                type: "exampleSentence",
+              },
+              "〈新千載・雑上〉",
             ],
             heading: "(2)",
           },
         ],
+        heading: "[二]",
       },
     ]);
   });
@@ -139,35 +184,107 @@ describe("third level definition parsing", () => {
           {
             type: "thirdLevelDefinition",
             content: [
-              "ある働き・作用を仕向ける。また、こちらの気持ちなどを相手へ向ける。 「催眠術を―・ける」 「暗示に―・ける」 「なぞを―・ける」 「情けを―・ける」 ",
+              "ある働き・作用を仕向ける。また、こちらの気持ちなどを相手へ向ける。 ",
+              {
+                content: ["「催眠術を―・ける」"],
+                innerQuote: "催眠術を―・ける",
+                type: "exampleSentence",
+              },
+              " ",
+              {
+                content: ["「暗示に―・ける」"],
+                innerQuote: "暗示に―・ける",
+                type: "exampleSentence",
+              },
+              " ",
+              {
+                content: ["「なぞを―・ける」"],
+                innerQuote: "なぞを―・ける",
+                type: "exampleSentence",
+              },
+              " ",
+              {
+                content: ["「情けを―・ける」"],
+                innerQuote: "情けを―・ける",
+                type: "exampleSentence",
+              },
+              " ",
             ],
             heading: "㋐",
           },
           {
             type: "thirdLevelDefinition",
             content: [
-              "送って相手に届かせる。 「電話を―・ける」 「言葉を―・ける」 ",
+              "送って相手に届かせる。 ",
+              {
+                content: ["「電話を―・ける」"],
+                innerQuote: "電話を―・ける",
+                type: "exampleSentence",
+              },
+              " ",
+              {
+                content: ["「言葉を―・ける」"],
+                innerQuote: "言葉を―・ける",
+                type: "exampleSentence",
+              },
+              " ",
             ],
             heading: "㋑",
           },
           {
             type: "thirdLevelDefinition",
             content: [
-              "取り付けてある仕掛けを働かせて、本体が動かないように固定する。 「鍵（かぎ）を―・ける」 ",
+              "取り付けてある仕掛けを働かせて、本体が動かないように固定する。 ",
+              {
+                content: ["「鍵（かぎ）を―・ける」"],
+                innerQuote: "鍵（かぎ）を―・ける",
+                type: "exampleSentence",
+              },
+              " ",
             ],
             heading: "㋒",
           },
           {
             type: "thirdLevelDefinition",
             content: [
-              "操作を加えて機械・装置などを作動させる。 「目覚ましを―・ける」 「レコードを―・ける」 「ブレーキを―・ける」 ",
+              "操作を加えて機械・装置などを作動させる。 ",
+              {
+                content: ["「目覚ましを―・ける」"],
+                innerQuote: "目覚ましを―・ける",
+                type: "exampleSentence",
+              },
+              " ",
+              {
+                content: ["「レコードを―・ける」"],
+                innerQuote: "レコードを―・ける",
+                type: "exampleSentence",
+              },
+              " ",
+              {
+                content: ["「ブレーキを―・ける」"],
+                innerQuote: "ブレーキを―・ける",
+                type: "exampleSentence",
+              },
+              " ",
             ],
             heading: "㋓",
           },
           {
             type: "thirdLevelDefinition",
             content: [
-              "道具を用いて他に作用を及ぼす。 「アイロンを―・ける」 「雑巾を―・けた廊下」 ",
+              "道具を用いて他に作用を及ぼす。 ",
+              {
+                content: ["「アイロンを―・ける」"],
+                innerQuote: "アイロンを―・ける",
+                type: "exampleSentence",
+              },
+              " ",
+              {
+                content: ["「雑巾を―・けた廊下」"],
+                innerQuote: "雑巾を―・けた廊下",
+                type: "exampleSentence",
+              },
+              " ",
             ],
             heading: "㋔",
           },
@@ -277,7 +394,12 @@ describe("synonym section", () => {
           {
             type: "linebreak",
           },
-          "積極的に繰り返し行われるさま。熱心。「学者の間で―な議論が交わされた」",
+          "積極的に繰り返し行われるさま。熱心。",
+          {
+            content: ["「学者の間で―な議論が交わされた」"],
+            innerQuote: "学者の間で―な議論が交わされた",
+            type: "exampleSentence",
+          },
           {
             type: "linebreak",
           },
@@ -400,4 +522,34 @@ describe("clitic section", () => {
       },
     ]);
   });
+});
+
+it("can parse top level exampleSentences", () => {
+  const text = `
+[keyword]サン【sun】[/keyword]
+太陽。「―グラス」「―デッキ」
+`;
+  assertParses(tokenize(text), [
+    {
+      type: "linebreak",
+    },
+    "[keyword]サン【sun】[/keyword]",
+    {
+      type: "linebreak",
+    },
+    "太陽。",
+    {
+      content: ["「―グラス」"],
+      innerQuote: "―グラス",
+      type: "exampleSentence",
+    },
+    {
+      content: ["「―デッキ」"],
+      innerQuote: "―デッキ",
+      type: "exampleSentence",
+    },
+    {
+      type: "linebreak",
+    },
+  ]);
 });

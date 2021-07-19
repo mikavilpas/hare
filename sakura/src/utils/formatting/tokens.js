@@ -34,6 +34,16 @@ export const tokenFactory = {
     heading: heading,
     content: content,
   }),
+  literalQuote: (content, innerQuote) => ({
+    type: "literalQuote",
+    content,
+    innerQuote,
+  }),
+  exampleSentence: (content, innerQuote) => ({
+    content,
+    innerQuote,
+    type: "exampleSentence",
+  }),
 };
 
 export const linebreak = p.newline().pipe(mapConst({ type: "linebreak" }));

@@ -11,7 +11,7 @@ import {
   then,
 } from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
-import { attempt, literalQuote } from "./formatting";
+import { attempt, quoteToken } from "./formatting";
 import {
   fullWidthNumber,
   ideographicSpace,
@@ -41,7 +41,7 @@ const level3Heading = katakanaToken.pipe(between("(", ")"));
 export const definitionChar = level1Heading.pipe(
   or(level2Heading.pipe(attempt()), level3Heading),
   not(),
-  qthen(linebreak.pipe(or(literalQuote, p.anyChar()))),
+  qthen(linebreak.pipe(or(quoteToken, p.anyChar()))),
   called("definitionChar")
 );
 
@@ -106,8 +106,9 @@ level3.init(
   )
 );
 
-const definition = definitionChar.pipe(
-  or(level1, level2.pipe(attempt()), level3, p.anyChar()),
+const definition = level1.pipe(
+  attempt(),
+  or(level2.pipe(attempt()), level3.pipe(attempt()), quoteToken, p.anyChar()),
   many(),
   map(joinSuccessiveStringTokens),
   flatten(),

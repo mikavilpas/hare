@@ -198,7 +198,7 @@ superscript {
   background-color: #27292d;
   max-height: 50vh;
   overflow: auto;
-  color: gray;
+  color: #c1c1c1;
 }
 
 #definition-preview {
@@ -223,6 +223,15 @@ superscript {
   font-size: 80%;
   color: #868686;
   margin-left: 10px;
+  display: inline-block;
+}
+
+#export .quote {
+  color: #616161;
+}
+
+#export .quote button.btn-outline-dark {
+  color: #616161;
 }
 
 #export .external-sites {

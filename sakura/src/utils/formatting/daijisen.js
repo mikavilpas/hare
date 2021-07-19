@@ -13,7 +13,7 @@ import {
   then,
 } from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
-import { attempt, literalQuote, quoted } from "./formatting";
+import { attempt, quoted, quoteToken } from "./formatting";
 import {
   circledKatakanaToken,
   kanjiNumber,
@@ -102,7 +102,7 @@ export const cliticSection = cliticSectionHeading.pipe(
 export const definitionChar = level1Heading.pipe(
   or(level2Heading, level3Heading, synonymSectionHeading, cliticSectionHeading),
   not(),
-  qthen(linebreak.pipe(or(literalQuote, p.anyChar()))),
+  qthen(linebreak.pipe(or(quoteToken, p.anyChar()))),
   called("definitionChar")
 );
 
@@ -170,6 +170,7 @@ const daijisenDefinition = level1.pipe(
     synonymSection(),
     level2.pipe(attempt()),
     linebreak,
+    quoteToken,
     cliticSection,
     p.anyChar()
   ),

@@ -21,6 +21,7 @@ describe("export view", () => {
     cy.contains("Audio sentences");
     cy.contains("Yourei sentences");
     cy.contains("Immersion Kit");
+    cy.get("[aria-label='Copy example sentence']").should("be.visible");
 
     cy.get("@consoleLog").should("be.calledWith", "gtag:", "page_view", {
       page_title: "export",

@@ -9,6 +9,7 @@ import {
   stringify,
 } from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
+import { linebreak, tokenFactory } from "./tokens";
 
 export function tokenize(text) {
   const tokens = highlightQuotes().parse(text);
@@ -28,6 +29,10 @@ export const quoted = (start, end) => {
   const quote = later();
   quote.init(
     quote.pipe(called("inner quote")).pipe(
+      map((q) => {
+        // flatten nested quotes (no need to preserve them)
+        return q.content.join("");
+      }),
       //
       or(plainText),
       between(start, end),
@@ -35,7 +40,9 @@ export const quoted = (start, end) => {
       called(`quote ${start} ${end}`),
       map((text) => {
         // put the quotes back in so the formatting is preserved
-        return start + text + end;
+        const content = [start + text + end];
+        const innerQuote = text;
+        return tokenFactory.literalQuote(content, innerQuote);
       })
     )
   );
@@ -55,16 +62,31 @@ export const literalQuote = quoted("（", "）").pipe(
     quoted("《", "》"),
     quoted("{", "}")
   ),
+  map((tokens) => {
+    // a literal quote is to be ignored, so we return it as plain text
+    return tokens.content.join("");
+  }),
   called("literalQuote")
 );
 
-const highlightQuotes = () => {
-  const quote = quoted("「", "」").pipe(
-    map((text) => ({ type: "quote", content: text }))
-  );
+export const exampleSentence = quoted("「", "」").pipe(
+  map((quoteToken) => {
+    return tokenFactory.exampleSentence(
+      quoteToken.content,
+      quoteToken.innerQuote
+    );
+  }),
+  called("exampleSentence")
+);
 
-  return literalQuote.pipe(
-    or(quote, p.anyChar()),
+export const quoteToken = literalQuote.pipe(
+  or(exampleSentence),
+  called("quoteToken")
+);
+
+export const highlightQuotes = () => {
+  return quoteToken.pipe(
+    or(linebreak, p.anyChar()),
     many(),
     map(joinSuccessiveStringTokens)
   );

@@ -11,11 +11,15 @@ import {
   then,
   thenq,
 } from "parjs/combinators";
-import { joinSuccessiveStringTokens } from "./parseUtils";
+import { attempt } from "./formatting/formatting";
+import { called, joinSuccessiveStringTokens } from "./parseUtils";
 
 export function parse(inputText) {
   try {
     const parseResult = heading.parse(inputText);
+    if (parseResult?.kind.toLowerCase() !== "ok") {
+      console.warn("wordParser error", parseResult);
+    }
     return parseResult;
   } catch (error) {
     console.log(error);
@@ -28,25 +32,21 @@ const normalize = (str) =>
 const wordChar = p.noCharOf("【】〖〗{}（）〔〕");
 const kanjiChar = p.noCharOf("・【】〖〗{}（）〔〕()");
 
-const quoted = (sepA, sepB) => {
-  return p.noCharOf([sepA, sepB]).pipe(
-    //
-    many(),
-    between(sepA, sepB),
-    stringify()
-  );
-};
-
 const inKanjiQuotes = (parser) => {
-  const a = parser.pipe(between("【", "】"));
-  const b = parser.pipe(between("【", "】"));
-  const c = parser.pipe(between("〖", "〗"));
-  const d = parser.pipe(between("{", "}"));
-  const e = parser.pipe(between("（", "）"));
-  const f = parser.pipe(between("〔", "〕"));
-  const g = parser.pipe(between("(", ")"));
-
-  return a.pipe(or(b, c, d, e, f, g));
+  return parser.pipe(between("【", "】")).pipe(
+    or(
+      parser.pipe(between("【", "】")),
+      parser.pipe(between("〖", "〗")),
+      parser.pipe(
+        between("{{", "}}"),
+        map((inside) => [[`{{${inside}}}`]])
+      ),
+      parser.pipe(between("{", "}")),
+      parser.pipe(between("（", "）")),
+      parser.pipe(between("〔", "〕")),
+      parser.pipe(between("(", ")"))
+    )
+  );
 };
 
 // parses a heading with only kana, no kanji part.
@@ -56,14 +56,18 @@ const kanaHeadingPart = wordChar.pipe(
   //
   many(),
   stringify(),
-  map((str) => ({ kana: normalize(str) }))
+  map((str) => ({ kana: normalize(str) })),
+  called("kanaHeadingPart")
 );
 
 const alternativeKanjiSpellings = () => {
-  const compulsoryPart = kanjiChar;
+  const compulsoryPart = kanjiChar.pipe(called("compulsoryPart"));
   const alternativePart = inKanjiQuotes(
-    compulsoryPart.pipe(many(), stringify())
-  ).pipe(map((a) => ({ type: "optional", text: a })));
+    compulsoryPart.pipe(attempt(), many(), stringify())
+  ).pipe(
+    map((a) => ({ type: "optional", text: a })),
+    called("alternativePart")
+  );
 
   const either = compulsoryPart.pipe(
     or(alternativePart),
@@ -89,7 +93,8 @@ const alternativeKanjiSpellings = () => {
         )
       );
       return uniq(combinations);
-    })
+    }),
+    called("alternativeKanjiSpellings")
   );
 };
 
@@ -106,13 +111,20 @@ const kanjiHeadingPart = alternativeKanjiSpellings().pipe(
   }),
   map((kanjiOptions) => {
     return { kanjiOptions };
-  })
+  }),
+  called("kanjiHeadingPart")
 );
 
 // all kanji headings start with the kana, followed by optional quoted kanji
 const heading = kanaHeadingPart.pipe(
-  then(kanjiHeadingPart.pipe(maybe({ kanjiOptions: [] }))),
+  then(
+    kanjiHeadingPart.pipe(
+      maybe({ kanjiOptions: [] }),
+      called("optional kanji spellings")
+    )
+  ),
   map(([kana, kanji]) => {
     return { ...kana, ...kanji };
-  })
+  }),
+  called("kanji heading")
 );

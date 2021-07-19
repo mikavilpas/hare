@@ -20,11 +20,6 @@ describe("heading or regular quote", () => {
       },
     ]);
   });
-
-  it("can parse a definition reference as a quote (ignored)", () => {
-    const text = `「打ち消し{（２）}」に同じ。`;
-    assertParses(tokenize(text), [text]);
-  });
 });
 
 describe("top level definition parsing", () => {
@@ -77,6 +72,48 @@ describe("top level definition parsing", () => {
     ]);
   });
 
+  it("1st level can contain 3rd level", () => {
+    const text = `
+■二■ （接頭） 名詞に付く。
+（１）何も持っていない，何も伴っていない意を表す。「―手」「―身」
+`;
+    assertParses(tokenize(text), [
+      {
+        type: "linebreak",
+      },
+      {
+        type: "firstLevelDefinition",
+        content: [
+          " （接頭） 名詞に付く。",
+          {
+            type: "linebreak",
+          },
+          {
+            type: "thirdLevelDefinition",
+            content: [
+              "何も持っていない，何も伴っていない意を表す。",
+              {
+                content: ["「―手」"],
+                innerQuote: "―手",
+                type: "exampleSentence",
+              },
+              {
+                content: ["「―身」"],
+                innerQuote: "―身",
+                type: "exampleSentence",
+              },
+              {
+                type: "linebreak",
+              },
+            ],
+            heading: "(1)",
+          },
+        ],
+        heading: "(二)",
+      },
+    ]);
+  });
+
   it("can parse top level definition symbols", () => {
     const text = `■一■ （副）スル □二□ （名） `;
     assertParses(tokenize(text), [
@@ -122,7 +159,22 @@ describe("top level definition parsing", () => {
       {
         type: "thirdLevelDefinition",
         content: [
-          "ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」",
+          "ある物事を一緒になってする者。",
+          {
+            content: ["「―に入る」"],
+            innerQuote: "―に入る",
+            type: "exampleSentence",
+          },
+          {
+            content: ["「―を裏切る」"],
+            innerQuote: "―を裏切る",
+            type: "exampleSentence",
+          },
+          {
+            content: ["「遊び―」"],
+            innerQuote: "遊び―",
+            type: "exampleSentence",
+          },
         ],
         heading: "(1)",
       },
@@ -143,7 +195,22 @@ describe("top level definition parsing", () => {
       {
         type: "thirdLevelDefinition",
         content: [
-          "ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」",
+          "ある物事を一緒になってする者。",
+          {
+            content: ["「―に入る」"],
+            innerQuote: "―に入る",
+            type: "exampleSentence",
+          },
+          {
+            content: ["「―を裏切る」"],
+            innerQuote: "―を裏切る",
+            type: "exampleSentence",
+          },
+          {
+            content: ["「遊び―」"],
+            innerQuote: "遊び―",
+            type: "exampleSentence",
+          },
           {
             type: "linebreak",
           },
@@ -153,7 +220,12 @@ describe("top level definition parsing", () => {
       {
         type: "thirdLevelDefinition",
         content: [
-          "同じ種類に属するもの。同類。「鯨は哺乳類の―であって，魚の―ではない」",
+          "同じ種類に属するもの。同類。",
+          {
+            content: ["「鯨は哺乳類の―であって，魚の―ではない」"],
+            innerQuote: "鯨は哺乳類の―であって，魚の―ではない",
+            type: "exampleSentence",
+          },
           {
             type: "linebreak",
           },
@@ -198,7 +270,12 @@ describe("top level definition parsing", () => {
           {
             type: "thirdLevelDefinition",
             content: [
-              "ある集団に加わっている。「野球部に―・している」",
+              "ある集団に加わっている。",
+              {
+                content: ["「野球部に―・している」"],
+                innerQuote: "野球部に―・している",
+                type: "exampleSentence",
+              },
               {
                 type: "linebreak",
               },
@@ -208,7 +285,12 @@ describe("top level definition parsing", () => {
           {
             type: "thirdLevelDefinition",
             content: [
-              "ある種類・範囲・分類の中にある。「哺乳類に―・する動物」",
+              "ある種類・範囲・分類の中にある。",
+              {
+                content: ["「哺乳類に―・する動物」"],
+                innerQuote: "哺乳類に―・する動物",
+                type: "exampleSentence",
+              },
               {
                 type: "linebreak",
               },
@@ -229,7 +311,12 @@ describe("top level definition parsing", () => {
           {
             type: "thirdLevelDefinition",
             content: [
-              "文章を書く。「稿を―・するは，大抵夜間/即興詩人（鴎外）」",
+              "文章を書く。",
+              {
+                content: ["「稿を―・するは，大抵夜間/即興詩人（鴎外）」"],
+                innerQuote: "稿を―・するは，大抵夜間/即興詩人（鴎外）",
+                type: "exampleSentence",
+              },
               {
                 type: "linebreak",
               },
@@ -239,7 +326,15 @@ describe("top level definition parsing", () => {
           {
             type: "thirdLevelDefinition",
             content: [
-              "依頼する。たのむ。嘱(シヨク)する。「閻王此偈を誦じをはて，すなはち彼文を尊恵に―・す/平家 6」",
+              "依頼する。たのむ。嘱(シヨク)する。",
+              {
+                content: [
+                  "「閻王此偈を誦じをはて，すなはち彼文を尊恵に―・す/平家 6」",
+                ],
+                innerQuote:
+                  "閻王此偈を誦じをはて，すなはち彼文を尊恵に―・す/平家 6",
+                type: "exampleSentence",
+              },
               {
                 type: "linebreak",
               },
@@ -259,28 +354,66 @@ describe("top level definition parsing", () => {
       {
         type: "thirdLevelDefinition",
         content: [
-          "（物事の）しめくくりを付けること。片付けること。処理。「―を付ける」「このごたごたをどう―するつもりだ」 ",
+          "（物事の）しめくくりを付けること。片付けること。処理。",
+          {
+            content: ["「―を付ける」"],
+            innerQuote: "―を付ける",
+            type: "exampleSentence",
+          },
+          {
+            content: ["「このごたごたをどう―するつもりだ」"],
+            innerQuote: "このごたごたをどう―するつもりだ",
+            type: "exampleSentence",
+          },
+          " ",
         ],
         heading: "(1)",
       },
       {
         type: "thirdLevelDefinition",
         content: [
-          "無駄遣いしないこと。倹約すること。「なんでも―して使う人」「藤屋の市兵衛が申事を尤と思はば，―をすべし/浮世草子・一代男 7」 ",
+          "無駄遣いしないこと。倹約すること。",
+          {
+            content: ["「なんでも―して使う人」"],
+            innerQuote: "なんでも―して使う人",
+            type: "exampleSentence",
+          },
+          {
+            content: [
+              "「藤屋の市兵衛が申事を尤と思はば，―をすべし/浮世草子・一代男 7」",
+            ],
+            innerQuote:
+              "藤屋の市兵衛が申事を尤と思はば，―をすべし/浮世草子・一代男 7",
+            type: "exampleSentence",
+          },
+          " ",
         ],
         heading: "(2)",
       },
       {
         type: "thirdLevelDefinition",
         content: [
-          "結果。主として悪い状態についていう。「さんざん迷惑をかけたあげく，あの―だ」 ",
+          "結果。主として悪い状態についていう。",
+          {
+            content: ["「さんざん迷惑をかけたあげく，あの―だ」"],
+            innerQuote: "さんざん迷惑をかけたあげく，あの―だ",
+            type: "exampleSentence",
+          },
+          " ",
         ],
         heading: "(3)",
       },
       {
         type: "thirdLevelDefinition",
         content: [
-          "物事の事情。事の次第。「私が此書(ホン)を読む様になりました―は/不如帰（蘆花）」",
+          "物事の事情。事の次第。",
+          {
+            content: [
+              "「私が此書(ホン)を読む様になりました―は/不如帰（蘆花）」",
+            ],
+            innerQuote: "私が此書(ホン)を読む様になりました―は/不如帰（蘆花）",
+            type: "exampleSentence",
+          },
         ],
         heading: "(4)",
       },
@@ -298,7 +431,22 @@ describe("content with no structure", () => {
       {
         type: "linebreak",
       },
-      "一緒に勉強したり仕事をしたり遊んだりして，親しく交わる人。友人。友。朋友(ホウユウ)。「―になる」「遊び―」「女―」",
+      "一緒に勉強したり仕事をしたり遊んだりして，親しく交わる人。友人。友。朋友(ホウユウ)。",
+      {
+        content: ["「―になる」"],
+        innerQuote: "―になる",
+        type: "exampleSentence",
+      },
+      {
+        content: ["「遊び―」"],
+        innerQuote: "遊び―",
+        type: "exampleSentence",
+      },
+      {
+        content: ["「女―」"],
+        innerQuote: "女―",
+        type: "exampleSentence",
+      },
       {
         type: "linebreak",
       },
@@ -313,7 +461,22 @@ describe("third level definitions", () => {
       {
         type: "thirdLevelDefinition",
         content: [
-          "ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」",
+          "ある物事を一緒になってする者。",
+          {
+            content: ["「―に入る」"],
+            innerQuote: "―に入る",
+            type: "exampleSentence",
+          },
+          {
+            content: ["「―を裏切る」"],
+            innerQuote: "―を裏切る",
+            type: "exampleSentence",
+          },
+          {
+            content: ["「遊び―」"],
+            innerQuote: "遊び―",
+            type: "exampleSentence",
+          },
         ],
         heading: "(1)",
       },
@@ -437,7 +600,12 @@ describe("fourth level definitions", () => {
           {
             type: "thirdLevelDefinition",
             content: [
-              "文章を書く。「稿を―・するは，大抵夜間/即興詩人（鴎外）」",
+              "文章を書く。",
+              {
+                content: ["「稿を―・するは，大抵夜間/即興詩人（鴎外）」"],
+                innerQuote: "稿を―・するは，大抵夜間/即興詩人（鴎外）",
+                type: "exampleSentence",
+              },
               {
                 type: "linebreak",
               },

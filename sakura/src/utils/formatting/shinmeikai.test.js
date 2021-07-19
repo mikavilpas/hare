@@ -201,7 +201,31 @@ describe("full definitions", () => {
               {
                 type: "linebreak",
               },
-              "[表記]「懸ける・《係ける」とも書く。「橋をかける」 「はしごをかける」は、「架ける」とも書く。",
+              "[表記]",
+              {
+                content: ["「懸ける・《係ける」"],
+                innerQuote: "懸ける・《係ける",
+                type: "exampleSentence",
+              },
+              "とも書く。",
+              {
+                content: ["「橋をかける」"],
+                innerQuote: "橋をかける",
+                type: "exampleSentence",
+              },
+              " ",
+              {
+                content: ["「はしごをかける」"],
+                innerQuote: "はしごをかける",
+                type: "exampleSentence",
+              },
+              "は、",
+              {
+                content: ["「架ける」"],
+                innerQuote: "架ける",
+                type: "exampleSentence",
+              },
+              "とも書く。",
               {
                 type: "linebreak",
               },
@@ -238,14 +262,48 @@ describe("full definitions", () => {
               {
                 type: "exampleSentenceGroup",
                 content: [
-                  "「緒戦の勝利に―を得る 」",
-                  "「―を△増す（盛り返す・失う） 」",
-                  "「―に押される 」",
-                  "「―に乗る 」",
-                  "「放水の―が弱る 」",
-                  "「―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した 」",
-                  "「走った―〔＝はずみ〕で植木鉢を割った 」",
-                  "「―よく〔＝強い勢いで〕…する 」",
+                  {
+                    content: "「緒戦の勝利に―を得る 」",
+                    innerQuote: "緒戦の勝利に―を得る",
+                    type: "exampleSentence",
+                  },
+                  {
+                    content: "「―を△増す（盛り返す・失う） 」",
+                    innerQuote: "―を△増す（盛り返す・失う）",
+                    type: "exampleSentence",
+                  },
+                  {
+                    content: "「―に押される 」",
+                    innerQuote: "―に押される",
+                    type: "exampleSentence",
+                  },
+                  {
+                    content: "「―に乗る 」",
+                    innerQuote: "―に乗る",
+                    type: "exampleSentence",
+                  },
+                  {
+                    content: "「放水の―が弱る 」",
+                    innerQuote: "放水の―が弱る",
+                    type: "exampleSentence",
+                  },
+                  {
+                    content:
+                      "「―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した 」",
+                    innerQuote:
+                      "―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した",
+                    type: "exampleSentence",
+                  },
+                  {
+                    content: "「走った―〔＝はずみ〕で植木鉢を割った 」",
+                    innerQuote: "走った―〔＝はずみ〕で植木鉢を割った",
+                    type: "exampleSentence",
+                  },
+                  {
+                    content: "「―よく〔＝強い勢いで〕…する 」",
+                    innerQuote: "―よく〔＝強い勢いで〕…する",
+                    type: "exampleSentence",
+                  },
                 ],
               },
               {
@@ -263,19 +321,51 @@ describe("full definitions", () => {
 
 describe("example sentence blocks", () => {
   it("can parse a block", () => {
-    // const text = `「緒戦の勝利に―を得る／―を△増す（盛り返す・失う）／―に押される／―に乗る／放水の―が弱る／―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した／走った―〔＝はずみ〕で植木鉢を割った／―よく〔＝強い勢いで〕…する」`;
     const text = `「緒戦の勝利に―を得る／―を△増す（盛り返す・失う）／―に押される／―に乗る／放水の―が弱る／―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した／走った―〔＝はずみ〕で植木鉢を割った／―よく〔＝強い勢いで〕…する」`;
     assertParses(exampleSentenceBlock.parse(text), {
       type: "exampleSentenceGroup",
       content: [
-        "「緒戦の勝利に―を得る 」",
-        "「―を△増す（盛り返す・失う） 」",
-        "「―に押される 」",
-        "「―に乗る 」",
-        "「放水の―が弱る 」",
-        "「―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した 」",
-        "「走った―〔＝はずみ〕で植木鉢を割った 」",
-        "「―よく〔＝強い勢いで〕…する 」",
+        {
+          content: "「緒戦の勝利に―を得る 」",
+          innerQuote: "緒戦の勝利に―を得る",
+          type: "exampleSentence",
+        },
+        {
+          content: "「―を△増す（盛り返す・失う） 」",
+          innerQuote: "―を△増す（盛り返す・失う）",
+          type: "exampleSentence",
+        },
+        {
+          content: "「―に押される 」",
+          innerQuote: "―に押される",
+          type: "exampleSentence",
+        },
+        {
+          content: "「―に乗る 」",
+          innerQuote: "―に乗る",
+          type: "exampleSentence",
+        },
+        {
+          content: "「放水の―が弱る 」",
+          innerQuote: "放水の―が弱る",
+          type: "exampleSentence",
+        },
+        {
+          content:
+            "「―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した 」",
+          innerQuote: "―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した",
+          type: "exampleSentence",
+        },
+        {
+          content: "「走った―〔＝はずみ〕で植木鉢を割った 」",
+          innerQuote: "走った―〔＝はずみ〕で植木鉢を割った",
+          type: "exampleSentence",
+        },
+        {
+          content: "「―よく〔＝強い勢いで〕…する 」",
+          innerQuote: "―よく〔＝強い勢いで〕…する",
+          type: "exampleSentence",
+        },
       ],
     });
   });

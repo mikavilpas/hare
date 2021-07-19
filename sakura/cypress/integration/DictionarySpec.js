@@ -65,7 +65,7 @@ describe("dictionary view", () => {
     cy.get("[aria-label=Search]").should("have.value", "狗");
   });
 
-  it.only("shows the higher of word/word+suru", () => {
+  it("shows the higher of word/word+suru", () => {
     cy.visit(encodeURI("#/dict/大辞林/prefix/検出/1"));
     // by default, the word+suru is a frequency 3 and the word is 2.
     // But they must both be shown as 3.

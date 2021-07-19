@@ -7,11 +7,13 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
+import ReactDOM from "react-dom";
 import { useRouteMatch } from "react-router-dom";
 import { getWordDefinitions } from "../../api";
 import { pageView } from "../../telemetry";
 import { frequency } from "../../utils/frequency";
 import * as wordParser from "../../utils/wordParser";
+import ExportViewDefinitionTokenProcessor from "../dict/tokenProcessors/exportViewDefinitionTokenProcessor";
 import { prettyText } from "../dict/utils";
 import Navbar from "../navbar/Navbar";
 
@@ -20,6 +22,7 @@ const CopyButton = ({ getTextToCopy, buttonText }) => {
 
   return (
     <Button
+      aria-label="Copy example sentence"
       block
       className="mt-2"
       variant={wordWasCopied ? "outline-success" : "outline-primary"}
@@ -68,11 +71,40 @@ const SearchLinkWithIcon = ({ iconUrl, children, url }) => {
   return <SearchLink icon={icon} children={children} url={url} />;
 };
 
+const CopyQuoteButton = ({ text, selectedWord }) => {
+  const [wordWasCopied, setWordWasCopied] = useState(false);
+
+  const copiableText = text
+    ?.replace("―", selectedWord)
+    .replace("━", selectedWord);
+
+  return (
+    <Button
+      variant={wordWasCopied ? "outline-success" : "outline-dark"}
+      size="sm"
+      onClick={() => {
+        copy(copiableText);
+        setWordWasCopied(true);
+      }}
+    >
+      {wordWasCopied ? (
+        <span>
+          <i className="bi bi-check"></i>
+        </span>
+      ) : (
+        <span>
+          <i className="bi bi-box-arrow-right"></i>
+        </span>
+      )}
+    </Button>
+  );
+};
+
 const ExportView = ({}) => {
   const [loading, setLoading] = useState(false);
   const [searchResult, setSearchResult] = useState();
   const [searchError, setSearchError] = useState();
-  const definitionRef = useRef();
+  const [definitionNode, setDefinitionNode] = useState();
 
   const match = useRouteMatch();
   const dict = match.params.dictname;
@@ -82,11 +114,33 @@ const ExportView = ({}) => {
   const [copiableText, setCopiableText] = useState();
   const [wordOptions, setWordOptions] = useState([]);
   const [selectedWord, setSelectedWord] = useState();
-  const [wordWasCopied, setWordWasCopied] = useState();
+  const buttonsRef = useRef();
 
   useEffect(() => {
     pageView("export", `/${dict}`);
+
+    return function cleanup() {
+      buttonsRef.current?.forEach((b) => {
+        ReactDOM.unmountComponentAtNode(b);
+      });
+    };
   }, []);
+
+  const onRefChange = (node) => {
+    // add copy button to example sentences
+    setDefinitionNode(node);
+
+    if (!node) return;
+
+    const quoteActions = Array.from(node.querySelectorAll(".quote-actions"));
+    quoteActions.forEach((q) => {
+      ReactDOM.render(
+        <CopyQuoteButton text={q.dataset.quote} selectedWord={selectedWord} />,
+        q
+      );
+    });
+    buttonsRef.current = quoteActions;
+  };
 
   useEffect(() => {
     if (!dict || !search || !openeditem) {
@@ -150,7 +204,11 @@ const ExportView = ({}) => {
   }
 
   const headingHtml = prettyText(searchResult.heading, { dict: dict });
-  const bodyHtml = prettyText(searchResult.text, { dict: dict });
+  const bodyHtml = prettyText(searchResult.text, {
+    dict: dict,
+    createTokenProcessor: (args) =>
+      new ExportViewDefinitionTokenProcessor(args),
+  });
 
   return (
     <Container fluid id="export" className="mt-2">
@@ -159,7 +217,7 @@ const ExportView = ({}) => {
       </Navbar>
       <Row id="definition-preview" className="d-flex flex-column h-50 mt-3">
         <div className="card">
-          <div className="card-body" ref={definitionRef}>
+          <div className="card-body" ref={onRefChange}>
             <h3
               className="card-title"
               dangerouslySetInnerHTML={{
@@ -200,7 +258,7 @@ const ExportView = ({}) => {
               <CopyButton
                 buttonText="TXTをコピー"
                 getTextToCopy={() => {
-                  const text = definitionRef.current?.innerText
+                  const text = definitionNode?.innerText
                     ?.split("\n")
                     .filter((l) => l.length > 0)
                     .join("\n");
