@@ -1,6 +1,6 @@
 /* eslint-disable jest/valid-expect */
 
-import { assertFailsParsing, assertParses } from "../parseUtils";
+import { assertFailsParsing, assertParses } from "../testUtils";
 import { definitionChar, level4, tokenize } from "./daijirin";
 
 describe("heading or regular quote", () => {

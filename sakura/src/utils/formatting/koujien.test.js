@@ -1,6 +1,6 @@
 /* eslint-disable jest/valid-expect */
 
-import { assertParses } from "../parseUtils";
+import { assertParses } from "../testUtils";
 import { tokenize } from "./koujien";
 
 describe("top level definition parsing", () => {

@@ -1,7 +1,7 @@
 /* eslint-disable jest/valid-expect */
 
 import { many } from "parjs/combinators";
-import { assertParses } from "../parseUtils";
+import { assertParses } from "../testUtils";
 import { definitionChar, exampleSentenceBlock, tokenize } from "./shinmeikai";
 
 describe("definition content", () => {

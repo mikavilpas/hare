@@ -1,6 +1,6 @@
 /* eslint-disable jest/valid-expect */
 
-import { assertFailsParsing, assertParses } from "../parseUtils";
+import { assertFailsParsing, assertParses } from "../testUtils";
 import { definitionChar, synonymSection, tokenize } from "./daijisen";
 
 describe("top level definition parsing", () => {
