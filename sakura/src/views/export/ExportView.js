@@ -113,24 +113,32 @@ const ExportView = ({}) => {
   const [copiableText, setCopiableText] = useState();
   const [wordOptions, setWordOptions] = useState([]);
   const [selectedWord, setSelectedWord] = useState();
+  const buttonsRef = useRef();
 
   useEffect(() => {
     pageView("export", `/${dict}`);
+
+    return function cleanup() {
+      buttonsRef.current?.forEach((b) => {
+        ReactDOM.unmountComponentAtNode(b);
+      });
+    };
   }, []);
 
   const onRefChange = (node) => {
+    // add copy button to example sentences
     setDefinitionNode(node);
 
-    // add copy button to example sentences
     if (!node) return;
 
-    const quoteActions = node.querySelectorAll(".quote-actions");
-    Array.from(quoteActions).forEach((q) => {
+    const quoteActions = Array.from(node.querySelectorAll(".quote-actions"));
+    quoteActions.forEach((q) => {
       ReactDOM.render(
         <CopyQuoteButton text={q.dataset.quote} selectedWord={selectedWord} />,
         q
       );
     });
+    buttonsRef.current = quoteActions;
   };
 
   useEffect(() => {
