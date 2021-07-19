@@ -18,7 +18,8 @@ import {
 import { textAnalysis } from "../../api";
 import { frequency, highestFrequency } from "../../utils/frequency";
 import { parse } from "../../utils/wordParser";
-import { bbcode2Html, prettyText, urls } from "./utils";
+import { prettyText, urls } from "./utils";
+import BbcodeTokenProcessor from "./tokenProcessors/bbcodeTokenProcessor";
 
 const Frequency = ({ rating }) => {
   const explanation = () => {
@@ -85,7 +86,10 @@ const Definition = ({
       words.sort((a, b) => frequency(b)?.rating - frequency(a)?.rating);
       setDefinitionWords(words);
     } catch (e) {
-      console.warn("Unable to parse definition words", e);
+      console.warn("Unable to parse definition words", {
+        heading: definition?.heading,
+        error: e,
+      });
       setDefinitionWords([]);
     }
   }, [definition.heading]);
@@ -113,10 +117,10 @@ const Definition = ({
       textAnalysis(definitionText).then(([html, error]) => {
         // now convert the image and other complex tags into html elements from
         // bbcode
-        const formatted = bbcode2Html(html, {
+        const formatted = new BbcodeTokenProcessor({
           ...prettyTextOptions,
           renderComplexTags: true,
-        });
+        }).convertInputText(html);
         setAnalysisResult(formatted);
         setAnalysisError(error);
       });
@@ -199,7 +203,9 @@ const Definition = ({
           <span className="definition-title d-flex justify-content-between w-100 align-items-center">
             <span
               dangerouslySetInnerHTML={{
-                __html: bbcode2Html(definition?.heading),
+                __html: new BbcodeTokenProcessor().convertInputText(
+                  definition?.heading
+                ),
               }}
             ></span>
             {/* words that are not included in the frequency list do not get a

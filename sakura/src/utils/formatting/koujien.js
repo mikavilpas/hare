@@ -1,7 +1,7 @@
 import * as p from "parjs";
 import { between, many, map, not, or, qthen, then } from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
-import { literalQuote } from "./formatting";
+import { quoteToken } from "./formatting";
 import {
   blackCircledNumberSansSerif,
   circledKatakanaToken,
@@ -28,7 +28,7 @@ const level3Heading = circledKatakanaToken.pipe(called("level3Heading"));
 const definitionChar = level1Heading.pipe(
   or(level2Heading, level3Heading),
   not(),
-  qthen(linebreak.pipe(or(literalQuote, p.anyChar()))),
+  qthen(linebreak.pipe(or(quoteToken, p.anyChar()))),
   called("definitionChar")
 );
 

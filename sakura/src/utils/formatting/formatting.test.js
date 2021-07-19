@@ -7,8 +7,9 @@ describe("quote parsing", () => {
   it("can parse a quote", () => {
     assertParses(tokenize("「あなた―に話す」"), [
       {
-        type: "quote",
-        content: "「あなた―に話す」",
+        content: ["「あなた―に話す」"],
+        innerQuote: "あなた―に話す",
+        type: "exampleSentence",
       },
     ]);
   });
@@ -16,12 +17,14 @@ describe("quote parsing", () => {
   it("can parse two quotes", () => {
     assertParses(tokenize("「あなた―に話す」「二人―で話したい」"), [
       {
-        type: "quote",
-        content: "「あなた―に話す」",
+        content: ["「あなた―に話す」"],
+        innerQuote: "あなた―に話す",
+        type: "exampleSentence",
       },
       {
-        type: "quote",
-        content: "「二人―で話したい」",
+        content: ["「二人―で話したい」"],
+        innerQuote: "二人―で話したい",
+        type: "exampleSentence",
       },
     ]);
   });
@@ -38,20 +41,24 @@ describe("quote parsing", () => {
     assertParses(tokenize(text), [
       "（１）それに限定する意を表す。",
       {
-        type: "quote",
-        content: "「あなた―に話す」",
+        content: ["「あなた―に話す」"],
+        innerQuote: "あなた―に話す",
+        type: "exampleSentence",
       },
       {
-        type: "quote",
-        content: "「二人―で話したい」",
+        content: ["「二人―で話したい」"],
+        innerQuote: "二人―で話したい",
+        type: "exampleSentence",
       },
       {
-        type: "quote",
-        content: "「ちょっと庭へ出る―だ」",
+        content: ["「ちょっと庭へ出る―だ」"],
+        innerQuote: "ちょっと庭へ出る―だ",
+        type: "exampleSentence",
       },
       {
-        type: "quote",
-        content: "「形式―整ってもだめだ」",
+        content: ["「形式―整ってもだめだ」"],
+        innerQuote: "形式―整ってもだめだ",
+        type: "exampleSentence",
       },
       " ",
     ]);
@@ -63,8 +70,9 @@ describe("quote parsing", () => {
     assertParses(tokenize(text), [
       "うつ-ろ [0] 【空ろ・虚ろ】 （名・形動）[文]ナリ （１）（「洞」 とも書く）中がからで何もない・こと（さま）。がらんどう。うろ。 ",
       {
-        type: "quote",
-        content: "「根もとの方が―になっている」",
+        content: ["「根もとの方が―になっている」"],
+        innerQuote: "根もとの方が―になっている",
+        type: "exampleSentence",
       },
     ]);
   });

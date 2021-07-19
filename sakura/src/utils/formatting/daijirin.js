@@ -10,7 +10,7 @@ import {
   then,
 } from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
-import { attempt, literalQuote } from "./formatting";
+import { attempt, literalQuote, quoteToken } from "./formatting";
 import {
   blackCircledNumber,
   fullWidthNumber,
@@ -47,7 +47,7 @@ export const definitionChar = level1Heading.pipe(
     level3Heading.pipe(not(), attempt()),
     level4Heading.pipe(not(), attempt())
   ),
-  qthen(linebreak.pipe(or(literalQuote, p.anyChar()))),
+  qthen(linebreak.pipe(or(quoteToken, p.anyChar()))),
   called("definitionChar")
 );
 
@@ -60,7 +60,7 @@ level1.init(
   level1Heading.pipe(
     then(
       level2.pipe(
-        or(definitionChar),
+        or(level3.pipe(attempt()), definitionChar),
         many(),
         map(joinSuccessiveStringTokens),
         called("level1 content")

@@ -89,7 +89,12 @@ describe("second level parsing", () => {
             type: "secondLevelDefinition",
             number: 1,
             content: [
-              "階段などの一きざみ。転じて、事件の一くぎり、地位・技能の一段階など。「―の御上達」",
+              "階段などの一きざみ。転じて、事件の一くぎり、地位・技能の一段階など。",
+              {
+                content: ["「―の御上達」"],
+                innerQuote: "―の御上達",
+                type: "exampleSentence",
+              },
               {
                 type: "linebreak",
               },
@@ -117,7 +122,18 @@ describe("second level parsing", () => {
           {
             type: "linebreak",
           },
-          "(「と」を伴っても用いる)一際[subscript]ひときわ[/subscript]。一層。狂言、烏帽子折「―ういやつぢや」。「―と腕があがる」",
+          "(「と」を伴っても用いる)一際[subscript]ひときわ[/subscript]。一層。狂言、烏帽子折",
+          {
+            content: ["「―ういやつぢや」"],
+            innerQuote: "―ういやつぢや",
+            type: "exampleSentence",
+          },
+          "。",
+          {
+            content: ["「―と腕があがる」"],
+            innerQuote: "―と腕があがる",
+            type: "exampleSentence",
+          },
           {
             type: "linebreak",
           },
@@ -143,7 +159,12 @@ describe("content with no structure", () => {
       {
         type: "linebreak",
       },
-      "気心の知れた者たちの内部。「―での話題」",
+      "気心の知れた者たちの内部。",
+      {
+        content: ["「―での話題」"],
+        innerQuote: "―での話題",
+        type: "exampleSentence",
+      },
       {
         type: "linebreak",
       },

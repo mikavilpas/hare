@@ -223,6 +223,7 @@ superscript {
   font-size: 80%;
   color: #868686;
   margin-left: 10px;
+  display: inline-block;
 }
 
 #export .external-sites {

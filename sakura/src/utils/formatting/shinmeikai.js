@@ -14,7 +14,7 @@ import {
   then,
 } from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
-import { attempt, literalQuote } from "./formatting";
+import { attempt, quoteToken } from "./formatting";
 import {
   fullWidthCapitalLetter,
   kanjiNumber,
@@ -54,7 +54,9 @@ export const exampleSentenceBlock = p.noCharOf("／」").pipe(
   between("「", "」"),
   map((tokens) => {
     // "split" into many quotes instead of one huge example sentence block
-    const sentences = tokens.map((t) => `「${t} 」`);
+    const sentences = tokens.map((t) => {
+      return tokenFactory.exampleSentence(`「${t} 」`, t);
+    });
     return tokenFactory.exampleSentenceGroup(sentences);
   }),
   called("exampleSentenceBlock")
@@ -69,7 +71,7 @@ definitionChar.init(
       exampleSentenceBlock.pipe(attempt())
     ),
     not(),
-    qthen(linebreak.pipe(or(literalQuote.pipe(attempt()), p.anyChar()))),
+    qthen(linebreak.pipe(or(quoteToken.pipe(attempt()), p.anyChar()))),
     called("definitionChar")
   )
 );

@@ -1,4 +1,5 @@
 import copy from "copy-to-clipboard";
+import ReactDOM from "react-dom";
 import React, { useEffect, useRef, useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
@@ -14,6 +15,7 @@ import { frequency } from "../../utils/frequency";
 import * as wordParser from "../../utils/wordParser";
 import { prettyText } from "../dict/utils";
 import Navbar from "../navbar/Navbar";
+import ExportViewDefinitionTokenProcessor from "../dict/tokenProcessors/exportViewDefinitionTokenProcessor";
 
 const CopyButton = ({ getTextToCopy, buttonText }) => {
   const [wordWasCopied, setWordWasCopied] = useState(false);
@@ -68,11 +70,40 @@ const SearchLinkWithIcon = ({ iconUrl, children, url }) => {
   return <SearchLink icon={icon} children={children} url={url} />;
 };
 
+const CopyQuoteButton = ({ text, selectedWord }) => {
+  const [wordWasCopied, setWordWasCopied] = useState(false);
+
+  const copiableText = text
+    ?.replace("―", selectedWord)
+    .replace("━", selectedWord);
+
+  return (
+    <Button
+      variant={wordWasCopied ? "outline-success" : "outline-secondary"}
+      size="sm"
+      onClick={() => {
+        copy(copiableText);
+        setWordWasCopied(true);
+      }}
+    >
+      {wordWasCopied ? (
+        <span>
+          <i className="bi bi-file-check"></i>
+        </span>
+      ) : (
+        <span>
+          <i className="bi bi-files"></i>
+        </span>
+      )}
+    </Button>
+  );
+};
+
 const ExportView = ({}) => {
   const [loading, setLoading] = useState(false);
   const [searchResult, setSearchResult] = useState();
   const [searchError, setSearchError] = useState();
-  const definitionRef = useRef();
+  const [definitionNode, setDefinitionNode] = useState();
 
   const match = useRouteMatch();
   const dict = match.params.dictname;
@@ -82,11 +113,25 @@ const ExportView = ({}) => {
   const [copiableText, setCopiableText] = useState();
   const [wordOptions, setWordOptions] = useState([]);
   const [selectedWord, setSelectedWord] = useState();
-  const [wordWasCopied, setWordWasCopied] = useState();
 
   useEffect(() => {
     pageView("export", `/${dict}`);
   }, []);
+
+  const onRefChange = (node) => {
+    setDefinitionNode(node);
+
+    // add copy button to example sentences
+    if (!node) return;
+
+    const quoteActions = node.querySelectorAll(".quote-actions");
+    Array.from(quoteActions).forEach((q) => {
+      ReactDOM.render(
+        <CopyQuoteButton text={q.dataset.quote} selectedWord={selectedWord} />,
+        q
+      );
+    });
+  };
 
   useEffect(() => {
     if (!dict || !search || !openeditem) {
@@ -150,7 +195,11 @@ const ExportView = ({}) => {
   }
 
   const headingHtml = prettyText(searchResult.heading, { dict: dict });
-  const bodyHtml = prettyText(searchResult.text, { dict: dict });
+  const bodyHtml = prettyText(searchResult.text, {
+    dict: dict,
+    createTokenProcessor: (args) =>
+      new ExportViewDefinitionTokenProcessor(args),
+  });
 
   return (
     <Container fluid id="export" className="mt-2">
@@ -159,7 +208,7 @@ const ExportView = ({}) => {
       </Navbar>
       <Row id="definition-preview" className="d-flex flex-column h-50 mt-3">
         <div className="card">
-          <div className="card-body" ref={definitionRef}>
+          <div className="card-body" ref={onRefChange}>
             <h3
               className="card-title"
               dangerouslySetInnerHTML={{
@@ -200,7 +249,7 @@ const ExportView = ({}) => {
               <CopyButton
                 buttonText="TXTをコピー"
                 getTextToCopy={() => {
-                  const text = definitionRef.current?.innerText
+                  const text = definitionNode?.innerText
                     ?.split("\n")
                     .filter((l) => l.length > 0)
                     .join("\n");

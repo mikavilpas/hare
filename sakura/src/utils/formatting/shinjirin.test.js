@@ -4,6 +4,12 @@ import { assertParses } from "../testUtils";
 import { tokenize } from "./shinjirin";
 
 describe("definitions", () => {
+  it("can parse 1st level heading from bbcode", () => {
+    const text = `[keyword]さん【山】[/keyword]`;
+
+    assertParses(tokenize(text), ["[keyword]さん【山】[/keyword]"]);
+  });
+
   it("1st devel definition", () => {
     const text = `か・ける【掛ける】
 (１)ぶらさげる。「服を―・ける」
@@ -16,7 +22,12 @@ describe("definitions", () => {
       {
         type: "firstLevelDefinition",
         content: [
-          "ぶらさげる。「服を―・ける」",
+          "ぶらさげる。",
+          {
+            content: ["「服を―・ける」"],
+            innerQuote: "服を―・ける",
+            type: "exampleSentence",
+          },
           {
             type: "linebreak",
           },
@@ -38,12 +49,26 @@ describe("definitions", () => {
         content: [
           {
             type: "thirdLevelDefinition",
-            content: ["…しそうになる。「おぼれ―・ける」"],
+            content: [
+              "…しそうになる。",
+              {
+                content: ["「おぼれ―・ける」"],
+                innerQuote: "おぼれ―・ける",
+                type: "exampleSentence",
+              },
+            ],
             heading: "(ア)",
           },
           {
             type: "thirdLevelDefinition",
-            content: ["…する途中である。…し始める。「帰り―・ける」"],
+            content: [
+              "…する途中である。…し始める。",
+              {
+                content: ["「帰り―・ける」"],
+                innerQuote: "帰り―・ける",
+                type: "exampleSentence",
+              },
+            ],
             heading: "(イ)",
           },
         ],
@@ -78,7 +103,12 @@ describe("definitions", () => {
           {
             type: "linebreak",
           },
-          "人数を数える語。「親子 3―」",
+          "人数を数える語。",
+          {
+            content: ["「親子 3―」"],
+            innerQuote: "親子 3―",
+            type: "exampleSentence",
+          },
           {
             type: "linebreak",
           },
@@ -115,7 +145,17 @@ describe("definitions", () => {
             type: "secondLevelDefinition",
             number: 0,
             content: [
-              "いま現に問題にしているもの，当面のものである意を表す。「―席」「―事件」",
+              "いま現に問題にしているもの，当面のものである意を表す。",
+              {
+                content: ["「―席」"],
+                innerQuote: "―席",
+                type: "exampleSentence",
+              },
+              {
+                content: ["「―事件」"],
+                innerQuote: "―事件",
+                type: "exampleSentence",
+              },
               {
                 type: "linebreak",
               },
@@ -126,7 +166,12 @@ describe("definitions", () => {
             type: "secondLevelDefinition",
             number: 0,
             content: [
-              "話している自分にかかわるものであることを表す。「―官」",
+              "話している自分にかかわるものであることを表す。",
+              {
+                content: ["「―官」"],
+                innerQuote: "―官",
+                type: "exampleSentence",
+              },
               {
                 type: "linebreak",
               },
@@ -177,22 +222,50 @@ describe("definitions", () => {
           "（「…ものだ（である）」などの形で）",
           {
             type: "thirdLevelDefinition",
-            content: ["普遍的な傾向。「人はお世辞に弱い―だ」"],
+            content: [
+              "普遍的な傾向。",
+              {
+                content: ["「人はお世辞に弱い―だ」"],
+                innerQuote: "人はお世辞に弱い―だ",
+                type: "exampleSentence",
+              },
+            ],
             heading: "(ア)",
           },
           {
             type: "thirdLevelDefinition",
-            content: ["なすべきこと。「そんな時は許してやる―だ」"],
+            content: [
+              "なすべきこと。",
+              {
+                content: ["「そんな時は許してやる―だ」"],
+                innerQuote: "そんな時は許してやる―だ",
+                type: "exampleSentence",
+              },
+            ],
             heading: "(イ)",
           },
           {
             type: "thirdLevelDefinition",
-            content: ["過去にしばしば起こったこと。「よく遊んだ―だ」"],
+            content: [
+              "過去にしばしば起こったこと。",
+              {
+                content: ["「よく遊んだ―だ」"],
+                innerQuote: "よく遊んだ―だ",
+                type: "exampleSentence",
+              },
+            ],
             heading: "(ウ)",
           },
           {
             type: "thirdLevelDefinition",
-            content: ["感動・詠嘆を表す。…なあ。「故郷とはいい―だ」"],
+            content: [
+              "感動・詠嘆を表す。…なあ。",
+              {
+                content: ["「故郷とはいい―だ」"],
+                innerQuote: "故郷とはいい―だ",
+                type: "exampleSentence",
+              },
+            ],
             heading: "(エ)",
           },
         ],
