@@ -4,6 +4,17 @@ import { assertParses } from "../testUtils";
 import { tokenize } from "./shinjirin";
 
 describe("definitions", () => {
+  it("can parse top level example sentences", () => {
+    const text = `「服を―・ける」`;
+    assertParses(tokenize(text), [
+      {
+        content: ["「服を―・ける」"],
+        innerQuote: "服を―・ける",
+        type: "exampleSentence",
+      },
+    ]);
+  });
+
   it("can parse 1st level heading from bbcode", () => {
     const text = `[keyword]さん【山】[/keyword]`;
 

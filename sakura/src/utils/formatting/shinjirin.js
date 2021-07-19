@@ -108,7 +108,7 @@ level3.init(
 
 const definition = level1.pipe(
   attempt(),
-  or(level2.pipe(attempt()), level3, p.anyChar()),
+  or(level2.pipe(attempt()), level3.pipe(attempt()), quoteToken, p.anyChar()),
   many(),
   map(joinSuccessiveStringTokens),
   flatten(),
