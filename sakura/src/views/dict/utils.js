@@ -52,10 +52,13 @@ export function prettyText(text, options = {}) {
   const bbcodeProcessor = new BbcodeTokenProcessor(options);
 
   const preProcess = (formatFunction) => {
-    const definitionProcessor = new DefinitionTokenProcessor({
+    const args = {
       ...options,
       formatFunction,
-    });
+    };
+    const definitionProcessor =
+      options.createTokenProcessor?.(args) ||
+      new DefinitionTokenProcessor(args);
     text = definitionProcessor.convertInputText(text);
     const html = bbcodeProcessor.convertInputText(text);
     return html;
