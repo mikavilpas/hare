@@ -65,6 +65,8 @@ doesn't give you a headache.
   * Youglish - pronounciations in YouTube videos
   * Native audio example sentences from https://sentencesearch.neocities.org
 * **Copy a word and its definition** for pasting into an Anki card or elsewhere.
+  Also copy an example sentence and substitute the word into it so you have an
+  example for studying.
 * **Grammar search** using the combined definitions from 5 grammar books that
   are available at
   https://itazuraneko.neocities.org/grammar/masterreference.html
