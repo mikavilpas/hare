@@ -2,10 +2,12 @@ import uniq from "lodash/uniq";
 import * as p from "parjs";
 import {
   between,
+  flatten,
   many,
   manySepBy,
   map,
   maybe,
+  must,
   or,
   stringify,
   then,
@@ -60,6 +62,21 @@ const kanaHeadingPart = wordChar.pipe(
   called("kanaHeadingPart")
 );
 
+// parse the quoted section of e.g. 【掛ける（懸ける・架ける・賭ける）】
+//                                          ^^^^^^^^^^^^^^^^^^^^
+export const innerListingOfAlternateParts = kanjiChar.pipe(
+  many(),
+  stringify(),
+  manySepBy("・"),
+  between("（", "）"),
+  // distinguish between an optional kanji and this parser
+  must((tokens) => tokens?.length > 1),
+  map((tokens) => {
+    return tokens.map((a) => ({ type: "literalOption", text: a }));
+  }),
+  called("innerListingOfAlternateParts")
+);
+
 const alternativeKanjiSpellings = () => {
   const compulsoryPart = kanjiChar.pipe(called("compulsoryPart"));
   const alternativePart = inKanjiQuotes(
@@ -70,8 +87,9 @@ const alternativeKanjiSpellings = () => {
   );
 
   const either = compulsoryPart.pipe(
-    or(alternativePart),
+    or(innerListingOfAlternateParts.pipe(attempt()), alternativePart),
     many(),
+    flatten(),
     map((tokens) => joinSuccessiveStringTokens(tokens))
   );
 
@@ -80,18 +98,24 @@ const alternativeKanjiSpellings = () => {
     map((kanjiWords) => {
       // return all possible combinations of mandatory and optional elements for
       // each kanjiWord
-      const combinations = kanjiWords.flatMap((kanjiWord) =>
-        kanjiWord.reduce(
-          (result, token) => {
-            if (typeof token === "string") {
-              return result.map((k) => k + token);
-            } else {
-              return result.flatMap((k) => [...result, k + token.text]);
-            }
-          },
-          [""]
-        )
-      );
+      const combinations = kanjiWords.flatMap((kanjiWord) => {
+        const literals = kanjiWord
+          .filter((k) => k?.type === "literalOption")
+          .map((k) => k.text);
+        const options = kanjiWord
+          .filter((k) => k?.type !== "literalOption")
+          .reduce(
+            (result, token) => {
+              if (typeof token === "string") {
+                return result.map((k) => k + token);
+              } else {
+                return result.flatMap((k) => [...result, k + token.text]);
+              }
+            },
+            [""]
+          );
+        return [...literals, ...options];
+      });
       return uniq(combinations);
     }),
     called("alternativeKanjiSpellings")

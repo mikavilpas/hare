@@ -111,4 +111,34 @@ describe("can parse headings", () => {
       kanjiOptions: ["{{zbe4b}}"],
     });
   });
+
+  it("can parse a type of alternate kanji spellings", () => {
+    assertParses(
+      wordParser.innerListingOfAlternateParts.parse(
+        "（懸ける・架ける・賭ける）"
+      ),
+      [
+        {
+          type: "literalOption",
+          text: "懸ける",
+        },
+        {
+          type: "literalOption",
+          text: "架ける",
+        },
+        {
+          type: "literalOption",
+          text: "賭ける",
+        },
+      ]
+    );
+
+    assertParses(
+      wordParser.parse("か・ける【掛ける（懸ける・架ける・賭ける）】"),
+      {
+        kana: "かける",
+        kanjiOptions: ["懸ける", "架ける", "賭ける", "掛ける"],
+      }
+    );
+  });
 });
