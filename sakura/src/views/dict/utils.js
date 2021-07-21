@@ -2,6 +2,7 @@ import config from "../../config";
 import { tokenize as daijirin } from "../../utils/formatting/daijirin";
 import { tokenize as daijisen } from "../../utils/formatting/daijisen";
 import { tokenize as defaultFormat } from "../../utils/formatting/formatting";
+import { tokenize as kogo } from "../../utils/formatting/kogo";
 import { tokenize as koujien } from "../../utils/formatting/koujien";
 import { tokenize as shinjirin } from "../../utils/formatting/shinjirin";
 import { tokenize as shinmeikai } from "../../utils/formatting/shinmeikai";
@@ -74,6 +75,8 @@ export function prettyText(text, options = {}) {
     return preProcess(shinmeikai);
   } else if (options.dict === "新辞林") {
     return preProcess(shinjirin);
+  } else if (options.dict === "古語") {
+    return preProcess(kogo);
   } else {
     const args = {
       ...options,

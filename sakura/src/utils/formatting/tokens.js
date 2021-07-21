@@ -117,3 +117,5 @@ export const ideographicSpace = p.string("　");
 export const fullWidthCapitalLetter = p.anyCharOf(
   "ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ"
 );
+
+export const chineseCircledNumber = p.anyCharOf("㊀㊁㊂㊃㊄㊅㊆㊇㊈㊉");
