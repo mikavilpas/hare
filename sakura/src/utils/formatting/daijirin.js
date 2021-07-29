@@ -1,9 +1,12 @@
 import * as p from "parjs";
 import {
   between,
+  flatten,
   later,
   many,
+  manyTill,
   map,
+  must,
   not,
   or,
   qthen,
@@ -131,9 +134,27 @@ level4.init(
   )
 );
 
-const definition = definitionChar.pipe(
-  or(level1, level2, level3.pipe(attempt()), p.anyChar()),
-  many(),
+const metaInformationLine = definitionChar.pipe(
+  manyTill(p.newline()),
+  must((tokens) => {
+    return Array.isArray(tokens) && tokens.length > 1;
+  }),
   map(joinSuccessiveStringTokens),
-  called("definition")
+  map((tokens) => {
+    return tokenFactory.metaInformation(tokens);
+  }),
+  called("metaInformationLine")
+);
+
+const definition = metaInformationLine.pipe(
+  then(
+    definitionChar.pipe(
+      or(level1, level2, level3.pipe(attempt()), p.anyChar()),
+      many(),
+      map(joinSuccessiveStringTokens),
+      called("definition")
+    )
+  ),
+
+  flatten()
 );

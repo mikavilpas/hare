@@ -37,6 +37,8 @@ export default class DefinitionTokenProcessor {
       return this.convertCliticSection(t);
     } else if (t.type === "exampleSentenceGroup") {
       return this.convertExampleSentenceGroup(t);
+    } else if (t.type === "metaInformation") {
+      return this.convertMetaInformation(t);
     } else {
       return this.convertDefinitionSection(t);
     }
@@ -97,5 +99,10 @@ export default class DefinitionTokenProcessor {
               <span class="heading">${t.heading}</span>
               <div class="content">${content}</div>
             </div>`;
+  }
+
+  convertMetaInformation(t) {
+    const content = t.content.map(this.convertToken).join("");
+    return `<div class="meta-information">${content}</div>`;
   }
 }

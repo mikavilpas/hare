@@ -44,6 +44,7 @@ export const tokenFactory = {
     innerQuote,
     type: "exampleSentence",
   }),
+  metaInformation: (content) => ({ type: "metaInformation", content: content }),
 };
 
 export const linebreak = p.newline().pipe(mapConst({ type: "linebreak" }));

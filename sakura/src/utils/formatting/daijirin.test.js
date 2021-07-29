@@ -3,29 +3,10 @@
 import { assertFailsParsing, assertParses } from "../testUtils";
 import { definitionChar, level4, tokenize } from "./daijirin";
 
-describe("heading or regular quote", () => {
-  it("can parse a part of speech", () => {
-    // const text = `（名）`;
-    const text = `（名）`;
-    assertParses(tokenize(text), [text]);
-  });
-
-  it("can parse a heading", () => {
-    const text = `（１）`;
-    assertParses(tokenize(text), [
-      {
-        type: "thirdLevelDefinition",
-        content: [],
-        heading: "(1)",
-      },
-    ]);
-  });
-});
-
 describe("top level definition parsing", () => {
   it("can parse 1st and second levels", () => {
     // https://sakura-paris.org/dict/大辞林/prefix/もの
-    const text = `
+    const text = `header
 ■一■ [2][0] （名）
 〔形である〕
 □一□
@@ -33,7 +14,8 @@ describe("top level definition parsing", () => {
 `;
     assertParses(tokenize(text), [
       {
-        type: "linebreak",
+        type: "metaInformation",
+        content: ["header"],
       },
       {
         type: "firstLevelDefinition",
@@ -73,13 +55,14 @@ describe("top level definition parsing", () => {
   });
 
   it("1st level can contain 3rd level", () => {
-    const text = `
+    const text = `header
 ■二■ （接頭） 名詞に付く。
 （１）何も持っていない，何も伴っていない意を表す。「―手」「―身」
 `;
     assertParses(tokenize(text), [
       {
-        type: "linebreak",
+        type: "metaInformation",
+        content: ["header"],
       },
       {
         type: "firstLevelDefinition",
@@ -115,8 +98,12 @@ describe("top level definition parsing", () => {
   });
 
   it("can parse top level definition symbols", () => {
-    const text = `■一■ （副）スル □二□ （名） `;
+    const text = `header\n■一■ （副）スル □二□ （名） `;
     assertParses(tokenize(text), [
+      {
+        type: "metaInformation",
+        content: ["header"],
+      },
       {
         type: "firstLevelDefinition",
         content: [
@@ -135,8 +122,12 @@ describe("top level definition parsing", () => {
 
   it("can parse alternate top level definition symbols", () => {
     // not sure why there are two options...
-    const text = `❶ （副）スル ❷ （名） `;
+    const text = `header\n❶ （副）スル ❷ （名） `;
     assertParses(tokenize(text), [
+      {
+        type: "metaInformation",
+        content: ["header"],
+      },
       {
         type: "secondLevelDefinition",
         number: "❶",
@@ -154,8 +145,12 @@ describe("top level definition parsing", () => {
 
   it("definition with some text after it", () => {
     const text =
-      "（１）ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」";
+      "header\n（１）ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」";
     assertParses(tokenize(text), [
+      {
+        type: "metaInformation",
+        content: ["header"],
+      },
       {
         type: "thirdLevelDefinition",
         content: [
@@ -188,9 +183,9 @@ describe("top level definition parsing", () => {
 （３）近世，商工業者が結成した同業組合。
 `;
     assertParses(tokenize(text), [
-      "なか-ま [3] 【仲間】",
       {
-        type: "linebreak",
+        type: "metaInformation",
+        content: ["なか-ま [3] 【仲間】"],
       },
       {
         type: "thirdLevelDefinition",
@@ -255,9 +250,11 @@ describe("top level definition parsing", () => {
 （２）依頼する。たのむ。嘱(シヨク)する。「閻王此偈を誦じをはて，すなはち彼文を尊恵に―・す/平家 6」
 `;
     assertParses(tokenize(text), [
-      "[keyword]ぞく・する[/keyword] [3] 【属する】 （動サ変）[文]サ変 ぞく・す",
       {
-        type: "linebreak",
+        type: "metaInformation",
+        content: [
+          "[keyword]ぞく・する[/keyword] [3] 【属する】 （動サ変）[文]サ変 ぞく・す",
+        ],
       },
       {
         type: "secondLevelDefinition",
@@ -348,9 +345,12 @@ describe("top level definition parsing", () => {
   });
 
   it("definition in another format", () => {
-    const text = `し-まつ [1] 【始末】 （名）スル （１）（物事の）しめくくりを付けること。片付けること。処理。「―を付ける」「このごたごたをどう―するつもりだ」 （２）無駄遣いしないこと。倹約すること。「なんでも―して使う人」「藤屋の市兵衛が申事を尤と思はば，―をすべし/浮世草子・一代男 7」 （３）結果。主として悪い状態についていう。「さんざん迷惑をかけたあげく，あの―だ」 （４）物事の事情。事の次第。「私が此書(ホン)を読む様になりました―は/不如帰（蘆花）」`;
+    const text = `し-まつ [1] 【始末】 （名）スル \n（１）（物事の）しめくくりを付けること。片付けること。処理。「―を付ける」「このごたごたをどう―するつもりだ」 （２）無駄遣いしないこと。倹約すること。「なんでも―して使う人」「藤屋の市兵衛が申事を尤と思はば，―をすべし/浮世草子・一代男 7」 （３）結果。主として悪い状態についていう。「さんざん迷惑をかけたあげく，あの―だ」 （４）物事の事情。事の次第。「私が此書(ホン)を読む様になりました―は/不如帰（蘆花）」`;
     assertParses(tokenize(text), [
-      "し-まつ [1] 【始末】 （名）スル ",
+      {
+        type: "metaInformation",
+        content: ["し-まつ [1] 【始末】 （名）スル "],
+      },
       {
         type: "thirdLevelDefinition",
         content: [
@@ -427,9 +427,9 @@ describe("content with no structure", () => {
 一緒に勉強したり仕事をしたり遊んだりして，親しく交わる人。友人。友。朋友(ホウユウ)。「―になる」「遊び―」「女―」
 `;
     assertParses(tokenize(text), [
-      "とも-だち [0] 【友達】",
       {
-        type: "linebreak",
+        type: "metaInformation",
+        content: ["とも-だち [0] 【友達】"],
       },
       "一緒に勉強したり仕事をしたり遊んだりして，親しく交わる人。友人。友。朋友(ホウユウ)。",
       {
@@ -456,8 +456,12 @@ describe("content with no structure", () => {
 
 describe("third level definitions", () => {
   it("can parse a third level definition", () => {
-    const text = `（１）ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」`;
+    const text = `header\n（１）ある物事を一緒になってする者。「―に入る」「―を裏切る」「遊び―」`;
     assertParses(tokenize(text), [
+      {
+        type: "metaInformation",
+        content: ["header"],
+      },
       {
         type: "thirdLevelDefinition",
         content: [
@@ -484,8 +488,12 @@ describe("third level definitions", () => {
   });
 
   it("can parse two 3rds", () => {
-    const text = `（１）あ（２）同じ `;
+    const text = `header\n（１）あ（２）同じ `;
     assertParses(tokenize(text), [
+      {
+        type: "metaInformation",
+        content: ["header"],
+      },
       {
         type: "thirdLevelDefinition",
         content: ["あ"],
@@ -500,8 +508,12 @@ describe("third level definitions", () => {
   });
 
   it("can parse level 3 followed by level 4", () => {
-    const text = `（２）歴史の時代区分の一。中世と近代の間の時期。（ア）日本史では，後期封建制の時期の安土桃山・江戸時代をいう。`;
+    const text = `header\n（２）歴史の時代区分の一。中世と近代の間の時期。（ア）日本史では，後期封建制の時期の安土桃山・江戸時代をいう。`;
     assertParses(tokenize(text), [
+      {
+        type: "metaInformation",
+        content: ["header"],
+      },
       {
         type: "thirdLevelDefinition",
         content: [
@@ -549,9 +561,9 @@ describe("fourth level definitions", () => {
 （２）歴史（ア）日本
 `;
     assertParses(tokenize(text), [
-      "[keyword]きん-せい[/keyword] [1] 【近世】",
       {
-        type: "linebreak",
+        type: "metaInformation",
+        content: ["[keyword]きん-せい[/keyword] [1] 【近世】"],
       },
       {
         type: "secondLevelDefinition",

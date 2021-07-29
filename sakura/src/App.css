@@ -226,6 +226,10 @@ superscript {
   display: inline-block;
 }
 
+.meta-information {
+  color: #868686;
+}
+
 #export .quote {
   color: #616161;
 }
