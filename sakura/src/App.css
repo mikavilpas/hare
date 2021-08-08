@@ -254,6 +254,22 @@ superscript {
   font-size: initial;
 }
 
+.popover {
+  background-color: black;
+}
+
+#delete-confirmation {
+}
+
+#delete-confirmation .title {
+  background-color: #212529;
+}
+
+#delete-confirmation .content {
+  color: white;
+  background-color: #454c51;
+}
+
 /* grammar */
 #grammar-search #results {
   font-size: 70%;

@@ -9,9 +9,9 @@ import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
 import ReactDOM from "react-dom";
 import { useRouteMatch } from "react-router-dom";
-import { getWordDefinitions } from "../../api";
 import { pageView } from "../../telemetry";
 import { frequency } from "../../utils/frequency";
+import { searchYomichanAndApi } from "../../utils/search";
 import * as wordParser from "../../utils/wordParser";
 import ExportViewDefinitionTokenProcessor from "../dict/tokenProcessors/exportViewDefinitionTokenProcessor";
 import { prettyText } from "../dict/utils";
@@ -100,7 +100,7 @@ const CopyQuoteButton = ({ text, selectedWord }) => {
   );
 };
 
-const ExportView = ({}) => {
+const ExportView = ({ dicts, db, yomichanDicts }) => {
   const [loading, setLoading] = useState(false);
   const [searchResult, setSearchResult] = useState();
   const [searchError, setSearchError] = useState();
@@ -146,21 +146,40 @@ const ExportView = ({}) => {
     if (!dict || !search || !openeditem) {
       setSearchResult(null);
       setSearchError(
-        "Invalid search parameters. Please go back and try again."
+        "Internal error - invalid search parameters. Please go back and try again."
       );
       return;
     }
 
     setLoading(true);
-    getWordDefinitions({ dict: dict, word: search })
-      .then(([result, error]) => {
-        const searchResultItem = result?.words?.[openeditem];
+    const [yomiSearchPromise, apiSearchPromises] = searchYomichanAndApi(
+      search,
+      db,
+      yomichanDicts,
+      dicts
+    );
+
+    // OPTIMIZE: no need to wait for every result here - could show results once
+    // the single result for this dict is present. Not an issue usually due to
+    // api caching and yomichan being fast though.
+
+    // OPTIMIZE: if yomichan dicts are available, could still display something
+    // even if the network goes down
+    yomiSearchPromise
+      .then(async (yomiResults) => {
+        const apiResults = await Promise.all(apiSearchPromises);
+        const allResults = [...yomiResults, ...apiResults];
+
+        // from all possible results, get the single result to be exported
+        const searchResult = allResults.find((res) => dict === res.alias);
+        const searchResultItem = searchResult?.result?.words?.[openeditem];
+
         if (!searchResultItem) {
           setSearchError("the search result did not contain the searched word");
           setSearchResult(null);
         } else {
+          setSearchError(null);
           setSearchResult(searchResultItem);
-          setSearchError(error);
 
           // parse possible words
           try {
@@ -186,17 +205,16 @@ const ExportView = ({}) => {
         }
       })
       .finally(() => setLoading(false));
-  }, [match.params]);
+  }, [match.params, dicts, db, openeditem]);
 
-  if (searchError) {
-    return <Alert variant="danger">Error: {searchError}</Alert>;
-  }
-  if (loading) {
+  if (loading || !dicts?.length || !search) {
     return (
       <Spinner animation="border" role="status">
         <span className="sr-only">Loading...</span>
       </Spinner>
     );
+  } else if (searchError) {
+    return <Alert variant="danger">Error: {searchError}</Alert>;
   }
 
   if (!searchResult) {

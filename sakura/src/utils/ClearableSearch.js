@@ -2,6 +2,7 @@ import React from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
+import Spinner from "react-bootstrap/Spinner";
 
 const ClearableSearch = ({
   searchInputText,
@@ -9,6 +10,7 @@ const ClearableSearch = ({
   searchInputRef,
   placeholder = "",
   autoFocus = false,
+  searchLoading,
 }) => {
   const clearSearch = () => {
     setSearchInputText("");
@@ -28,6 +30,15 @@ const ClearableSearch = ({
         aria-label="Search"
         autoFocus={autoFocus}
       />
+      {searchLoading && (
+        <InputGroup.Append>
+          <Button variant="light" block className="border-0 bg-white">
+            <Spinner className="bg-white" animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          </Button>
+        </InputGroup.Append>
+      )}
       <InputGroup.Append>
         <Button
           hidden={searchInputText?.length === 0}

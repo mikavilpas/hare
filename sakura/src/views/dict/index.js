@@ -15,9 +15,14 @@ import { registerGestures } from "./gestures";
 import SearchBox from "./SearchBox";
 import { dictInfo, urls } from "./utils";
 
-function DictView() {
-  const [dicts, setDicts] = useState([]);
-  const [searchLoading, setSearchLoading] = useState();
+function DictView({
+  dicts,
+  setDicts,
+  db,
+  yomichanDicts,
+  dictsLoading,
+  dictsLoadingError,
+}) {
   const [searchResult, setSearchResult] = useState({});
 
   const location = useLocation();
@@ -43,11 +48,11 @@ function DictView() {
   }, [match.params, match.path]);
 
   useEffect(() => {
-    if (dicts) {
+    if (dicts || yomichanDicts?.length > 0) {
       const unregister = registerGestures(gestureRef.current);
       return unregister;
     }
-  }, [dicts]);
+  }, [dicts, yomichanDicts]);
 
   const goToRecursiveLookupPage = (word, dict = "大辞林") => {
     const url = generatePath(urls.recursiveLookup, {
@@ -64,10 +69,15 @@ function DictView() {
     if (!dictname) return null;
 
     const dictinfo = dictInfo(dictname);
-    const result =
-      searchResult?.[dictinfo.id]?.result ||
-      searchResult?.[dictinfo.alias]?.result;
-    return result;
+    if (dictinfo) {
+      const result =
+        searchResult?.[dictinfo?.id]?.result ||
+        searchResult?.[dictinfo?.alias]?.result;
+      return result;
+    } else {
+      // yomichan dictionary
+      return searchResult?.[dictname]?.result;
+    }
   };
 
   const p = match?.params;
@@ -80,9 +90,10 @@ function DictView() {
         <SearchBox
           currentDict={dictname}
           dicts={dicts}
+          db={db}
+          yomichanDicts={yomichanDicts}
           searchResult={searchResult}
           setSearchResult={setSearchResult}
-          setSearchLoading={setSearchLoading}
         />
       </Navbar>
       <div className="mt-3"></div>
@@ -90,13 +101,15 @@ function DictView() {
         currentDict={dictname}
         dicts={dicts}
         setDicts={setDicts}
+        yomichanDicts={yomichanDicts}
         searchResult={searchResult}
+        loading={dictsLoading}
+        error={dictsLoadingError}
       />
       <main className="mt-3">
         <Definitions
           dict={dictname}
           definitions={currentDefinitions()}
-          searchLoading={searchLoading}
           goToRecursiveLookupPage={goToRecursiveLookupPage}
           currentTab={match.params.openeditem}
           openTab={(index) => {

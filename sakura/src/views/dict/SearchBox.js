@@ -3,22 +3,25 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { generatePath, useHistory, useParams } from "react-router-dom";
-import { getWordDefinitions } from "../../api";
 import ClearableSearch from "../../utils/ClearableSearch";
+import { searchYomichanAndApi } from "../../utils/search";
 import { urls } from "./utils";
 
 const SearchBox = ({
   currentDict,
   dicts,
+  db,
+  yomichanDicts,
   searchResult,
   setSearchResult,
-  setSearchLoading,
 }) => {
   const params = useParams();
   const { searchmode = "", search = "" } = params;
-  const [searchInputText, setSearchInputText] = useState(search);
   const history = useHistory();
   const searchInputRef = useRef();
+
+  const [searchLoading, setSearchLoading] = useState();
+  const [searchInputText, setSearchInputText] = useState(search);
 
   const tempSearchResult = useRef();
   const singleDictSearchResult = (d, searchQuery, result, error) => {
@@ -38,13 +41,13 @@ const SearchBox = ({
       setSearchInputText(search);
       doSearch(search);
     }
-  }, [dicts, searchmode, search]);
+  }, [dicts, yomichanDicts, searchmode, search]);
 
   const applySearchToUrl = () => {
-    if (search !== searchInputText) {
+    if (search !== searchInputText && dicts?.length) {
       // if a new search is made, go to the lookup page
       const lookupUrl = generatePath(urls.lookup, {
-        dictname: currentDict,
+        dictname: currentDict || dicts?.[0],
         searchmode: "prefix",
         search: searchInputText,
         openeditem: 0, // open first result
@@ -59,18 +62,30 @@ const SearchBox = ({
     setSearchResult(null);
     tempSearchResult.current = {};
 
-    const searchPromises = dicts?.map((dict) => {
-      getWordDefinitions({
-        dict: dict,
-        word: word,
-      })
-        .then(([result, error]) => {
-          singleDictSearchResult(dict, word, result, error);
-        })
-        .finally(() => setSearchLoading(false));
-    });
+    const [yomiSearchPromise, apiSearchPromises] = searchYomichanAndApi(
+      word,
+      db,
+      yomichanDicts,
+      dicts
+    );
 
-    return Promise.allSettled(searchPromises);
+    yomiSearchPromise?.then((dictsAndResults) => {
+      dictsAndResults.map((resultObject) => {
+        const { alias, word, result, error } = resultObject;
+        singleDictSearchResult(alias, word, result, error);
+      });
+    });
+    apiSearchPromises?.map((p) =>
+      p?.then((resultObject) => {
+        const { alias, word, result, error } = resultObject;
+        singleDictSearchResult(alias, word, result, error);
+      })
+    );
+
+    return Promise.allSettled([
+      yomiSearchPromise,
+      ...apiSearchPromises,
+    ]).finally(() => setSearchLoading(false));
   };
 
   if (!dicts?.length) return "";
@@ -87,6 +102,7 @@ const SearchBox = ({
           setSearchInputText={setSearchInputText}
           searchInputRef={searchInputRef}
           autoFocus={search?.length === 0}
+          searchLoading={searchLoading}
         />
         <InputGroup.Append>
           <Button

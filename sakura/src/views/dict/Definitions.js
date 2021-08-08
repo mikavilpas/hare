@@ -7,7 +7,6 @@ import Card from "react-bootstrap/Card";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Spinner from "react-bootstrap/Spinner";
 import Tooltip from "react-bootstrap/Tooltip";
 import {
   generatePath,
@@ -175,6 +174,7 @@ const Definition = ({
           className="icon-button"
           variant="link"
           to={makeExportLink()}
+          aria-label="Export word"
           onClick={(e) => {
             e.stopPropagation();
           }}
@@ -250,48 +250,46 @@ const Definitions = ({
   dict,
   definitions,
   searchError,
-  searchLoading,
   goToRecursiveLookupPage,
   currentTab,
   openTab,
   makeExportLink,
 }) => {
-  if (searchLoading) {
-    return (
-      <Spinner animation="border" role="status">
-        <span className="sr-only">Loading...</span>
-      </Spinner>
-    );
-  } else if (searchError) {
-    return (
-      <Alert variant={"danger"}>
-        <p>Error loading results</p>
-        <p>{searchError.toString()}</p>
-      </Alert>
-    );
-  }
+  const indicator = () => {
+    if (searchError) {
+      return (
+        <Alert variant={"danger"}>
+          <p>Error loading results</p>
+          <p>{searchError.toString()}</p>
+        </Alert>
+      );
+    }
+  };
 
   if (!definitions) return "";
 
   return (
-    <Accordion
-      activeKey={currentTab}
-      className="definition-listing d-flex flex-column"
-    >
-      {definitions.words?.map((w, i) => {
-        return (
-          <Definition
-            key={`${dict}_${i}`}
-            i={i}
-            openTab={openTab}
-            definition={w}
-            goToRecursiveLookupPage={goToRecursiveLookupPage}
-            isOpened={i.toString() === currentTab}
-            makeExportLink={makeExportLink}
-          />
-        );
-      })}
-    </Accordion>
+    <>
+      <div>{indicator()}</div>
+      <Accordion
+        activeKey={currentTab}
+        className="definition-listing d-flex flex-column"
+      >
+        {definitions.words?.map((w, i) => {
+          return (
+            <Definition
+              key={`${dict}_${i}`}
+              i={i}
+              openTab={openTab}
+              definition={w}
+              goToRecursiveLookupPage={goToRecursiveLookupPage}
+              isOpened={i.toString() === currentTab}
+              makeExportLink={makeExportLink}
+            />
+          );
+        })}
+      </Accordion>
+    </>
   );
 };
 

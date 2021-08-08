@@ -30,7 +30,7 @@ export const preferredDictionaries = [
 // short form.
 export function dictInfo(dictAliasOrId) {
   const d = config.dictinfo.dicts.find(
-    (d) => d?.alias == dictAliasOrId || d?.id == dictAliasOrId
+    (d) => d?.alias === dictAliasOrId || d?.id === dictAliasOrId
   );
   if (!d) console.warn(`Unable to find the dict ${dictAliasOrId}`);
   return d;
