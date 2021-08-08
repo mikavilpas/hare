@@ -17,6 +17,13 @@ object-assign
   http://jedwatson.github.io/classnames
 */
 
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <http://feross.org>
+ * @license  MIT
+ */
+
 /*! ./_a-function */
 
 /*! ./_add-to-unscopables */
@@ -228,6 +235,8 @@ object-assign
 /*! exports provided: read, write, key, invalidate, serializeQuery, default */
 
 /*! exports provided: setup, setupCache, serializeQuery, default */
+
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
 /*! is-buffer */
 
