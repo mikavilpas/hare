@@ -9,7 +9,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
-import DictionaryImporterWorker from "worker-loader!../../../utils/yomichan/workers/dictionaryImporter";
+import DictionaryImporterWorker from "worker-loader?inline=no-fallback!../../../utils/yomichan/workers/dictionaryImporter";
 import { newDatabaseWorkerInstance } from "../../../utils/yomichan/workers/databaseWorker";
 import { readJsonInsideZip, readZip } from "../../../utils/yomichan/zipReader";
 
