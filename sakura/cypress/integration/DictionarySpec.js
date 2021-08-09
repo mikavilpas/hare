@@ -1,3 +1,7 @@
+/// <reference types="cypress" />
+
+import { DictionaryPage, SettingsPage } from "../support/pages";
+
 describe("dictionary view", () => {
   // for now these use the actual api so there is no mocking!
 
@@ -150,7 +154,11 @@ describe("dictionary view", () => {
 
     // a definition from that dict should be visible
     cy.contains("interhuman relations");
+  });
+});
 
+describe("recursive searches", () => {
+  it("can open from a link", () => {
     // can open recursive lookup from url
     cy.visit(
       encodeURI("#/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/山辺/1")
@@ -220,5 +228,33 @@ describe("dictionary view", () => {
     cy.contains("No results found for 学ぶ");
     cy.contains("searching in all dictionaries").click();
     cy.get("[aria-label=Search]").should("have.value", "学ぶ");
+  });
+
+  it("uses the added yomichan dictionary as the default dict when available", () => {
+    // fallbacking to daijirin is tested in other tests already
+    //
+    const settings = new SettingsPage();
+    settings.visit();
+    settings.importYomichanDictionary("jmdict_english_truncated.zip");
+
+    const dict = new DictionaryPage();
+    dict.visit();
+    dict.searchBox().type("あそこ"); // has to exist in the truncated dict
+    dict.searchButton().click();
+
+    // click some word that can be looked up recursively
+    cy.get("[data-word=彼処]").should("exist").click();
+
+    cy.url().should(
+      "contain",
+      encodeURI("/#/dict/広辞苑/prefix/あそこ/0/recursive/jmdict/prefix/彼処/0")
+    );
+    cy.contains("over there");
+
+    // must be able to open from a link
+    cy.visit(
+      encodeURI("/#/dict/広辞苑/prefix/あそこ/0/recursive/jmdict/prefix/あこ/0")
+    );
+    cy.contains("over there");
   });
 });

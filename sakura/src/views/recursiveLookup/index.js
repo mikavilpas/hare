@@ -9,10 +9,10 @@ import {
   useParams,
   useRouteMatch,
 } from "react-router-dom";
-import { getWordDefinitions } from "../../api";
+import { searchSingleDict } from "../../utils/search";
 import Definitions from "../dict/Definitions";
 
-function RecursiveLookup({ goToRecursiveLookupPage, hide }) {
+function RecursiveLookup({ yomichanDicts, db, goToRecursiveLookupPage, hide }) {
   const [searchResult, setSearchResult] = useState();
   const [searchResultLoading, setSearchResultLoading] = useState(false);
   const [searchResultError, setSearchResultError] = useState();
@@ -24,19 +24,23 @@ function RecursiveLookup({ goToRecursiveLookupPage, hide }) {
     return `/export/${p?.rdict}/${p?.rsearchmode}/${p?.rsearch}/${p?.ropeneditem}`;
   };
 
-  // rdict is reserved for the future. currently only a single dict is supported
-  // for recursive searches, but that may change.
-  const { rdict = "大辞林", rsearch } = useParams();
+  const { rdict = yomichanDicts?.[0] || "大辞林", rsearch } = useParams();
 
   useEffect(() => {
     setSearchResult(null);
     setSearchResultError(null);
+
+    if (!rdict || !rsearch) return;
+
     setSearchResultLoading(true);
-    getWordDefinitions({ dict: rdict, word: rsearch })
-      .then(([result, error]) => {
+
+    const word = rsearch;
+    searchSingleDict(word, rdict, db, yomichanDicts)
+      .then((resultObject) => {
+        const result = resultObject?.result;
         setSearchResult(result);
-        setSearchResultError(error);
       })
+      .catch((error) => setSearchResultError(error))
       .finally(() => setSearchResultLoading(false));
   }, [rdict, rsearch]);
 

@@ -24,6 +24,20 @@ export class SettingsPage {
   confirmDeleteButton() {
     return cy.get(`button[aria-label="Confirm deletion"]`);
   }
+
+  importYomichanDictionary(zipFileName) {
+    cy.visit("#/settings");
+
+    cy.contains("Import Dictionary");
+    this.selectFile(zipFileName);
+
+    // the name of the dict must be shown
+    cy.contains("JMdict (English)");
+    this.alias().type("jmdict");
+
+    // once the alias has been entered, the import button must be visible
+    this.importButton().click();
+  }
 }
 
 export class DictionaryPage {

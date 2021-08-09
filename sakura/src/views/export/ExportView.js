@@ -11,7 +11,7 @@ import ReactDOM from "react-dom";
 import { useRouteMatch } from "react-router-dom";
 import { pageView } from "../../telemetry";
 import { frequency } from "../../utils/frequency";
-import { searchYomichanAndApi } from "../../utils/search";
+import { searchSingleDict } from "../../utils/search";
 import * as wordParser from "../../utils/wordParser";
 import ExportViewDefinitionTokenProcessor from "../dict/tokenProcessors/exportViewDefinitionTokenProcessor";
 import { prettyText } from "../dict/utils";
@@ -152,12 +152,6 @@ const ExportView = ({ dicts, db, yomichanDicts }) => {
     }
 
     setLoading(true);
-    const [yomiSearchPromise, apiSearchPromises] = searchYomichanAndApi(
-      search,
-      db,
-      yomichanDicts,
-      dicts
-    );
 
     // OPTIMIZE: no need to wait for every result here - could show results once
     // the single result for this dict is present. Not an issue usually due to
@@ -165,13 +159,8 @@ const ExportView = ({ dicts, db, yomichanDicts }) => {
 
     // OPTIMIZE: if yomichan dicts are available, could still display something
     // even if the network goes down
-    yomiSearchPromise
-      .then(async (yomiResults) => {
-        const apiResults = await Promise.all(apiSearchPromises);
-        const allResults = [...yomiResults, ...apiResults];
-
-        // from all possible results, get the single result to be exported
-        const searchResult = allResults.find((res) => dict === res.alias);
+    searchSingleDict(search, dict, db, yomichanDicts)
+      .then(async (searchResult) => {
         const searchResultItem = searchResult?.result?.words?.[openeditem];
 
         if (!searchResultItem) {

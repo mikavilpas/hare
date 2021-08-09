@@ -26,18 +26,8 @@ describe("importing a yomichan dictionary", () => {
   });
 
   it("can import successfully", () => {
-    cy.visit("#/settings");
-
-    cy.contains("Import Dictionary");
     const page = new SettingsPage();
-    page.selectFile("jmdict_english_truncated.zip");
-
-    // the name of the dict must be shown
-    cy.contains("JMdict (English)");
-    page.alias().type("jmdict");
-
-    // once the alias has been entered, the import button must be visible
-    page.importButton().click();
+    page.importYomichanDictionary("jmdict_english_truncated.zip");
 
     // the import must have completed successfully
     cy.contains("Terms200");

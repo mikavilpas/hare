@@ -2,6 +2,28 @@ import { default as groupBy } from "lodash/groupBy";
 import { getWordDefinitions } from "../api";
 
 export function searchYomichanAndApi(word, db, yomichanDicts, dicts) {
+  const yomiSearchPromise = searchYomichan(word, db, yomichanDicts);
+  const apiSearchPromises = searchApi(word, dicts);
+
+  return [yomiSearchPromise || Promise.resolve([]), apiSearchPromises || []];
+}
+
+export async function searchSingleDict(word, dictAlias, db, yomichanDicts) {
+  const yomiDict = yomichanDicts.find((d) => d.alias === dictAlias);
+
+  if (yomiDict) {
+    const results = await searchYomichan(word, db, yomichanDicts);
+    const resultObject = results?.[0];
+    return resultObject;
+  } else {
+    const searchPromises = searchApi(word, [dictAlias]);
+    const resultObject = await searchPromises?.[0];
+    return resultObject;
+  }
+}
+
+// for now searches all dictionaries at the same time
+async function searchYomichan(word, db, yomichanDicts) {
   const yomiSearchPromise = db?.searchPrefix(word).then((terms) => {
     const results = terms.map((term) => {
       return {
@@ -18,12 +40,15 @@ export function searchYomichanAndApi(word, db, yomichanDicts, dicts) {
     return Object.entries(byDictionary).map(([dictionaryName, words]) => {
       // get the alias for the dictionary, such as "jmdict"
       const dictionary = yomichanDicts.find((d) => d.name === dictionaryName);
-      const alias = dictionary.alias;
+      const alias = dictionary?.alias || "";
       return { alias, word, result: { words }, error: undefined };
     });
   });
+  return yomiSearchPromise;
+}
 
-  const apiSearchPromises = dicts?.map((dict) =>
+function searchApi(word, dicts) {
+  const promiseArray = dicts?.map((dict) =>
     getWordDefinitions({
       dict: dict,
       word: word,
@@ -32,5 +57,5 @@ export function searchYomichanAndApi(word, db, yomichanDicts, dicts) {
     })
   );
 
-  return [yomiSearchPromise || Promise.resolve([]), apiSearchPromises || []];
+  return promiseArray;
 }

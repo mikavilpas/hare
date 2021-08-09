@@ -54,7 +54,10 @@ function DictView({
     }
   }, [dicts, yomichanDicts]);
 
-  const goToRecursiveLookupPage = (word, dict = "大辞林") => {
+  const goToRecursiveLookupPage = (
+    word,
+    dict = yomichanDicts?.[0]?.alias || "大辞林"
+  ) => {
     const url = generatePath(urls.recursiveLookup, {
       ...match.params,
       rdict: dict,
@@ -123,6 +126,8 @@ function DictView({
         />
       </main>
       <RecursiveLookup
+        yomichanDicts={yomichanDicts}
+        db={db}
         goToRecursiveLookupPage={goToRecursiveLookupPage}
         hide={() => {
           const dictUrl = generatePath(urls.lookup, match.params);
