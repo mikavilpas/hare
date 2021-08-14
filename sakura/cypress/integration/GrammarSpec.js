@@ -11,10 +11,5 @@ describe("grammar view", () => {
 
     // a result must now be visible
     cy.contains("ということは");
-
-    cy.get("@consoleLog").should("be.calledWith", "gtag:", "page_view", {
-      page_title: "grammar",
-      page_path: undefined,
-    });
   });
 });

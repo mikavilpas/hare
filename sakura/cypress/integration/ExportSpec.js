@@ -1,10 +1,6 @@
 describe("export view", () => {
   it("can display the export view", () => {
-    cy.visit("#/export/大辞林/prefix/犬/0", {
-      onBeforeLoad(win) {
-        cy.spy(win.console, "log").as("consoleLog");
-      },
-    });
+    cy.visit("#/export/大辞林/prefix/犬/0");
 
     cy.contains("いぬ【犬・狗】");
     cy.contains("TXTをコピー");
@@ -22,11 +18,6 @@ describe("export view", () => {
     cy.contains("Yourei sentences");
     cy.contains("Immersion Kit");
     cy.get("[aria-label='Copy example sentence']").should("be.visible");
-
-    cy.get("@consoleLog").should("be.calledWith", "gtag:", "page_view", {
-      page_title: "export",
-      page_path: "/大辞林",
-    });
 
     cy.get("#nav-menu").should("be.visible");
   });
