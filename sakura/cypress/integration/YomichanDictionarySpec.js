@@ -3,7 +3,9 @@
 import { DictionaryPage, SettingsPage } from "../support/pages";
 
 describe("dictionary view with yomichan dictionaries", () => {
-  it("displays the search box and a list of dictionaries", () => {
+  beforeEach(() => {
+    indexedDB.deleteDatabase("hare-yomichan");
+
     // set up a yomichan dictionary
     const settingsPage = new SettingsPage();
     settingsPage.visit();
@@ -11,7 +13,9 @@ describe("dictionary view with yomichan dictionaries", () => {
     settingsPage.alias().type("jmdict");
     settingsPage.importButton().click();
     cy.contains("jmdict"); // wait until imported
+  });
 
+  it("displays the search box and a list of dictionaries", () => {
     // the dictionary must be visible on the dictionary page
     const dictionaryPage = new DictionaryPage();
     dictionaryPage.visit();
@@ -38,5 +42,10 @@ describe("dictionary view with yomichan dictionaries", () => {
 
     // can open the export view
     dictionaryPage.exportButton().click();
+  });
+
+  it("displays no results for recursive search", () => {
+    cy.visit("#/dict/広辞苑/prefix/学ぶ/0/recursive/jmdict/prefix/学ぶ/0");
+    cy.contains("No results found for 学ぶ.");
   });
 });

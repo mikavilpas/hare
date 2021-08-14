@@ -27,11 +27,10 @@ function RecursiveLookup({ yomichanDicts, db, goToRecursiveLookupPage, hide }) {
   const { rdict = yomichanDicts?.[0] || "大辞林", rsearch } = useParams();
 
   useEffect(() => {
-    setSearchResult(null);
-    setSearchResultError(null);
-
     if (!rdict || !rsearch) return;
 
+    setSearchResult(null);
+    setSearchResultError(null);
     setSearchResultLoading(true);
 
     const word = rsearch;
@@ -64,7 +63,7 @@ function RecursiveLookup({ yomichanDicts, db, goToRecursiveLookupPage, hide }) {
       );
     }
 
-    if (searchResult?.words?.length === 0) {
+    if (!searchResult?.words?.length) {
       return (
         <Alert variant={"secondary"}>
           <p>No results found for {rsearch}.</p>
