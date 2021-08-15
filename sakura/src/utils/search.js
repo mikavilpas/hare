@@ -13,7 +13,7 @@ export async function searchSingleDict(word, dictAlias, db, yomichanDicts) {
 
   if (yomiDict) {
     const results = await searchYomichan(word, db, yomichanDicts);
-    const resultObject = results?.[0];
+    const resultObject = results?.[yomiDict.name];
     return resultObject;
   } else {
     const searchPromises = searchApi(word, [dictAlias]);
@@ -37,11 +37,12 @@ async function searchYomichan(word, db, yomichanDicts) {
     // (English)" so they can be saved into individual dictionaries' results
     const byDictionary = groupBy(results, (t) => t.term.dictionaryName);
 
-    return Object.entries(byDictionary).map(([dictionaryName, words]) => {
+    return mapValues(byDictionary, ([dictionaryName, words]) => {
       // get the alias for the dictionary, such as "jmdict"
       const dictionary = yomichanDicts.find((d) => d.name === dictionaryName);
       const alias = dictionary?.alias || "";
-      return { alias, word, result: { words }, error: undefined };
+      const val = { alias, word, result: { words }, error: undefined };
+      return [dictionaryName, val];
     });
   });
   return yomiSearchPromise;
@@ -58,4 +59,8 @@ function searchApi(word, dicts) {
   );
 
   return promiseArray;
+}
+
+function mapValues(obj, mapFunction) {
+  return Object.fromEntries(Object.entries(obj).map(mapFunction));
 }

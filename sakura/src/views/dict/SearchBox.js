@@ -70,10 +70,12 @@ const SearchBox = ({
     );
 
     yomiSearchPromise?.then((dictsAndResults) => {
-      dictsAndResults?.map((resultObject) => {
-        const { alias, word, result, error } = resultObject;
-        singleDictSearchResult(alias, word, result, error);
-      });
+      Object.entries(dictsAndResults || {}).forEach(
+        ([dictAlias, resultObject]) => {
+          const { alias, word, result, error } = resultObject;
+          singleDictSearchResult(alias, word, result, error);
+        }
+      );
     });
     apiSearchPromises?.map((p) =>
       p?.then((resultObject) => {

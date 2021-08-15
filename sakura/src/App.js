@@ -34,6 +34,7 @@ function App() {
   // refer to it simply as "db"
   const yomichanDbWorker = useRef();
   const [yomichanDicts, setYomichanDicts] = useState([]);
+  const [yomichanDictsAndSettings, setYomichanDictsAndSettings] = useState([]);
 
   useEffect(() => {
     startGoogleAnalytics();
@@ -43,6 +44,9 @@ function App() {
       // initialize the worker thread only once so there is no resource leakage
       yomichanDbWorker.current = worker;
       worker.getDictionaries().then((ds) => setYomichanDicts(ds));
+      worker.getDictionariesAndSettings().then((ds) => {
+        setYomichanDictsAndSettings(ds);
+      });
     });
   }, []);
 
@@ -90,6 +94,7 @@ function App() {
                 setDicts={setDicts}
                 db={yomichanDbWorker.current}
                 yomichanDicts={yomichanDicts}
+                yomichanDictsAndSettings={yomichanDictsAndSettings}
                 dictsLoading={dictsLoading}
                 dictsLoadingError={dictsLoadingError}
               />
@@ -107,11 +112,14 @@ function App() {
             <Route path={["/settings"]}>
               <SettingsView
                 db={yomichanDbWorker.current}
-                yomichanDicts={yomichanDicts}
-                refreshYomichanDicts={() => {
+                yomichanDictsAndSettings={yomichanDictsAndSettings}
+                refreshYomichanDictsAndSettings={() => {
                   yomichanDbWorker.current
                     ?.getDictionaries()
                     .then((ds) => setYomichanDicts(ds));
+                  yomichanDbWorker.current
+                    ?.getDictionariesAndSettings()
+                    .then((ds) => setYomichanDictsAndSettings(ds));
                 }}
               />
             </Route>

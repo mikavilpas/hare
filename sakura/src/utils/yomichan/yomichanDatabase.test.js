@@ -1,15 +1,15 @@
 /* eslint-disable jest/valid-expect, no-undef, jest/valid-expect-in-promise */
 
-import IDBKeyRange from "fake-indexeddb/lib/FDBKeyRange";
-import YomichanDatabase from "./yomichanDatabase";
+import YomichanDatabase, {
+  databaseVersions,
+  DictionarySetting,
+  YomichanDictionary,
+} from "./yomichanDatabase";
+// import { newDatabase } from "./yomichanTestUtils";
 
 function newDatabase() {
-  const FDBFactory = require("fake-indexeddb/lib/FDBFactory");
-
-  // Whenever you want a fresh indexedDB
-  const indexedDB = new FDBFactory();
-  const db = new YomichanDatabase({ indexedDB, IDBKeyRange });
-  return db;
+  indexedDB.deleteDatabase("hare-yomichan");
+  return new YomichanDatabase();
 }
 
 describe("yomichan database", () => {
@@ -173,46 +173,121 @@ describe("adding a dictionary", () => {
     const db = newDatabase();
 
     cy.wrap(
-      db.addDictionary("dictionaryName", "alias", (dict) => {
-        db.addTerms(dict.name, terms);
-      })
-    ).then(() => {
-      cy.wrap(db.db.dictionaries.toArray()).then((actual) => {
-        expect(actual).to.eql([
-          {
-            name: "dictionaryName",
-            alias: "alias",
+      db
+        .addDictionary("testDict", "alias")
+        .then(() => db.addTerms("testDict", terms))
+    ).then(async () => {
+      expect(await db.db.dictionaries.toArray()).to.eql([
+        { name: "testDict", alias: "alias" },
+      ]);
+
+      expect(await db.db.dictionarySettings.toArray()).to.eql([
+        {
+          dictionaryName: "testDict",
+          positionType: "before",
+          position: 0,
+        },
+      ]);
+    });
+  });
+
+  it("can get a dictionary and its settings", () => {
+    const db = newDatabase();
+    const prepare = async () => {
+      await db.db.dictionaries.add(new YomichanDictionary("testDict", "tdict"));
+      await db.db.dictionarySettings.add(
+        new DictionarySetting("testDict", "before", 0)
+      );
+
+      return db.getDictionariesAndSettings();
+    };
+
+    cy.wrap(prepare()).then((ds) => {
+      expect(ds).eql([
+        {
+          dictionary: {
+            name: "testDict",
+            alias: "tdict",
           },
-        ]);
-      });
+          setting: {
+            dictionaryName: "testDict",
+            positionType: "before",
+            position: 0,
+          },
+        },
+      ]);
+    });
+  });
+
+  it("can update a dictionary's settings", () => {
+    const db = newDatabase();
+    cy.wrap(
+      db.addDictionary("testDict", "alias").then(() =>
+        db.updateDictionarySettings("testDict", {
+          positionType: "after",
+          position: 1,
+        })
+      )
+    ).then(async () => {
+      expect(await db.db.dictionarySettings.toArray()).to.eql([
+        {
+          dictionaryName: "testDict",
+          positionType: "after",
+          position: 1,
+        },
+      ]);
     });
   });
 });
 
 describe("deleting a dictionary", () => {
   it("can delete", () => {
-    const terms = [
-      ["藍", "あい", "n", "", 615, ["indigo (dye)"], 1549400, "P news"],
-    ];
     const db = newDatabase();
 
-    cy.wrap(
-      db.addDictionary("dictionaryName", "alias", (dict) => {
-        db.addTerms(dict.name, terms);
-      })
-    )
-      .then(() => {
-        cy.wrap(db.deleteDictionary("dictionaryName"));
-      })
-      .then(() => {
-        cy.wrap(db.db.dictionaries.toArray()).then((actual) => {
-          expect(actual).to.eql([]);
-        });
-      })
-      .then(() => {
-        cy.wrap(db.db.terms.toArray()).then((actual) => {
-          expect(actual).to.eql([]);
-        });
+    const prepare = async () => {
+      await db
+        .addDictionary("dictionaryName", "alias", 0, "after")
+        .then(() =>
+          db.addTerms("dictionaryName", [
+            ["藍", "あい", "n", "", 615, ["indigo (dye)"], 1549400, "P news"],
+          ])
+        );
+    };
+
+    cy.wrap(prepare()).then(async () => {
+      await db.deleteDictionary("dictionaryName");
+      expect(await db.db.dictionaries.toArray()).to.eql([]);
+      expect(await db.db.terms.toArray()).to.eql([]);
+      expect(await db.db.dictionarySettings.toArray()).to.eql([]);
+    });
+  });
+});
+
+describe("migrations", () => {
+  it("migrates version 1->2", () => {
+    indexedDB.deleteDatabase("hare-yomichan");
+
+    const prepare = async () => {
+      // add v1 data
+      const db = databaseVersions.version01();
+      db.open();
+      await db.dictionaries.add({
+        name: "name",
+        alias: "alias",
       });
+    };
+
+    cy.wrap(prepare()).then(async () => {
+      // opening version02 must trigger a migration that adds an entry to
+      // dictionarySettings
+      const db = databaseVersions.version02();
+      expect(await db.dictionarySettings.toArray()).to.eql([
+        {
+          dictionaryName: "name",
+          positionType: "start",
+          position: 0,
+        },
+      ]);
+    });
   });
 });

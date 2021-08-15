@@ -15,11 +15,23 @@ import { registerGestures } from "./gestures";
 import SearchBox from "./SearchBox";
 import { dictInfo, urls } from "./utils";
 
+const defaultYomiDict = (yomichanDictsAndSettings) => {
+  if (!yomichanDictsAndSettings?.length) return null;
+
+  const before = yomichanDictsAndSettings.filter(
+    (ds) => ds.setting.positionType === "before"
+  );
+  before.sort((a, b) => a.setting.position - b.setting.position);
+  const { dictionary } = before[0];
+  return dictionary;
+};
+
 function DictView({
   dicts,
   setDicts,
   db,
   yomichanDicts,
+  yomichanDictsAndSettings,
   dictsLoading,
   dictsLoadingError,
 }) {
@@ -56,7 +68,7 @@ function DictView({
 
   const goToRecursiveLookupPage = (
     word,
-    dict = yomichanDicts?.[0]?.alias || "大辞林"
+    dict = defaultYomiDict(yomichanDictsAndSettings)?.alias || "大辞林"
   ) => {
     const url = generatePath(urls.recursiveLookup, {
       ...match.params,
@@ -104,7 +116,7 @@ function DictView({
         currentDict={dictname}
         dicts={dicts}
         setDicts={setDicts}
-        yomichanDicts={yomichanDicts}
+        yomichanDictsAndSettings={yomichanDictsAndSettings}
         searchResult={searchResult}
         loading={dictsLoading}
         error={dictsLoadingError}

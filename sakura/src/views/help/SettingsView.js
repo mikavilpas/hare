@@ -24,7 +24,11 @@ const Section = ({ children }) => {
   return <div className="mb-4">{children}</div>;
 };
 
-const SettingsView = ({ db, yomichanDicts, refreshYomichanDicts }) => {
+const SettingsView = ({
+  db,
+  yomichanDictsAndSettings,
+  refreshYomichanDictsAndSettings,
+}) => {
   useEffect(() => {
     pageView("settings");
   }, []);
@@ -56,15 +60,32 @@ const SettingsView = ({ db, yomichanDicts, refreshYomichanDicts }) => {
             </Col>
           </Row>
           <Row>
-            {yomichanDicts?.length > 0 ? (
-              <ExistingDictionary
-                dictionary={yomichanDicts[0]}
-                onDictionaryDeleted={() => refreshYomichanDicts()}
-              />
-            ) : (
-              <ImportDictionaryWizard
-                onImportCompleted={() => refreshYomichanDicts()}
-              />
+            {yomichanDictsAndSettings?.map((obj, i) => {
+              const { dictionary, setting } = obj;
+              return (
+                <Col xs={12} sm={6}>
+                  <ExistingDictionary
+                    key={i}
+                    db={db}
+                    dictionary={dictionary}
+                    settings={setting}
+                    onDictionaryDeleted={() =>
+                      refreshYomichanDictsAndSettings()
+                    }
+                    updateSettings={(newSettings) => {
+                      db.updateDictionarySettings(dictionary.name, newSettings);
+                      refreshYomichanDictsAndSettings();
+                    }}
+                  />
+                </Col>
+              );
+            })}
+            {yomichanDictsAndSettings?.length < 2 && (
+              <Col xs={12} sm={6}>
+                <ImportDictionaryWizard
+                  onImportCompleted={() => refreshYomichanDictsAndSettings()}
+                />
+              </Col>
             )}
           </Row>
         </Section>

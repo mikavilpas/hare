@@ -59,7 +59,7 @@ const Dictionaries = ({
   currentDict,
   dicts,
   setDicts,
-  yomichanDicts,
+  yomichanDictsAndSettings,
   searchResult,
   loading,
   error,
@@ -72,6 +72,19 @@ const Dictionaries = ({
       history.push(`/dict/${d}/${searchmode}/${search}/0`);
     }
   }
+
+  const YomiDictButton = ({ d }) => {
+    const alias = d.alias;
+    const ownSearchResult = searchResult?.[alias] || searchResult?.[d];
+    return (
+      <DictionaryLink
+        alias={alias}
+        ownSearchResult={ownSearchResult}
+        currentDict={currentDict}
+        setDict={setDict}
+      />
+    );
+  };
 
   if (error) {
     return <Alert>Unable to load dictionaries. {error.toString()}</Alert>;
@@ -96,24 +109,28 @@ const Dictionaries = ({
       );
     });
 
-    const yomiDictButtons = yomichanDicts?.map((d, i) => {
-      const alias = d.alias;
-      const ownSearchResult = searchResult?.[alias] || searchResult?.[d];
-      return (
-        <DictionaryLink
-          key={i}
-          alias={alias}
-          ownSearchResult={ownSearchResult}
-          currentDict={currentDict}
-          setDict={setDict}
-        />
+    const yomiDicts = (positionType) => {
+      const items = yomichanDictsAndSettings.filter(
+        (ds) => ds.setting.positionType === positionType
       );
-    });
+      // ascending
+      items.sort((a, b) => a.setting.position - b.setting.position);
+      return items;
+    };
+
+    const beforeYomiDictButtons = yomiDicts("before").map((ds, i) => (
+      <YomiDictButton key={i} d={ds.dictionary} />
+    ));
+
+    const afterYomiDictButtons = yomiDicts("after").map((ds, i) => (
+      <YomiDictButton key={i} d={ds.dictionary} />
+    ));
 
     return (
       <ButtonGroup toggle id="dictionary-list">
-        {yomiDictButtons}
+        {beforeYomiDictButtons}
         {apiDictButtons}
+        {afterYomiDictButtons}
       </ButtonGroup>
     );
   }
