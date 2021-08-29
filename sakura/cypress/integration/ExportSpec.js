@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe("export view", () => {
   it("can display the export view", () => {
     cy.visit("#/export/大辞林/prefix/犬/0");
@@ -25,5 +27,10 @@ describe("export view", () => {
   it("exports the correct word", () => {
     cy.visit("#/export/日国/prefix/幸い/0");
     cy.contains("●幸いする");
+  });
+
+  it("can copy sentences from an example sentence block", () => {
+    cy.visit("/#/export/新明解/prefix/金品/0");
+    cy.get(".example-sentence-group .quote").should("have.length.above", 0);
   });
 });
