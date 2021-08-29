@@ -55,7 +55,7 @@ export const exampleSentenceBlock = p.noCharOf("／」").pipe(
   map((tokens) => {
     // "split" into many quotes instead of one huge example sentence block
     const sentences = tokens.map((t) => {
-      return tokenFactory.exampleSentence(`「${t} 」`, t);
+      return tokenFactory.exampleSentence([`「${t} 」`], t);
     });
     return tokenFactory.exampleSentenceGroup(sentences);
   }),

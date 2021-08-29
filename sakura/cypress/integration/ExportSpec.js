@@ -29,7 +29,12 @@ describe("export view", () => {
     cy.contains("●幸いする");
   });
 
-  it("can copy sentences from an example sentence block", () => {
+  it("can copy example sentences", () => {
+    // copying single sentences
+    cy.visit("/#/export/広辞苑/prefix/白/17");
+    cy.get(".quote").should("have.length.above", 0);
+
+    // copying works from a shinmeikai example sentence block
     cy.visit("/#/export/新明解/prefix/金品/0");
     cy.get(".example-sentence-group .quote").should("have.length.above", 0);
   });

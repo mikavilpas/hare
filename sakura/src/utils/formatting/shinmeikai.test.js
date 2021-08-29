@@ -263,44 +263,45 @@ describe("full definitions", () => {
                 type: "exampleSentenceGroup",
                 content: [
                   {
-                    content: "「緒戦の勝利に―を得る 」",
+                    content: ["「緒戦の勝利に―を得る 」"],
                     innerQuote: "緒戦の勝利に―を得る",
                     type: "exampleSentence",
                   },
                   {
-                    content: "「―を△増す（盛り返す・失う） 」",
+                    content: ["「―を△増す（盛り返す・失う） 」"],
                     innerQuote: "―を△増す（盛り返す・失う）",
                     type: "exampleSentence",
                   },
                   {
-                    content: "「―に押される 」",
+                    content: ["「―に押される 」"],
                     innerQuote: "―に押される",
                     type: "exampleSentence",
                   },
                   {
-                    content: "「―に乗る 」",
+                    content: ["「―に乗る 」"],
                     innerQuote: "―に乗る",
                     type: "exampleSentence",
                   },
                   {
-                    content: "「放水の―が弱る 」",
+                    content: ["「放水の―が弱る 」"],
                     innerQuote: "放水の―が弱る",
                     type: "exampleSentence",
                   },
                   {
-                    content:
+                    content: [
                       "「―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した 」",
+                    ],
                     innerQuote:
                       "―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した",
                     type: "exampleSentence",
                   },
                   {
-                    content: "「走った―〔＝はずみ〕で植木鉢を割った 」",
+                    content: ["「走った―〔＝はずみ〕で植木鉢を割った 」"],
                     innerQuote: "走った―〔＝はずみ〕で植木鉢を割った",
                     type: "exampleSentence",
                   },
                   {
-                    content: "「―よく〔＝強い勢いで〕…する 」",
+                    content: ["「―よく〔＝強い勢いで〕…する 」"],
                     innerQuote: "―よく〔＝強い勢いで〕…する",
                     type: "exampleSentence",
                   },
@@ -326,43 +327,44 @@ describe("example sentence blocks", () => {
       type: "exampleSentenceGroup",
       content: [
         {
-          content: "「緒戦の勝利に―を得る 」",
+          content: ["「緒戦の勝利に―を得る 」"],
           innerQuote: "緒戦の勝利に―を得る",
           type: "exampleSentence",
         },
         {
-          content: "「―を△増す（盛り返す・失う） 」",
+          content: ["「―を△増す（盛り返す・失う） 」"],
           innerQuote: "―を△増す（盛り返す・失う）",
           type: "exampleSentence",
         },
         {
-          content: "「―に押される 」",
+          content: ["「―に押される 」"],
           innerQuote: "―に押される",
           type: "exampleSentence",
         },
         {
-          content: "「―に乗る 」",
+          content: ["「―に乗る 」"],
           innerQuote: "―に乗る",
           type: "exampleSentence",
         },
         {
-          content: "「放水の―が弱る 」",
+          content: ["「放水の―が弱る 」"],
           innerQuote: "放水の―が弱る",
           type: "exampleSentence",
         },
         {
-          content:
+          content: [
             "「―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した 」",
+          ],
           innerQuote: "―〔＝相手を倒そうとする力が〕余って土俵の外へ飛び出した",
           type: "exampleSentence",
         },
         {
-          content: "「走った―〔＝はずみ〕で植木鉢を割った 」",
+          content: ["「走った―〔＝はずみ〕で植木鉢を割った 」"],
           innerQuote: "走った―〔＝はずみ〕で植木鉢を割った",
           type: "exampleSentence",
         },
         {
-          content: "「―よく〔＝強い勢いで〕…する 」",
+          content: ["「―よく〔＝強い勢いで〕…する 」"],
           innerQuote: "―よく〔＝強い勢いで〕…する",
           type: "exampleSentence",
         },
