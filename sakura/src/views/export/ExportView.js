@@ -356,6 +356,15 @@ const ExportView = ({ dicts, db, yomichanDicts }) => {
                   </SearchLinkWithIcon>
                 </li>
                 <li>
+                  <SearchLinkWithIcon
+                    word={selectedWord}
+                    iconUrl={"https://massif.la/static/favicon_256.png"}
+                    url={`https://massif.la/ja/search?q=${selectedWord}`}
+                  >
+                    Massif
+                  </SearchLinkWithIcon>
+                </li>
+                <li>
                   <SearchLink
                     word={selectedWord}
                     icon={

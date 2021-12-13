@@ -18,6 +18,7 @@ describe("export view", () => {
     cy.contains("Youglish");
     cy.contains("Audio sentences");
     cy.contains("Yourei sentences");
+    cy.contains("Massif");
     cy.contains("Immersion Kit");
     cy.get("[aria-label='Copy example sentence']").should("be.visible");
 
