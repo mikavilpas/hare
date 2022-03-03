@@ -29,11 +29,15 @@ export function parse(inputText) {
   }
 }
 
+// https://www.fileformat.info/info/unicode/char/3000/index.htm
+const fullWidthSpace = "　";
+
 const normalize = (str) =>
   str
     .replaceAll(/[‐・-]/g, "")
     .replaceAll("●", "")
-    .replaceAll("=", "");
+    .replaceAll("=", "")
+    .replaceAll(fullWidthSpace, "");
 const wordChar = p.noCharOf("【】〖〗{}（）〔〕");
 const kanjiChar = p.noCharOf("・【】〖〗{}（）〔〕()");
 

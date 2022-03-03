@@ -11,6 +11,13 @@ describe("can parse headings", () => {
     });
   });
 
+  it("can parse words that erroneously contain spaces", () => {
+    assertParses(wordParser.parse("しなやか "), {
+      kana: "しなやか ",
+      kanjiOptions: [],
+    });
+  });
+
   it("case with a hyphen in the kana", () => {
     assertParses(wordParser.parse("そう‐さ【捜査】サウ‥"), {
       kanjiOptions: ["捜査"],
