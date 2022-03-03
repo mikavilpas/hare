@@ -30,7 +30,10 @@ export function parse(inputText) {
 }
 
 const normalize = (str) =>
-  str.replaceAll(/[‐・-]/g, "").replaceAll("●", "").replaceAll("=", "");
+  str
+    .replaceAll(/[‐・-]/g, "")
+    .replaceAll("●", "")
+    .replaceAll("=", "");
 const wordChar = p.noCharOf("【】〖〗{}（）〔〕");
 const kanjiChar = p.noCharOf("・【】〖〗{}（）〔〕()");
 
