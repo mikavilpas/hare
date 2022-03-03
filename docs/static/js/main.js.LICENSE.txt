@@ -5,6 +5,18 @@ object-assign
 */
 
 /*!
+
+JSZip v3.7.1 - A JavaScript class for generating and reading zip files
+<http://stuartk.com/jszip>
+
+(c) 2009-2016 Stuart Knightley <stuart [at] stuartk.com>
+Dual licenced under the MIT license or GPLv3. See https://raw.github.com/Stuk/jszip/master/LICENSE.markdown.
+
+JSZip uses the library pako released under the MIT license :
+https://github.com/nodeca/pako/blob/master/LICENSE
+*/
+
+/*!
          * Determine if an object is a Buffer
          *
          * @author   Feross Aboukhadijeh <https://feross.org>
@@ -16,13 +28,6 @@ object-assign
   Licensed under the MIT License (MIT), see
   http://jedwatson.github.io/classnames
 */
-
-/*!
- * The buffer module from node.js, for the browser.
- *
- * @author   Feross Aboukhadijeh <http://feross.org>
- * @license  MIT
- */
 
 /*! ./_a-function */
 
@@ -235,8 +240,6 @@ object-assign
 /*! exports provided: read, write, key, invalidate, serializeQuery, default */
 
 /*! exports provided: setup, setupCache, serializeQuery, default */
-
-/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
 /*! is-buffer */
 
