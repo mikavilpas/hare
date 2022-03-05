@@ -102,7 +102,7 @@ describe("can parse headings", () => {
     );
   });
 
-  it("can parse headings with custom kanji in them ", () => {
+  it("can parse headings with custom kanji in them", () => {
     assertParses(
       wordParser.parse("さんじっこくよふねのはじまり【三十石{{zcc4d}}始】"),
       {
@@ -112,7 +112,7 @@ describe("can parse headings", () => {
     );
   });
 
-  it("can parse headings with only a custom kanji in them ", () => {
+  it("can parse headings with only a custom kanji in them", () => {
     assertParses(wordParser.parse("{{zbe4b}}"), {
       kana: "",
       kanjiOptions: ["{{zbe4b}}"],
