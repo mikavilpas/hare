@@ -34,7 +34,9 @@ export default class BbcodeTokenProcessor {
     // TODO render <a>
     if (t.type === "reference") return this.convertReference(t, content);
     if (t.type === "image") return this.convertImage(t, content);
+    if (t.type === "wav") return this.convertWav(t, content);
 
+    debugger;
     return t?.content || t; // unknown tags or no tags at all
   }
 
@@ -76,5 +78,9 @@ export default class BbcodeTokenProcessor {
       // text analysis is complete
       return t.asText;
     }
+  }
+
+  convertWav(t, content) {
+    return `<span title="(audio not supported)" class="text-muted"><i class="bi bi-volume-mute-fill"></i></span>${content}`;
   }
 }

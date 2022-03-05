@@ -1,6 +1,7 @@
 import * as p from "parjs";
 import {
   backtrack,
+  not,
   later,
   many,
   manySepBy,
@@ -152,12 +153,29 @@ const image = () => {
   );
 };
 
+// parses a tag like [wav page=308713,offset=1955]blabla[/wav]
+const complexTag = (tagName) => {
+  return p.string(`[${tagName} `).pipe(
+    then(
+      //
+      propertyKeyValueListing,
+      p.string("]"),
+      p.anyChar().pipe(manyTill(p.string(`[/${tagName}]`)), stringify())
+    ),
+    map((things) => {
+      const [_start, properties, _startEnd, contents] = things;
+      return { type: tagName, properties: properties, content: [contents] };
+    })
+  );
+};
+
 bbcodeTag.init(
   nestableTag.pipe(
     or(
       // these tags are complex and they also cannot be nested
       reference(),
-      image()
+      image(),
+      complexTag("wav")
     )
   )
 );

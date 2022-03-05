@@ -1,6 +1,7 @@
 /* eslint-disable jest/valid-expect */
 
 import * as bbcode from "./bbcode";
+import { assertParses } from "./testUtils";
 
 describe("tokenizing", () => {
   it("can tokenize a tag followed by some text", () => {
@@ -245,5 +246,25 @@ describe("tokenizing", () => {
       value: ["[japanese-is-cool]contents here[/japanese-is-cool]"],
       kind: "OK",
     });
+  });
+
+  it("parses wav tags", () => {
+    assertParses(
+      bbcode.tokenize(
+        "[wav page=308713,offset=1955,endpage=308832,endoffset=458]→「月光」（ベートーベン）[音声][/wav]"
+      ),
+      [
+        {
+          type: "wav",
+          properties: {
+            page: "308713",
+            offset: "1955",
+            endpage: "308832",
+            endoffset: "458",
+          },
+          content: ["→「月光」（ベートーベン）[音声]"],
+        },
+      ]
+    );
   });
 });
