@@ -14,6 +14,7 @@ import { frequency } from "../../utils/frequency";
 import { searchSingleDict } from "../../utils/search";
 import * as wordParser from "../../utils/wordParser";
 import ExportViewDefinitionTokenProcessor from "../dict/tokenProcessors/exportViewDefinitionTokenProcessor";
+import ToPlainTextTokenProcessor from "../dict/tokenProcessors/toPlainTextTokenProcessor";
 import { prettyText } from "../dict/utils";
 import Navbar from "../navbar/Navbar";
 
@@ -111,7 +112,6 @@ const ExportView = ({ dicts, db, yomichanDicts }) => {
   const search = match.params.search;
   const openeditem = match.params.openeditem;
 
-  const [copiableText, setCopiableText] = useState();
   const [wordOptions, setWordOptions] = useState([]);
   const [selectedWord, setSelectedWord] = useState();
   const buttonsRef = useRef();
@@ -172,11 +172,16 @@ const ExportView = ({ dicts, db, yomichanDicts }) => {
 
           // parse possible words
           try {
-            const parseResult = wordParser.parse(searchResultItem.heading);
+            debugger;
+            const toPlainText = new ToPlainTextTokenProcessor();
+            const heading = toPlainText.convertInputText(
+              searchResultItem.heading
+            );
+            const parseResult = wordParser.parse(heading);
             const options = [
               ...parseResult.value.kanjiOptions,
               parseResult.value.kana,
-              searchResultItem.heading,
+              heading,
             ];
 
             options.sort((a, b) => frequency(b)?.rating - frequency(a)?.rating);
