@@ -1,5 +1,13 @@
+import axios from "axios";
 import { default as groupBy } from "lodash/groupBy";
 import { getWordDefinitions } from "../api";
+
+export async function searchAudioExampleSentencesApi(word) {
+  const apiUrl =
+    "https://4o6cbb7hwwxbtxiygkdrw3bvr40ikrdl.lambda-url.eu-north-1.on.aws/";
+  const response = await axios.get(apiUrl, { params: { query: word } });
+  return response.data || [];
+}
 
 export function searchYomichanAndApi(word, db, yomichanDicts, dicts) {
   const yomiSearchPromise = searchYomichan(word, db, yomichanDicts);

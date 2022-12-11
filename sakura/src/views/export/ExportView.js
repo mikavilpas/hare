@@ -11,7 +11,10 @@ import ReactDOM from "react-dom";
 import { useRouteMatch } from "react-router-dom";
 import { pageView } from "../../telemetry";
 import { frequency } from "../../utils/frequency";
-import { searchSingleDict } from "../../utils/search";
+import {
+  searchAudioExampleSentencesApi,
+  searchSingleDict,
+} from "../../utils/search";
 import * as wordParser from "../../utils/wordParser";
 import ExportViewDefinitionTokenProcessor from "../dict/tokenProcessors/exportViewDefinitionTokenProcessor";
 import ToPlainTextTokenProcessor from "../dict/tokenProcessors/toPlainTextTokenProcessor";
@@ -106,6 +109,8 @@ const ExportView = ({ dicts, db, yomichanDicts }) => {
   const [searchResult, setSearchResult] = useState();
   const [searchError, setSearchError] = useState();
   const [definitionNode, setDefinitionNode] = useState();
+  const [audioSentences, setAudioSentences] = useState([]);
+  const [audioSentencesLoading, setAudioSentencesLoading] = useState(false);
 
   const match = useRouteMatch();
   const dict = match.params.dictname;
@@ -172,7 +177,6 @@ const ExportView = ({ dicts, db, yomichanDicts }) => {
 
           // parse possible words
           try {
-            debugger;
             const toPlainText = new ToPlainTextTokenProcessor();
             const heading = toPlainText.convertInputText(
               searchResultItem.heading
@@ -199,6 +203,13 @@ const ExportView = ({ dicts, db, yomichanDicts }) => {
         }
       })
       .finally(() => setLoading(false));
+
+    setAudioSentencesLoading(true);
+    searchAudioExampleSentencesApi(search)
+      .then((searchResultsArray) => {
+        setAudioSentences(searchResultsArray);
+      })
+      .finally(() => setAudioSentencesLoading(false));
   }, [match.params, dicts, db, openeditem]);
 
   if (loading || !dicts?.length || !search) {
@@ -265,6 +276,59 @@ const ExportView = ({ dicts, db, yomichanDicts }) => {
               })}
             </Form.Control>
           </Row>
+          <hr />
+          <Row className="mt-2">
+            <Col>
+              <div className="mt-1">例文</div>
+            </Col>
+          </Row>
+          {audioSentencesLoading ? (
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          ) : null}
+          {audioSentences?.length > 0 ? (
+            <Row className="mt-2">
+              <Col>
+                <table id="example-sentences" className="w-100">
+                  <tbody>
+                    {audioSentences.map((sentenceRecord) => (
+                      <tr
+                        className="result-item"
+                        key={sentenceRecord.audio_jap}
+                      >
+                        <td className="col-4">
+                          <span className="p-1 text-secondary mr-1">
+                            {sentenceRecord.jap}
+                          </span>
+                          <CopyQuoteButton text={sentenceRecord.jap} />
+                        </td>
+
+                        <td className="col-4">
+                          {sentenceRecord.eng ? (
+                            <>
+                              <span className="text-muted mr-1">
+                                {sentenceRecord.eng}
+                              </span>
+                              <CopyQuoteButton text={sentenceRecord.eng} />
+                            </>
+                          ) : null}
+                        </td>
+
+                        <td aria-label="actions" className="pr-2 col-1">
+                          <span aria-label="download audio">
+                            <a href={sentenceRecord.audio_jap} target="_blank">
+                              <i className="bi bi-play"></i>
+                            </a>
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </Col>
+            </Row>
+          ) : null}
           <Row className="mt-2">
             <Col>
               <CopyButton
@@ -285,6 +349,7 @@ const ExportView = ({ dicts, db, yomichanDicts }) => {
               />
             </Col>
           </Row>
+          <hr />
           <Row>
             <Col>
               <ul className="external-sites list-unstyled mt-2">

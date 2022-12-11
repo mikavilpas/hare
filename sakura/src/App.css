@@ -250,6 +250,21 @@ superscript {
   line-height: 1.1em;
 }
 
+#export #example-sentences {
+  font-size: 70%;
+}
+
+#export #example-sentences .result-item {
+  background-color: #27292d;
+  color: gray;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+#export #example-sentences .result-item:nth-child(even) {
+  background-color: #1f1f1f;
+}
+
 #settings {
   font-size: initial;
 }
@@ -271,16 +286,16 @@ superscript {
 }
 
 /* grammar */
-#grammar-search #results {
+#results {
   font-size: 70%;
 }
 
-#grammar-search #results .result-item {
+#results .result-item {
   background-color: #27292d;
   color: gray;
 }
 
-#grammar-search #results .result-item:hover {
+#results .result-item:hover {
   background-color: gray;
   color: black;
 }
