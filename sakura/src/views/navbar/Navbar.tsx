@@ -1,9 +1,11 @@
+import { ReactElement, ReactNode } from "react";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { Link } from "react-router-dom";
 
-const Navbar = ({ children }) => {
+type NavbarProps = { children: ReactNode };
+const Navbar = ({ children }: NavbarProps) => {
   return (
     <div className="mt-3 d-flex">
       <div className="col pl-1">{children}</div>

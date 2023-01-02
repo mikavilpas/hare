@@ -1,7 +1,11 @@
-let frequencies;
+let frequencies: { [key: string]: number };
 
-export function frequency(word) {
-  if (!frequencies) return null;
+export interface WordFrequency {
+  index: number;
+  rating: number;
+}
+export function frequency(word: string): WordFrequency | undefined {
+  if (!frequencies) return undefined;
   const index = frequencies[word] || 999999;
 
   // migaku dictionary frequency logic
@@ -15,25 +19,27 @@ export function frequency(word) {
   return { index, rating };
 }
 
-export function initFrequencyList() {
-  if (frequencies) return null;
+export function initFrequencyList(): Promise<void> | undefined {
+  if (frequencies) return undefined;
 
   // load in browser
   return fetch("https://sp3ctum.github.io/hare/static/public/frequency.json")
     .then((response) => response.json())
     .then((jsonArray) => {
       const freqs = Object.fromEntries(
-        jsonArray.map((word, index) => [word, index])
+        jsonArray.map((word: string, index: number) => [word, index])
       );
       frequencies = freqs;
     })
     .then(() => {
-      window.frequency = frequency;
+      (window as any).frequency = frequency;
       console.log("Loaded frequency list.");
     });
 }
 
-export function highestFrequency(definitionWords) {
+export function highestFrequency(
+  definitionWords: string[]
+): number | undefined {
   const frequencies = definitionWords.flatMap((w) => [
     frequency(w),
     frequency(w + "する"),
@@ -41,7 +47,7 @@ export function highestFrequency(definitionWords) {
 
   const freq = frequencies
     .filter((f) => f) // might not have been loaded yet - just ignore
-    .map((f) => f.rating)
+    .map((f) => f?.rating)
     .sort()
     .reverse()?.[0];
   return freq;

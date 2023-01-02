@@ -1,16 +1,10 @@
 /* eslint-disable jest/valid-expect, no-undef, jest/valid-expect-in-promise */
 
+import { newDatabase } from "../testUtilsForBrowser";
 import YomichanDatabase, {
-  databaseVersions,
-  DictionarySetting,
-  YomichanDictionary,
+  YomichanDatabaseVersion,
+  YomichanTerm,
 } from "./yomichanDatabase";
-// import { newDatabase } from "./yomichanTestUtils";
-
-function newDatabase() {
-  indexedDB.deleteDatabase("hare-yomichan");
-  return new YomichanDatabase();
-}
 
 describe("yomichan database", () => {
   it("can add terms", () => {
@@ -31,8 +25,7 @@ describe("yomichan database", () => {
 
     const db = newDatabase();
     cy.wrap(db.addTerms("fakedict", terms)).then(() => {
-      //
-      cy.wrap(db.db.terms.toArray()).then((actual) => {
+      cy.wrap(db.terms.toArray()).then((actual) => {
         expect(actual).to.eql([
           {
             dictionaryName: "fakedict",
@@ -148,7 +141,9 @@ describe("yomichan database", () => {
     cy.wrap(db.addTerms("fakedict", terms)).then(() => {
       // returns all terms that match the kanji
 
-      cy.wrap(db.searchPrefix("立")).then((actual) => {
+      cy.wrap<Promise<YomichanTerm[]>, YomichanTerm[]>(
+        db.searchPrefix("立")
+      ).should((actual: YomichanTerm[]) => {
         expect(actual.map((a) => a.expression)).to.eql([
           "立ち",
           "立ち会う",
@@ -177,11 +172,11 @@ describe("adding a dictionary", () => {
         .addDictionary("testDict", "alias")
         .then(() => db.addTerms("testDict", terms))
     ).then(async () => {
-      expect(await db.db.dictionaries.toArray()).to.eql([
+      expect(await db.dictionaries.toArray()).to.eql([
         { name: "testDict", alias: "alias" },
       ]);
 
-      expect(await db.db.dictionarySettings.toArray()).to.eql([
+      expect(await db.dictionarySettings.toArray()).to.eql([
         {
           dictionaryName: "testDict",
           positionType: "before",
@@ -194,10 +189,12 @@ describe("adding a dictionary", () => {
   it("can get a dictionary and its settings", () => {
     const db = newDatabase();
     const prepare = async () => {
-      await db.db.dictionaries.add(new YomichanDictionary("testDict", "tdict"));
-      await db.db.dictionarySettings.add(
-        new DictionarySetting("testDict", "before", 0)
-      );
+      await db.dictionaries.add({ name: "testDict", alias: "tdict" });
+      await db.dictionarySettings.add({
+        dictionaryName: "testDict",
+        positionType: "before",
+        position: 0,
+      });
 
       return db.getDictionariesAndSettings();
     };
@@ -229,7 +226,7 @@ describe("adding a dictionary", () => {
         })
       )
     ).then(async () => {
-      expect(await db.db.dictionarySettings.toArray()).to.eql([
+      expect(await db.dictionarySettings.toArray()).to.eql([
         {
           dictionaryName: "testDict",
           positionType: "after",
@@ -256,20 +253,20 @@ describe("deleting a dictionary", () => {
 
     cy.wrap(prepare()).then(async () => {
       await db.deleteDictionary("dictionaryName");
-      expect(await db.db.dictionaries.toArray()).to.eql([]);
-      expect(await db.db.terms.toArray()).to.eql([]);
-      expect(await db.db.dictionarySettings.toArray()).to.eql([]);
+      expect(await db.dictionaries.toArray()).to.eql([]);
+      expect(await db.terms.toArray()).to.eql([]);
+      expect(await db.dictionarySettings.toArray()).to.eql([]);
     });
   });
 });
 
 describe("migrations", () => {
-  it("migrates version 1->2", () => {
+  it("migrates versions 1->newest", () => {
     indexedDB.deleteDatabase("hare-yomichan");
 
     const prepare = async () => {
       // add v1 data
-      const db = databaseVersions.version01();
+      const db = new YomichanDatabase(YomichanDatabaseVersion.version01);
       db.open();
       await db.dictionaries.add({
         name: "name",
@@ -280,7 +277,7 @@ describe("migrations", () => {
     cy.wrap(prepare()).then(async () => {
       // opening version02 must trigger a migration that adds an entry to
       // dictionarySettings
-      const db = databaseVersions.version02();
+      const db = new YomichanDatabase(YomichanDatabaseVersion.version02);
       expect(await db.dictionarySettings.toArray()).to.eql([
         {
           dictionaryName: "name",

@@ -36,7 +36,6 @@ export default class BbcodeTokenProcessor {
     if (t.type === "image") return this.convertImage(t, content);
     if (t.type === "wav") return this.convertWav(t, content);
 
-    debugger;
     return t?.content || t; // unknown tags or no tags at all
   }
 

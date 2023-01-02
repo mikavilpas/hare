@@ -1,4 +1,5 @@
-import config from "../../config";
+import { ParjsResult } from "parjs";
+import config, { ApiDictionary } from "../../config";
 import { tokenize as daijirin } from "../../utils/formatting/daijirin";
 import { tokenize as daijisen } from "../../utils/formatting/daijisen";
 import { tokenize as defaultFormat } from "../../utils/formatting/formatting";
@@ -28,7 +29,7 @@ export const preferredDictionaries = [
 // Some dicts are reported by the api with a very long name, but then the api
 // only accepts the short name when querying (bug?). Converts a dict name to
 // short form.
-export function dictInfo(dictAliasOrId) {
+export function dictInfo(dictAliasOrId: string): ApiDictionary | undefined {
   const d = config.dictinfo.dicts.find(
     (d) => d?.alias === dictAliasOrId || d?.id === dictAliasOrId
   );
@@ -36,7 +37,7 @@ export function dictInfo(dictAliasOrId) {
   return d;
 }
 
-export function dictShortName(dictAliasOrId) {
+export function dictShortName(dictAliasOrId: string): string | undefined {
   const dictObject = dictInfo(dictAliasOrId);
   return dictObject?.alias || dictObject?.id;
 }
@@ -47,12 +48,24 @@ export const urls = {
   lookup: "/dict/:dictname/:searchmode/:search/:openeditem",
 };
 
+// TODO add strong typing?
+export type ProcessingResult = ParjsResult<any>;
+interface InputProcessor {
+  convertInputText: (text: string) => string;
+}
+
 // Format and enhance definitions for supported dictionaries, or fallback to
 // default (simple) formatting.
-export function prettyText(text, options = {}) {
+export function prettyText(
+  text: string,
+  options: {
+    dict?: string;
+    createTokenProcessor?: (args: any) => InputProcessor;
+  } = {}
+): string {
   const bbcodeProcessor = new BbcodeTokenProcessor(options);
 
-  const preProcess = (formatFunction) => {
+  const preProcess = (formatFunction: (input: string) => ProcessingResult) => {
     const args = {
       ...options,
       formatFunction,

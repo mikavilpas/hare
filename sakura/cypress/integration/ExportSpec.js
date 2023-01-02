@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+import { newDatabase } from "../../src/utils/testUtilsForBrowser";
+
 describe("export view", () => {
   beforeEach(() => {
     mockAudioSentences();
@@ -50,6 +52,96 @@ describe("export view", () => {
     cy.contains("頼んでいた品物が今日届いた。");
     cy.contains("The article which I have ordered arrived today.");
     cy.get(`[aria-label="download audio"]`).should("be.visible");
+  });
+
+  describe("anki export", () => {
+    beforeEach(async () => {
+      // creating the database will also populate it with the default settings
+      const db = newDatabase();
+      db.saveAnkiConnectSetting("address", "http://localhost:12345");
+      db.saveAnkiConnectSetting("selectedDeckName", "myDeck");
+      db.saveAnkiConnectSetting("selectedModelName", "myModel");
+      db.saveAnkiConnectSetting("fieldValueMapping", {
+        Expression: "sentence",
+        Meaning: "definition",
+        Audio: "audio",
+        Focus: "word",
+        Meaning2: "englishTranslation",
+      });
+    });
+
+    it("can export dictionary example sentences", () => {
+      cy.visit("#/export/大辞林/prefix/品物/0");
+
+      // select an example sentence from the dictionary definition
+      cy.contains("高価な―をとりそろえる")
+        .children(".quote-actions")
+        .children(`button[aria-label="copy sentence"]`)
+        .click();
+
+      cy.intercept("http://localhost:12345", "POST").as("create jap only");
+      cy.contains("button", "Create anki card").click();
+      cy.wait("@create jap only").then((interception) => {
+        expect(interception.request.body).to.deep.eql({
+          action: "addNote",
+          version: 6,
+          params: {
+            note: {
+              deckName: "myDeck",
+              modelName: "myModel",
+              fields: {
+                Expression: "高価な品物をとりそろえる",
+                Meaning:
+                  'しな-もの【品物】\n<div class="meta-information"><mark>しな-もの</mark> [0] 【品物】</div><div class="definition-section level-3">\n              <span class="heading">(1)</span>\n              <div class="content">物品。また，特に商品。しな。<span class="quote border border-dark rounded mr-3">\n              「高価な―をとりそろえる」\n              <span class="quote-actions" data-quote="高価な―をとりそろえる"></span>\n            </span><span class="quote border border-dark rounded mr-3">\n              「店先に―がなくなる」\n              <span class="quote-actions" data-quote="店先に―がなくなる"></span>\n            </span><br /></div>\n            </div><div class="definition-section level-3">\n              <span class="heading">(2)</span>\n              <div class="content">美人。品者。<span class="quote border border-dark rounded mr-3">\n              「都の水でみがき上げ，娘盛りの―が/浄瑠璃・先代萩」\n              <span class="quote-actions" data-quote="都の水でみがき上げ，娘盛りの―が/浄瑠璃・先代萩"></span>\n            </span><br /></div>\n            </div>',
+                Audio: "",
+                Focus: "品物",
+                Meaning2: "",
+              },
+              tags: ["hare"],
+              options: {
+                allowDuplicate: true,
+              },
+            },
+          },
+        });
+      });
+
+      // next, select an audio sentence
+      cy.contains("頼んでいた品物が今日届いた。")
+        .siblings(`[aria-label="copy sentence"]`)
+        .click();
+      cy.contains("The article which I have ordered arrived today.")
+        .siblings(`[aria-label="copy sentence"]`)
+        .click();
+      cy.get(`[aria-label="download audio"]`)
+        .children(`[aria-label="copy sentence"]`)
+        .first()
+        .click();
+
+      cy.intercept("http://localhost:12345", "POST").as("create jap,eng,audio");
+      cy.contains("button", "Create anki card").click();
+      cy.wait("@create jap,eng,audio").then((interception) => {
+        const body = interception.request.body;
+        expect(body).to.nested.include({
+          action: "addNote",
+          version: 6,
+          "params.note.fields.Expression": "頼んでいた品物が今日届いた。",
+          "params.note.fields.Meaning":
+            'しな-もの【品物】\n<div class="meta-information"><mark>しな-もの</mark> [0] 【品物】</div><div class="definition-section level-3">\n              <span class="heading">(1)</span>\n              <div class="content">物品。また，特に商品。しな。<span class="quote border border-dark rounded mr-3">\n              「高価な―をとりそろえる」\n              <span class="quote-actions" data-quote="高価な―をとりそろえる"></span>\n            </span><span class="quote border border-dark rounded mr-3">\n              「店先に―がなくなる」\n              <span class="quote-actions" data-quote="店先に―がなくなる"></span>\n            </span><br /></div>\n            </div><div class="definition-section level-3">\n              <span class="heading">(2)</span>\n              <div class="content">美人。品者。<span class="quote border border-dark rounded mr-3">\n              「都の水でみがき上げ，娘盛りの―が/浄瑠璃・先代萩」\n              <span class="quote-actions" data-quote="都の水でみがき上げ，娘盛りの―が/浄瑠璃・先代萩"></span>\n            </span><br /></div>\n            </div>',
+          "params.note.fields.Audio": "",
+          "params.note.fields.Focus": "品物",
+          "params.note.fields.Meaning2":
+            "The article which I have ordered arrived today.",
+          "params.note.deckName": "myDeck",
+          "params.note.modelName": "myModel",
+          "params.note.tags[0]": "hare",
+          "params.note.options.allowDuplicate": true,
+          "params.note.audio[0].url":
+            "https://receptomanijalogi.web.app/audio/anki_5k_media/rec1409219283.mp3",
+          "params.note.audio[0].fields[0]": "Audio",
+        });
+      });
+    });
   });
 
   function mockAudioSentences(response) {

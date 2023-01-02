@@ -20,6 +20,14 @@ import GrammarView from "./views/grammar/GrammarView";
 import SettingsView from "./views/help/SettingsView";
 import VersionIndicator from "./views/versionIndicator/VersionIndicator";
 
+// these settings are stored in the database
+const defaultAnkiConnectSettings = {
+  address: new URL("http://127.0.0.1:8765"),
+  selectedDeckName: "",
+  selectedModelName: "",
+  fieldValueMapping: {},
+};
+
 function App() {
   const [searchLoading, setSearchLoading] = useState();
   const [searchResult, setSearchResult] = useState();
@@ -36,6 +44,25 @@ function App() {
   const [yomichanDicts, setYomichanDicts] = useState([]);
   const [yomichanDictsAndSettings, setYomichanDictsAndSettings] = useState([]);
 
+  const [ankiConnectSettings, setAnkiConnectDbSettings] = useState(
+    defaultAnkiConnectSettings
+  );
+
+  const updateAnkiConnectSettingsToDb = async (newSettings) => {
+    const db = yomichanDbWorker.current;
+    if (!db) return;
+
+    for (let [key, value] of Object.entries(newSettings)) {
+      await db.saveAnkiConnectSetting(key, value);
+    }
+
+    await db
+      .getAnkiConnectSettings()
+      .then((settingsResponse) =>
+        setAnkiConnectDbSettings(settingsResponse.data)
+      );
+  };
+
   useEffect(() => {
     startGoogleAnalytics();
     initFrequencyList();
@@ -47,6 +74,11 @@ function App() {
       worker.getDictionariesAndSettings().then((ds) => {
         setYomichanDictsAndSettings(ds);
       });
+      worker
+        .getAnkiConnectSettings()
+        .then((settingsResponse) =>
+          setAnkiConnectDbSettings(settingsResponse.data)
+        );
     });
   }, []);
 
@@ -55,7 +87,7 @@ function App() {
     getDicts()
       .then(([response, error]) => {
         const whitelist = new Set(preferredDictionaries);
-        const shortNames = response?.data?.map((d) => dictShortName(d));
+        const shortNames = response?.map((d) => dictShortName(d));
         const whitelistedDictionaries = shortNames.filter((n) =>
           whitelist.has(n)
         );
@@ -63,7 +95,9 @@ function App() {
         // setDict(currentDict || whitelistedDictionaries?.[0]);
         setDictsLoadingError(error);
       })
-      .catch((e) => setDictsLoadingError(e))
+      .catch((e) => {
+        setDictsLoadingError(e);
+      })
       .finally(() => setDictsLoading(false));
   }, []);
 
@@ -104,6 +138,7 @@ function App() {
                 dicts={dicts}
                 db={yomichanDbWorker.current}
                 yomichanDicts={yomichanDicts}
+                ankiConnectSettings={ankiConnectSettings}
               />
             </Route>
             <Route path={["/grammar"]}>
@@ -111,6 +146,8 @@ function App() {
             </Route>
             <Route path={["/settings"]}>
               <SettingsView
+                ankiConnectSettings={ankiConnectSettings}
+                setAnkiConnectSettings={updateAnkiConnectSettingsToDb}
                 db={yomichanDbWorker.current}
                 yomichanDictsAndSettings={yomichanDictsAndSettings}
                 refreshYomichanDictsAndSettings={() => {

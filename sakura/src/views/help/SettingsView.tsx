@@ -1,6 +1,12 @@
 /* eslint-disable import/no-webpack-loader-syntax */
 
-import React, { useEffect } from "react";
+import React, {
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
@@ -10,32 +16,50 @@ import { pageView } from "../../telemetry";
 import Navbar from "../navbar/Navbar";
 import ExistingDictionary from "./dictionaries/ExistingDictionary";
 import ImportDictionaryWizard from "./dictionaries/ImportDictionaryWizard";
+import AnkiConnectSettings from "./AnkiConnectSettings";
+import YomichanDatabase, {
+  AnkiConnectSettingData,
+  DictionaryAndDictionarySetting,
+  DictionarySetting,
+} from "../../utils/yomichan/yomichanDatabase";
 
 const resetToHostSite = () => {
-  window.__STORE__.dispatch(
-    window.__ACTIONS__.updateUserConfig({
+  (window as any).__STORE__.dispatch(
+    (window as any).__ACTIONS__.updateUserConfig({
       css: "",
       js: "",
     })
   );
 };
 
-const Section = ({ children }) => {
+type SectionProps = { children?: ReactNode };
+const Section = ({ children }: SectionProps) => {
   return <div className="mb-4">{children}</div>;
 };
 
+type SettingsViewProps = {
+  db: YomichanDatabase;
+  ankiConnectSettings: AnkiConnectSettingData;
+  setAnkiConnectSettings: (s: Partial<AnkiConnectSettingData>) => void;
+  yomichanDictsAndSettings: DictionaryAndDictionarySetting[];
+  refreshYomichanDictsAndSettings: () => void;
+};
 const SettingsView = ({
   db,
+  ankiConnectSettings,
+  setAnkiConnectSettings,
   yomichanDictsAndSettings,
   refreshYomichanDictsAndSettings,
-}) => {
+}: SettingsViewProps) => {
   useEffect(() => {
     pageView("settings");
   }, []);
 
   return (
     <Container fluid id="settings" className="mt-2">
-      <Navbar />
+      <Navbar>
+        <></>
+      </Navbar>
       <Form
         onSubmit={(e) => {
           e.preventDefault(); // don't reload page
@@ -72,7 +96,7 @@ const SettingsView = ({
                     onDictionaryDeleted={() =>
                       refreshYomichanDictsAndSettings()
                     }
-                    updateSettings={(newSettings) => {
+                    updateSettings={(newSettings: DictionarySetting) => {
                       db.updateDictionarySettings(dictionary.name, newSettings);
                       refreshYomichanDictsAndSettings();
                     }}
@@ -107,6 +131,12 @@ const SettingsView = ({
               </Button>
             </Col>
           </Row>
+        </Section>
+        <Section>
+          <AnkiConnectSettings
+            ankiConnectSettings={ankiConnectSettings}
+            setAnkiConnectSettings={setAnkiConnectSettings}
+          />
         </Section>
       </Form>
     </Container>

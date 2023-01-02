@@ -1,11 +1,11 @@
 # how to build a new version
+
 Cd into this directory
+
 ```sh
 (cd ../loaderapp && ./publish.sh)
 
 ```
-
-
 
 # Getting Started with Create React App
 
