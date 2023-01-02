@@ -18,7 +18,7 @@
     "comlink": "^4.3.1",
     "copy-to-clipboard": "^3.3.1",
     "craco": "^0.0.3",
-    "dexie": "^3.0.3",
+    "dexie": "^3.2.2",
     "ga-gtag": "^1.1.0",
     "jszip": "^3.7.0",
     "localforage": "^1.9.0",
