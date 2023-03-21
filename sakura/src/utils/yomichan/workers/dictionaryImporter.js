@@ -1,5 +1,5 @@
 import * as Comlink from "comlink";
-import YomichanDatabase from "../yomichanDatabase";
+import YomichanDatabase from "../Types";
 
 // accepts an arraybuffer because it's a Transferable
 // https://developer.mozilla.org/en-US/docs/Web/API/Transferable

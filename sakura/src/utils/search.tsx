@@ -1,15 +1,12 @@
 import axios from "axios";
 import { Dictionary } from "lodash";
 import { default as groupBy } from "lodash/groupBy";
+import { getWordDefinitions, WordDefinition } from "../api";
+import YomichanDatabase from "./yomichan/Types";
 import {
-  getWordDefinitions,
-  GetWordDefinitionsResponse,
-  WordDefinition,
-} from "../api";
-import YomichanDatabase, {
   YomichanDictionary,
   YomichanTerm,
-} from "./yomichan/yomichanDatabase";
+} from "./yomichan/YomichanDictionary";
 
 export type AudioSentenceSearchResult = {
   jap: string;

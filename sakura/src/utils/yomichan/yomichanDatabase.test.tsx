@@ -1,10 +1,8 @@
 /* eslint-disable jest/valid-expect, no-undef, jest/valid-expect-in-promise */
 
 import { newDatabase } from "../testUtilsForBrowser";
-import YomichanDatabase, {
-  YomichanDatabaseVersion,
-  YomichanTerm,
-} from "./yomichanDatabase";
+import YomichanDatabase from "./Types";
+import { YomichanDatabaseVersion, YomichanTerm } from "./YomichanDictionary";
 
 describe("yomichan database", () => {
   it("can add terms", () => {

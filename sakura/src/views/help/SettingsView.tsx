@@ -1,27 +1,20 @@
-/* eslint-disable import/no-webpack-loader-syntax */
-
-import React, {
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { ReactNode, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { pageView } from "../../telemetry";
-import Navbar from "../navbar/Navbar";
-import ExistingDictionary from "./dictionaries/ExistingDictionary";
-import ImportDictionaryWizard from "./dictionaries/ImportDictionaryWizard";
-import AnkiConnectSettings from "./AnkiConnectSettings";
-import YomichanDatabase, {
+import YomichanDatabase from "../../utils/yomichan/Types";
+import {
   AnkiConnectSettingData,
   DictionaryAndDictionarySetting,
   DictionarySetting,
-} from "../../utils/yomichan/yomichanDatabase";
+} from "../../utils/yomichan/YomichanDictionary";
+import Navbar from "../navbar/Navbar";
+import AnkiConnectSettings from "./AnkiConnectSettings";
+import ExistingDictionary from "./dictionaries/ExistingDictionary";
+import ImportDictionaryWizard from "./dictionaries/ImportDictionaryWizard";
 
 const resetToHostSite = () => {
   (window as any).__STORE__.dispatch(

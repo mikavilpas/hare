@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
-import YomichanDatabase from "../../src/utils/yomichan/yomichanDatabase";
-import { DictionaryPage, SettingsPage } from "../support/pages";
+import YomichanDatabase from "../../src/utils/yomichan/Types";
+import { DictionaryPage, SettingsPage } from "../support/pages.tsx";
 
 describe("dictionary view with yomichan dictionaries", () => {
   beforeEach(() => {

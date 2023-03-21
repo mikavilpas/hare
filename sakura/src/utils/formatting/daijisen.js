@@ -13,7 +13,7 @@ import {
   then,
 } from "parjs/combinators";
 import { called, joinSuccessiveStringTokens } from "../parseUtils";
-import { attempt, quoted, quoteToken } from "./formatting";
+import { attempt, quoteToken, quoted } from "./formatting";
 import {
   circledKatakanaToken,
   kanjiNumber,

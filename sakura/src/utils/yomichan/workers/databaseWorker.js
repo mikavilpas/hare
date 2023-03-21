@@ -5,7 +5,7 @@ import * as Comlink from "comlink";
 import DatabaseWorker from "worker-loader?inline=no-fallback!./index";
 
 /** A shared place to get a new worker instance. Will run in a web worker.
-    @returns {Promise<import("../yomichanDatabase.js").default>}
+    @returns {Promise<import("../Types.js").default>}
  */
 export async function newDatabaseWorkerInstance() {
   const workerClass = Comlink.wrap(new DatabaseWorker());

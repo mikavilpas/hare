@@ -1,31 +1,31 @@
 export class SettingsPage {
-  visit() {
+  visit(): void {
     cy.visit("#/settings");
   }
 
-  selectFile(fileName) {
-    cy.get(`[aria-label="Select yomichan dictionary file"]`).attachFile(
-      fileName
-    );
+  selectFile(fileName: string): void {
+    (
+      cy.get(`[aria-label="Select yomichan dictionary file"]`) as any
+    ).attachFile(fileName);
   }
 
-  alias() {
+  alias(): Cypress.Chainable<JQuery<HTMLElement>> {
     return cy.get(`[aria-label="Dictionary alias"]`);
   }
 
-  importButton() {
+  importButton(): Cypress.Chainable<JQuery<HTMLElement>> {
     return cy.get(`button[aria-label="Import"]`);
   }
 
-  deleteButton() {
+  deleteButton(): Cypress.Chainable<JQuery<HTMLElement>> {
     return cy.get(`button[aria-label="Delete dictionary"]`);
   }
 
-  confirmDeleteButton() {
+  confirmDeleteButton(): Cypress.Chainable<JQuery<HTMLElement>> {
     return cy.get(`button[aria-label="Confirm deletion"]`);
   }
 
-  importYomichanDictionary(zipFileName) {
+  importYomichanDictionary(zipFileName: string) {
     cy.visit("#/settings");
 
     cy.contains("Import Dictionary");
@@ -37,6 +37,22 @@ export class SettingsPage {
 
     // once the alias has been entered, the import button must be visible
     this.importButton().click();
+  }
+
+  ankiConnectUrl(): Cypress.Chainable<JQuery<HTMLElement>> {
+    return cy.get("#address");
+  }
+
+  ankiConnectDeck(): Cypress.Chainable<JQuery<HTMLElement>> {
+    return cy.get("#deck");
+  }
+
+  ankiConnectModel(): Cypress.Chainable<JQuery<HTMLElement>> {
+    return cy.get("#model");
+  }
+
+  ankiConnectFieldMapping(fieldName: string) {
+    return cy.get(`[data-field-name="${fieldName}"]`);
   }
 }
 
@@ -53,7 +69,7 @@ export class DictionaryPage {
     return cy.contains("Search");
   }
 
-  resultButton(dictAlias) {
+  resultButton(dictAlias: string) {
     return cy.get("#dictionary-list").contains(dictAlias);
   }
 

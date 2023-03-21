@@ -1,54 +1,14 @@
 /* eslint-disable import/no-webpack-loader-syntax */
 
-import React, { useEffect, useRef, useState } from "react";
-import Button from "react-bootstrap/Button";
+import { useEffect, useState } from "react";
 import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
-import { pageView } from "../../telemetry";
-import Navbar from "../navbar/Navbar";
-import ExistingDictionary from "./dictionaries/ExistingDictionary";
-import ImportDictionaryWizard from "./dictionaries/ImportDictionaryWizard";
 import * as ankiconnectApi from "../../utils/ankiconnect/ankiconnectApi";
 import {
   AnkiConnectSettingData,
   AnkiFieldContentType,
-} from "../../utils/yomichan/yomichanDatabase";
-
-type FieldNameSelectionProps = {
-  value: string;
-  onChanged: (newValue: AnkiFieldContentType) => void;
-};
-const FieldNameSelection = ({ value, onChanged }: FieldNameSelectionProps) => {
-  return (
-    <select
-      onChange={(e) => {
-        const newValue = e.target.value;
-        const validTypes: AnkiFieldContentType[] = [
-          "sentence",
-          "definition",
-          "englishTranslation",
-          "audio",
-          "word",
-        ];
-        if (!new Set(validTypes).has(newValue as AnkiFieldContentType)) {
-          throw new Error(`Cannot set unknown field name ${newValue}`);
-        }
-        onChanged(newValue as AnkiFieldContentType);
-      }}
-      value={value}
-      className="form-control"
-    >
-      <option value=""></option>
-      <option value="sentence">sentence</option>
-      <option value="definition">definition</option>
-      <option value="englishTranslation">englishTranslation</option>
-      <option value="audio">audio</option>
-      <option value="word">word</option>
-    </select>
-  );
-};
+} from "../../utils/yomichan/YomichanDictionary";
+import { FieldNameSelection } from "./FieldNameSelection";
 
 type AnkiConnectSettingsProps = {
   ankiConnectSettings: AnkiConnectSettingData;
@@ -98,10 +58,11 @@ const AnkiConnectSettingsComponent = ({
     const showModelFieldNames = async () => {
       if (!ankiConnectSettings.selectedModelName) return;
 
-      const getModelFieldNamesResponse = await ankiconnectApi.getModelFieldNames(
-        baseUrl,
-        ankiConnectSettings.selectedModelName
-      );
+      const getModelFieldNamesResponse =
+        await ankiconnectApi.getModelFieldNames(
+          baseUrl,
+          ankiConnectSettings.selectedModelName
+        );
       setAnkiConnectError(getModelFieldNamesResponse.error);
       if (getModelFieldNamesResponse.error) {
         return;
@@ -135,7 +96,7 @@ const AnkiConnectSettingsComponent = ({
         </Col>
       </Row>
       <Row>
-        <Col xs={6}>
+        <Col md={6}>
           <div className="form-group">
             <label htmlFor="address" className="mr-3">
               Address
@@ -184,9 +145,24 @@ const AnkiConnectSettingsComponent = ({
               className="form-control col"
               id="model"
               value={ankiConnectSettings.selectedModelName || ""}
-              onChange={(e) => {
+              onChange={async (e) => {
+                // TODO add a test that the fieldValueMapping is cleared when this is changed
+                const newModelName = e.target.value || "";
+
+                const newFieldNames = await ankiconnectApi.getModelFieldNames(
+                  ankiConnectSettings.address,
+                  newModelName
+                );
+
+                // make all fields default to "(empty)" to prevent errors in the addNote api call
+                const emptyValues: Record<string, AnkiFieldContentType> = {};
+                newFieldNames.result?.forEach((fieldName) => {
+                  emptyValues[fieldName] = "(empty)" as AnkiFieldContentType;
+                });
+
                 setAnkiConnectSettings({
-                  selectedModelName: e.target.value || "",
+                  selectedModelName: newModelName,
+                  fieldValueMapping: emptyValues,
                 });
               }}
             >
@@ -212,9 +188,10 @@ const AnkiConnectSettingsComponent = ({
                   <th scope="row">{fieldName}</th>
                   <td>
                     <FieldNameSelection
+                      fieldName={fieldName}
                       value={
                         ankiConnectSettings?.fieldValueMapping?.[fieldName] ||
-                        ""
+                        ("(empty)" as AnkiFieldContentType)
                       }
                       onChanged={(newSelectionValue) => {
                         const newMapping = {

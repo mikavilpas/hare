@@ -1,5 +1,5 @@
 import { initial, last } from "lodash";
-import { defineCombinator, ParjserBase } from "parjs/internal";
+import { ParjserBase, defineCombinator } from "parjs/internal";
 
 // helper
 export const joinSuccessiveStringTokens = (tokens) => {

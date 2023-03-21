@@ -1,6 +1,6 @@
 import { Retrier } from "@jsier/retrier";
 import React from "react";
-import ReactDOM from "react-dom";
+import * as ReactDOMClient from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
@@ -66,10 +66,10 @@ function prepareHostSite() {
 prepareHostSite().then(() => {
   const rootElement = document.getElementById("sakura-customizations");
   log("starting the app");
-  ReactDOM.render(
+  const root = ReactDOMClient.createRoot(rootElement);
+  root.render(
     <React.StrictMode>
       <App />
-    </React.StrictMode>,
-    rootElement
+    </React.StrictMode>
   );
 });

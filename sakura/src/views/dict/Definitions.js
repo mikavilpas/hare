@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
@@ -9,8 +9,8 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import {
-  generatePath,
   Link,
+  generatePath,
   useHistory,
   useRouteMatch,
 } from "react-router-dom";

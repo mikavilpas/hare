@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 import { DictionaryPage, SettingsPage } from "../support/pages";
+import { AnkiconnectMockApi } from "./AnkiconnectMockApi.tsx";
 
 describe("dictionary view", () => {
   // for now these use the actual api so there is no mocking!
@@ -154,11 +155,11 @@ describe("recursive searches", () => {
     cy.contains("Search").click();
 
     // click some word that can be looked up recursively
-    cy.get("[data-word=山辺]").should("exist").click();
+    cy.get(`[data-word="人"]`).first().should("exist").click();
     cy.get(".modal-content").should("be.visible");
     cy.url().should(
       "contain",
-      encodeURI("/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/山辺/0")
+      encodeURI("/dict/広辞苑/prefix/犬/0/recursive/大辞林/prefix/人/0")
     );
 
     // can close the modal
@@ -210,11 +211,18 @@ describe("recursive searches", () => {
   });
 
   it("uses the added yomichan dictionary as the default dict when available", () => {
+    // use AnkiConnect mock API to avoid needless connection errors in the cypress test log
+    const ankiconnectMockApi = new AnkiconnectMockApi();
+    ankiconnectMockApi.build();
+
     // fallbacking to daijirin is tested in other tests already
     //
     const settings = new SettingsPage();
     settings.visit();
     settings.importYomichanDictionary("jmdict_english_truncated.zip");
+
+    // wait for the dictionary to be imported
+    cy.get('[id="dictionary-JMdict (English)"]').should("exist");
 
     const dict = new DictionaryPage();
     dict.visit();
@@ -222,11 +230,11 @@ describe("recursive searches", () => {
     dict.searchButton().click();
 
     // click some word that can be looked up recursively
-    cy.get("[data-word=彼処]").should("exist").click();
+    cy.get('[data-word="彼"]').first().should("exist").click();
 
     cy.url().should(
       "contain",
-      encodeURI("/#/dict/広辞苑/prefix/あそこ/0/recursive/jmdict/prefix/彼処/0")
+      encodeURI("/#/dict/広辞苑/prefix/あそこ/0/recursive/jmdict/prefix/彼/0")
     );
     cy.contains("over there");
 

@@ -1,6 +1,8 @@
 /// <reference types="cypress" />
 
-import { SettingsPage } from "../support/pages";
+import YomichanDatabase from "../../src/utils/yomichan/Types";
+import { SettingsPage } from "../support/pages.tsx";
+import { AnkiconnectMockApi } from "./AnkiconnectMockApi.tsx";
 
 describe("settings view", () => {
   it("can display the settings view", () => {
@@ -69,5 +71,50 @@ describe("importing a yomichan dictionary", () => {
 
     // must have reset to the first state
     cy.contains("Import Dictionary");
+  });
+
+  describe.only("ankiconnect settings", () => {
+    it("can set the ankiconnect url", () => {
+      const ankiconnect = new AnkiconnectMockApi();
+      ankiconnect.build();
+
+      cy.visit("#/settings");
+      cy.wait("@ankiconnect_is_running");
+      cy.wait("@deckNames");
+      cy.wait("@modelNames");
+
+      const page = new SettingsPage();
+
+      // the default value must be shown
+      page
+        .ankiConnectUrl()
+        .scrollIntoView()
+        .should("contain.value", "http://127.0.0.1:8765");
+
+      page.ankiConnectDeck().select("Default");
+      page.ankiConnectModel().select("Japanese 2022 new accent note");
+      page.ankiConnectFieldMapping("Expression").select("sentence");
+      page.ankiConnectFieldMapping("Reading").select("");
+      page
+        .ankiConnectFieldMapping("Meaning")
+        .select("englishTranslation")
+        .then(() => {
+          const db = new YomichanDatabase();
+          db.getAnkiConnectSettings().then((settings) => {
+            expect(settings).to.deep.equal({
+              data: {
+                address: "http://127.0.0.1:8765",
+                selectedDeckName: "Default",
+                selectedModelName: "Japanese 2022 new accent note",
+                fieldValueMapping: {
+                  Expression: "sentence",
+                  Reading: "(empty)",
+                  Meaning: "englishTranslation",
+                },
+              },
+            });
+          });
+        });
+    });
   });
 });

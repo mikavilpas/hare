@@ -1,15 +1,15 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Container from "react-bootstrap/Container";
 import {
-  HashRouter as Router,
   Redirect,
   Route,
+  HashRouter as Router,
   Switch,
 } from "react-router-dom";
-import { getDicts } from "./api";
 import "./App.css";
+import { getDicts } from "./api";
 import { startGoogleAnalytics } from "./telemetry";
 import { initFrequencyList } from "./utils/frequency";
 import { newDatabaseWorkerInstance } from "./utils/yomichan/workers/databaseWorker";

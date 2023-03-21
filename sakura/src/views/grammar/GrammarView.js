@@ -1,6 +1,6 @@
 import axios from "axios";
 import { QuickScore } from "quick-score";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -25,7 +25,7 @@ const GrammarView = ({}) => {
   useEffect(() => {
     // preload the grammar search index
     setLoading(true);
-    return axios
+    axios
       .get("https://sp3ctum.github.io/hare/static/public/grammar-links.json")
       .then((response) => {
         const opts = response.data || [];
