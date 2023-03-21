@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";

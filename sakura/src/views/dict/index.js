@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   generatePath,
   useHistory,
@@ -22,6 +22,11 @@ const defaultYomiDict = (yomichanDictsAndSettings) => {
     (ds) => ds.setting.positionType === "before"
   );
   before.sort((a, b) => a.setting.position - b.setting.position);
+
+  // in case the user has no "before" dictionaries, we let the caller fallback
+  // to a default
+  if (before.length === 0) return null;
+
   const { dictionary } = before[0];
   return dictionary;
 };

@@ -1,8 +1,7 @@
-import { mount } from "@cypress/react";
 import ReactJson from "react-json-view";
 
 export function assertParses(parseResult, expected) {
-  mount(<ReactJson src={parseResult} theme="monokai" />).then(() => {
+  cy.mount(<ReactJson src={parseResult} theme="monokai" />).then(() => {
     if (parseResult.kind !== "OK") {
       console.log(parseResult.trace);
     }

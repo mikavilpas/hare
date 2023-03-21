@@ -1,13 +1,5 @@
 import copy from "copy-to-clipboard";
-import React, {
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { DOMElement } from "react";
-import { RefCallback } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
@@ -15,7 +7,7 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
-import ReactDOM from "react-dom";
+
 import { useRouteMatch } from "react-router-dom";
 import { pageView } from "../../telemetry";
 import { addNote } from "../../utils/ankiconnect/ankiconnectApi";
@@ -27,14 +19,18 @@ import {
   WordDefinitionResult,
 } from "../../utils/search";
 import * as wordParser from "../../utils/wordParser";
-import YomichanDatabase, {
+import YomichanDatabase from "../../utils/yomichan/Types";
+import {
   AnkiConnectSettingData,
+  AnkiFieldContentType,
   YomichanDictionary,
-} from "../../utils/yomichan/yomichanDatabase";
+} from "../../utils/yomichan/YomichanDictionary";
 import ExportViewDefinitionTokenProcessor from "../dict/tokenProcessors/exportViewDefinitionTokenProcessor";
 import ToPlainTextTokenProcessor from "../dict/tokenProcessors/toPlainTextTokenProcessor";
 import { prettyText } from "../dict/utils";
 import Navbar from "../navbar/Navbar";
+import { DefinitionPreview } from "./DefinitionPreview";
+import { ResultItemSection } from "./ResultItemSection";
 
 type ErrorItemProps = { heading: string; error: any };
 const ErrorItem = ({ heading, error }: ErrorItemProps) => {
@@ -113,6 +109,7 @@ const SearchLinkWithIcon = ({
       src={iconUrl}
       style={{ height: "16px", width: "16px" }}
       className="inline icon"
+      alt="search"
     ></img>
   );
   return <SearchLink icon={icon} children={children} url={url} />;
@@ -122,7 +119,7 @@ type SelectSentenceForAnkiCardButtonProps = {
   onSelect: () => void;
   isSelected: boolean;
 };
-const SelectSentenceForAnkiCardButton = ({
+export const SelectSentenceForAnkiCardButton = ({
   onSelect,
   isSelected,
 }: SelectSentenceForAnkiCardButtonProps) => {
@@ -143,7 +140,10 @@ const SelectSentenceForAnkiCardButton = ({
 };
 
 type CopyQuoteButtonProps = { text: string; selectedWord?: string };
-const CopyQuoteButton = ({ text, selectedWord }: CopyQuoteButtonProps) => {
+export const CopyQuoteButton = ({
+  text,
+  selectedWord,
+}: CopyQuoteButtonProps) => {
   const [wordWasCopied, setWordWasCopied] = useState(false);
 
   const copiableText = text
@@ -205,56 +205,19 @@ const ExportView = ({
   // the alternative spellings of the word
   const [wordOptions, setWordOptions] = useState<string[]>([]);
   const [selectedWord, setSelectedWord] = useState<string>();
-  const buttonsRef = useRef<Element[]>();
 
-  const [selectedAnkiJapSentence, setSelectedAnkiJapSentence] = useState<
-    string
-  >();
-  const [selectedAnkiEngSentence, setSelectedAnkiEngSentence] = useState<
-    string
-  >();
-  const [
-    selectedAnkiAudioSentenceUrl,
-    setSelectedAnkiAudioSentenceUrl,
-  ] = useState<string>();
-  const [ankiCardCreationError, setAnkiCardCreationError] = useState<
-    ReactNode
-  >();
+  const [selectedAnkiJapSentence, setSelectedAnkiJapSentence] =
+    useState<string>();
+  const [selectedAnkiEngSentence, setSelectedAnkiEngSentence] =
+    useState<string>();
+  const [selectedAnkiAudioSentenceUrl, setSelectedAnkiAudioSentenceUrl] =
+    useState<string>();
+  const [ankiCardCreationError, setAnkiCardCreationError] =
+    useState<ReactNode>();
 
   useEffect(() => {
     pageView("export", `/${dict}`);
-
-    return function cleanup() {
-      buttonsRef.current?.forEach((b) => {
-        ReactDOM.unmountComponentAtNode(b);
-      });
-    };
-  }, []);
-
-  const onRefChange: RefCallback<HTMLDivElement> = (node) => {
-    // add copy button to example sentences
-    setDefinitionNode(node || undefined);
-
-    if (!node) return;
-
-    const quoteActions = Array.from(node.querySelectorAll(".quote-actions"));
-    quoteActions.forEach((e: Element) => {
-      const q = e as HTMLSpanElement;
-
-      const sentence = q.dataset.quote || "";
-      ReactDOM.render(
-        <>
-          <CopyQuoteButton text={sentence} selectedWord={selectedWord || ""} />
-          <SelectSentenceForAnkiCardButton
-            onSelect={() => setSelectedAnkiJapSentence(sentence)}
-            isSelected={sentence === selectedAnkiJapSentence}
-          />
-        </>,
-        q
-      );
-    });
-    buttonsRef.current = quoteActions;
-  };
+  }, [dict]);
 
   useEffect(() => {
     if (!dict || !search || !openeditem) {
@@ -358,20 +321,14 @@ const ExportView = ({
       </Navbar>
       <Row id="definition-preview" className="d-flex flex-column h-50 mt-3">
         <div className="card">
-          <div className="card-body" ref={onRefChange}>
-            <h3
-              className="card-title"
-              dangerouslySetInnerHTML={{
-                __html: headingHtml,
-              }}
-            ></h3>
-            <p
-              className="card-text"
-              dangerouslySetInnerHTML={{
-                __html: bodyHtml,
-              }}
-            ></p>
-          </div>
+          <DefinitionPreview
+            headingHtml={headingHtml}
+            bodyHtml={bodyHtml}
+            setDefinitionNode={setDefinitionNode}
+            selectedWord={selectedWord}
+            selectedAnkiJapSentence={selectedAnkiJapSentence}
+            setSelectedAnkiJapSentence={setSelectedAnkiJapSentence}
+          />
         </div>
       </Row>
       {wordOptions?.length > 0 && (
@@ -412,63 +369,56 @@ const ExportView = ({
                   <tbody>
                     {audioSentences.map((sentenceRecord) => (
                       <tr
-                        className="result-item"
+                        className="result-item d-flex flex-column flex-md-row"
                         key={sentenceRecord.audio_jap}
                       >
-                        <td className="col-4">
-                          <span className="p-1 text-secondary mr-1">
-                            {sentenceRecord.jap}
-                          </span>
-                          <CopyQuoteButton text={sentenceRecord.jap} />
-
-                          <SelectSentenceForAnkiCardButton
-                            onSelect={() =>
-                              setSelectedAnkiJapSentence(sentenceRecord.jap)
-                            }
-                            isSelected={
-                              sentenceRecord.jap === selectedAnkiJapSentence
-                            }
+                        <td className="d-flex col flex-row justify-content-between">
+                          <ResultItemSection
+                            sentence={sentenceRecord.jap}
+                            setSelectedAnkiSentence={setSelectedAnkiJapSentence}
+                            selectedAnkiSentence={selectedAnkiJapSentence}
                           />
                         </td>
 
-                        <td className="col-4">
+                        <td className="d-flex col flex-row justify-content-between">
                           {sentenceRecord.eng ? (
-                            <>
-                              <span className="text-muted mr-1">
-                                {sentenceRecord.eng}
-                              </span>
-                              <CopyQuoteButton text={sentenceRecord.eng} />
-
-                              <SelectSentenceForAnkiCardButton
-                                onSelect={() =>
-                                  setSelectedAnkiEngSentence(sentenceRecord.eng)
-                                }
-                                isSelected={
-                                  sentenceRecord.eng === selectedAnkiEngSentence
-                                }
-                              />
-                            </>
+                            <ResultItemSection
+                              sentence={sentenceRecord.eng}
+                              setSelectedAnkiSentence={
+                                setSelectedAnkiEngSentence
+                              }
+                              selectedAnkiSentence={selectedAnkiEngSentence}
+                            />
                           ) : null}
                         </td>
 
-                        <td aria-label="actions" className="pr-2 col-1">
-                          <span aria-label="download audio">
-                            <a href={sentenceRecord.audio_jap} target="_blank">
+                        <td
+                          aria-label="actions"
+                          className="d-flex col flex-row justify-content-end align-items-center flex-shrink-0 min-width-0 flex-grow-0"
+                        >
+                          <span
+                            aria-label="download audio"
+                            style={{ width: "27px" }}
+                          >
+                            <a
+                              href={sentenceRecord.audio_jap}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
                               <i className="bi bi-play"></i>
                             </a>
-
-                            <SelectSentenceForAnkiCardButton
-                              onSelect={() =>
-                                setSelectedAnkiAudioSentenceUrl(
-                                  sentenceRecord.audio_jap
-                                )
-                              }
-                              isSelected={
-                                sentenceRecord.audio_jap ===
-                                selectedAnkiAudioSentenceUrl
-                              }
-                            />
                           </span>
+                          <SelectSentenceForAnkiCardButton
+                            onSelect={() =>
+                              setSelectedAnkiAudioSentenceUrl(
+                                sentenceRecord.audio_jap
+                              )
+                            }
+                            isSelected={
+                              sentenceRecord.audio_jap ===
+                              selectedAnkiAudioSentenceUrl
+                            }
+                          />
                         </td>
                       </tr>
                     ))}
@@ -507,7 +457,7 @@ const ExportView = ({
                     const baseUrl = ankiConnectSettings.address;
 
                     let audioFields: string[] = [];
-                    const options = {
+                    const options: any = {
                       deckName: ankiConnectSettings.selectedDeckName,
                       modelName: ankiConnectSettings.selectedModelName,
                       fields: Object.fromEntries(
@@ -515,7 +465,8 @@ const ExportView = ({
                           ankiConnectSettings.fieldValueMapping
                         ).map(([key, value]) => {
                           let fieldContent = "";
-                          switch (value) {
+                          const newValue = value as AnkiFieldContentType;
+                          switch (newValue) {
                             case "audio": {
                               // will be added as a downloadable audio file instead
                               audioFields.push(key);
@@ -542,21 +493,33 @@ const ExportView = ({
                               fieldContent = selectedWord;
                               break;
                             }
+                            case "(empty)": {
+                              fieldContent = "";
+                              break;
+                            }
+                            default: {
+                              // make sure that all cases are handled or it's a compile error
+                              newValue satisfies never;
+                            }
                           }
 
                           return [key, fieldContent];
                         })
                       ),
-                      audio: selectedAnkiAudioSentenceUrl
-                        ? {
-                            url: selectedAnkiAudioSentenceUrl,
-                            filename:
-                              `hare_${selectedWord}_` +
-                              new Date().toISOString(),
-                            fields: audioFields,
-                          }
-                        : undefined,
                     };
+
+                    if (selectedAnkiAudioSentenceUrl) {
+                      // get the last "." separated part of the url
+                      // which should be the file extension
+                      const extension =
+                        selectedAnkiAudioSentenceUrl.split(".").slice(-1)[0] ||
+                        "mp3";
+                      options.audio = {
+                        url: selectedAnkiAudioSentenceUrl,
+                        filename: `hare_${selectedWord}_${new Date().toISOString()}.${extension}`,
+                        fields: audioFields,
+                      };
+                    }
 
                     const response = await addNote(baseUrl, options);
                     if (response.error) {

@@ -1,79 +1,70 @@
-# how to build a new version
-
-Cd into this directory
+# Common development instructions
 
 ```sh
-(cd ../loaderapp && ./publish.sh)
+# install dependencies
+yarn install
 
+# start the development server
+yarn start
+
+# run unit tests
+npx cypress run-ct
+
+# run browser tests
+npx cypress run
+
+# build a new version for deployment
+(cd ../loaderapp && ./publish.sh)
 ```
 
-# Getting Started with Create React App
+# How to develop against Ankiconnect Android
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+These instructions are for developing against the Android version of Ankiconnect
+called Ankiconnect Android. This will work for the following scenarios:
 
-## Available Scripts
+1. You have an android device such as your mobile phone or tablet.
+2. You are using an existing version of Ankiconnect Android, or you are
+   developing a version with Android Studio and you can run it on your device.
 
-In the project directory, you can run:
+## Prerequisites for development
 
-### `yarn start`
+These instructions are for Chrome on a Mac. If you are using a different browser
+or operating system, you may need to find the equivalent steps.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Install Ankiconnect Android on your device
+- Connect your device to your computer and enable USB debugging in Android.
+- Connect your Android device to the same network as your computer.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Connecting to hare on your Android device
 
-### `yarn test`
+1. Find out the IP address of your computer. For example, if you are on a
+   Mac, you can run `ifconfig | grep inet` and look for the IP address that
+   starts with 192.168.0. or 10.0.0.
+1. In the Ankiconnect Android app, go to the settings and change the cors setting
+   to `*`. This will allow access from any host. If you want to limit this, you
+   can also set it to `http://<the ip address of your computer>:4000`. The
+   settings will be taken into use immediately.
+1. Start hare on your computer with `yarn start`. This will make it available to
+   the network so you can connect to it from your device.
+1. On your device, open http://<your computer's IP address>:4000
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Connect your computer's chrome to your Android device's chrome
 
-### `yarn build`
+1. Connect your Android device to your computer with a USB cable.
+2. Open Chrome on your computer and go to chrome://inspect/#devices . You will
+   be presented with a list of tabs on your device. Choose the tab that is running
+   hare.
+3. Now you can use the developer tools on your computer to debug the code on your
+   device. Run the following code to test the connection:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```js
+fetch("http://localhost:8765")
+  .then((r) => r.text())
+  .then(console.log);
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+It will respond with "Ankiconnect Android is running.". If you get a CORS error,
+double check that you have set the cors setting in the app to `*` or
+`http://<your computer's IP address>:4000`.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+NOTE: on your device, you need to have the chrome tab active for this to work.

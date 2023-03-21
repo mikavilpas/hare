@@ -1,7 +1,7 @@
 /* eslint-disable import/no-webpack-loader-syntax */
 
 import * as Comlink from "comlink";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";

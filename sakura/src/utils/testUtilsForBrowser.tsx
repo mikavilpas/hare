@@ -1,4 +1,4 @@
-import YomichanDatabase from "./yomichan/yomichanDatabase";
+import YomichanDatabase from "./yomichan/Types";
 
 export function newDatabase() {
   indexedDB.deleteDatabase("hare-yomichan");

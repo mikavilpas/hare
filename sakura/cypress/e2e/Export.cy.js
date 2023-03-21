@@ -67,6 +67,7 @@ describe("export view", () => {
         Audio: "audio",
         Focus: "word",
         Meaning2: "englishTranslation",
+        Snapshot: "(empty)",
       });
     });
 
@@ -76,7 +77,7 @@ describe("export view", () => {
       // select an example sentence from the dictionary definition
       cy.contains("高価な―をとりそろえる")
         .children(".quote-actions")
-        .children(`button[aria-label="copy sentence"]`)
+        .find(`[aria-label="copy sentence"]`)
         .click();
 
       cy.intercept("http://localhost:12345", "POST").as("create jap only");
@@ -96,6 +97,7 @@ describe("export view", () => {
                 Audio: "",
                 Focus: "品物",
                 Meaning2: "",
+                Snapshot: "",
               },
               tags: ["hare"],
               options: {
@@ -108,13 +110,16 @@ describe("export view", () => {
 
       // next, select an audio sentence
       cy.contains("頼んでいた品物が今日届いた。")
-        .siblings(`[aria-label="copy sentence"]`)
+        .parent()
+        .find(`[aria-label="copy sentence"]`)
         .click();
       cy.contains("The article which I have ordered arrived today.")
-        .siblings(`[aria-label="copy sentence"]`)
+        .parent()
+        .find(`[aria-label="copy sentence"]`)
         .click();
       cy.get(`[aria-label="download audio"]`)
-        .children(`[aria-label="copy sentence"]`)
+        .parent()
+        .find(`[aria-label="copy sentence"]`)
         .first()
         .click();
 
