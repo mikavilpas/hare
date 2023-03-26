@@ -2,12 +2,12 @@
 set -e
 set +x
 
-rm ./dist/* -rf
+rm -rf ./dist/*
 mkdir -p ../docs
 
 export PUBLIC_URL=https://sp3ctum.github.io/hare/
 (cd ../sakura/ && yarn prettier-check && yarn build)
 yarn build
-cp -v ./dist/* ../docs/ -r
+cp -vr ./dist/* ../docs/
 git add ../docs
 git status
